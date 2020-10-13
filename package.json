@@ -1,10 +1,14 @@
 {
-  "name": "json-api",
+  "name": "json-route-api",
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "test": "yarn nodemon --watch test src/index.js"
+  },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "nodemon": "^2.0.5"
   }
 }
