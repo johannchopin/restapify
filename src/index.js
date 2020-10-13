@@ -3,10 +3,6 @@ const { join, resolve } = require('path')
 const express = require('express')
 const app = express()
 
-app.get('/users/:userId', (req, res) => {
-  res.send(req.params['userId'])
-})
-
 const HTTP_VERBS = ['get', 'put', 'delete', 'create']
 
 const BASE = resolve(__dirname, '../test/api/')
@@ -37,6 +33,11 @@ const getRoute = (filePath, filename) => {
   const params = getVarsInPath(route)
   const apiRoute = getNormalizedApiRoute(route, params).replace(filename, '')
   const fileVariable = filename.split('.')[0]
+  const varInFilename = getVarsInPath(filename)[0]
+
+  if (varInFilename) {
+    return apiRoute.split('/').slice(0, -1).join('/') + '/:' + varInFilename.slice(1, -1)
+  }
 
   if (fileVariable === '*') {
     return apiRoute.slice(0, -1)
