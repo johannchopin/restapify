@@ -2,4 +2,6 @@
 
 ## ✨ Features:
 
-- [ ] Handle `[userid].json` route
+- [ ] Handle `[userid].json` route syntax
+- [ ] Hot reload json api
+- [ ] Handle `[userid%2].json` route syntax
