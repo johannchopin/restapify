@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node"
+  }
+}
