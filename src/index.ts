@@ -2,31 +2,34 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as express from 'express'
 
+import { getVarsInPath } from './utils/server'
+
 const NUMBER_CAST_INDICATOR = '(number)'
 
 const getDirs = (p: string) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
 const getFiles = (p: string) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isFile())
 
 export interface RestApiFyParams {
-  entryFolder: string
+  rootDir: string
   port?: number
   apiPrefix?: string
 }
 
 class RestApiFy {
-  protected server: express.Express
+  protected app: express.Express
+  protected server: any
   public entryFolderPath: string
   public port: number
   public entryFolderFullPath: string
   public apiPrefix: string
 
   constructor({
-      entryFolder,
+      rootDir,
       port = 6767,
       apiPrefix = '/api'
     }: RestApiFyParams) {
-      this.entryFolderPath = entryFolder
-      this.entryFolderFullPath = path.resolve(__dirname, entryFolder)
+      this.entryFolderPath = rootDir
+      this.entryFolderFullPath = path.resolve(__dirname, rootDir)
       this.port = port
       this.apiPrefix = apiPrefix
 
@@ -36,7 +39,7 @@ class RestApiFy {
   }
 
   private configServer = (): void => {
-    this.server = express()
+    this.app = express()
     this.configFolder(this.entryFolderPath)
   }
 
@@ -71,40 +74,20 @@ class RestApiFy {
     return match !== null ? match : []
   }
   
-  private getVarsInPath = (path: string): string[] => {
-    const vars: string[] = []
-
-    if (path.endsWith('.json')) {
-      path = path.slice(0, -'.json'.length)
-    }
-
-    const explodedPath = path.split('/')
-  
-    explodedPath.forEach(pathElement => {
-      console.log(pathElement)
-      const isVar = pathElement.startsWith('[') && pathElement.endsWith(']')
-      if (isVar) {
-        vars.push(pathElement.slice(1, -1))
-      }
-    })
-  
-    return vars
-  }
-  
   private getNormalizedApiRoute = (path: string, params: string[]): string => {
     params.forEach(param => {
       path = replaceAll(path, `[${param}]`, `:${param}`)
     })
-  
+
     return path
   }
   
   private getRoute = (filePath: string, filename: string): string => {
     const route = `${this.apiPrefix}${filePath.replace(this.entryFolderFullPath, '')}`
-    const params = this.getVarsInPath(route)
+    const params = getVarsInPath(route)
     const apiRoute = this.getNormalizedApiRoute(route, params).replace(filename, '')
     const fileVariable = filename.split('.')[0]
-    const varInFilename = this.getVarsInPath(fileVariable)[0]
+    const varInFilename = getVarsInPath(fileVariable)[0]
   
     if (varInFilename) {
       return apiRoute.split('/').slice(0, -1).join('/') + '/:' + varInFilename
@@ -122,7 +105,7 @@ class RestApiFy {
     let fileContent = fs.readFileSync(filePath, 'utf8')
     const route = filePath.replace(this.entryFolderFullPath, '')
     const numberParamsToCast = this.getNumbersToCast(fileContent)
-    const params = this.getVarsInPath(route)
+    const params = getVarsInPath(route)
     console.log(params)
     const apiRoute = this.getRoute(filePath, filename)
 
@@ -145,22 +128,22 @@ class RestApiFy {
   
     switch (httpVerbInFilename) {
       case 'post':
-        this.server.post(apiRoute, responseCallback)
+        this.app.post(apiRoute, responseCallback)
         console.log(`> POST ${apiRoute}`)
         break
     
       case 'delete':
-        this.server.delete(apiRoute, responseCallback)
+        this.app.delete(apiRoute, responseCallback)
         console.log(`> DELETE ${apiRoute}`)
         break
       
       case 'put':
-        this.server.put(apiRoute, responseCallback)
+        this.app.put(apiRoute, responseCallback)
         console.log(`> PUT ${apiRoute}`)
         break
       
       case 'get': default:
-        this.server.get(apiRoute, responseCallback)
+        this.app.get(apiRoute, responseCallback)
         console.log(`> GET ${apiRoute}`)
         break
     }
@@ -173,7 +156,12 @@ class RestApiFy {
 
   public run = (): void => {
     console.log(`Server started on port ${this.port}`)
-    this.server.listen(this.port)
+    this.server = this.app.listen(this.port)
+  }
+
+  public close = (): void => {
+    console.log(`Server stopped`)
+    this.server.close()
   }
 
   public kill = (): void => {
