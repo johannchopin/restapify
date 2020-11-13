@@ -1,10 +1,13 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as express from 'express'
+import * as portscanner from 'portscanner'
 
 import { getVarsInPath } from './utils/server'
 
 const NUMBER_CAST_INDICATOR = '(number)'
+const LOCALHOST = '127.0.0.1'
+const DEFAULT_PORT = 6767
 
 const getDirs = (p: string) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
 const getFiles = (p: string) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isFile())
@@ -25,7 +28,7 @@ class RestApiFy {
 
   constructor({
       rootDir,
-      port = 6767,
+      port = DEFAULT_PORT,
       apiPrefix = '/api'
     }: RestApiFyParams) {
       this.entryFolderPath = rootDir
@@ -33,9 +36,10 @@ class RestApiFy {
       this.port = port
       this.apiPrefix = apiPrefix
 
-      this.check()
-      this.configServer()
-      this.run()
+      this.check(() => {
+        this.configServer()
+        this.run()
+      })
   }
 
   private configServer = (): void => {
@@ -43,8 +47,25 @@ class RestApiFy {
     this.configFolder(this.entryFolderPath)
   }
 
-  private check = (): void => {
+  private check = (onSuccess: () => void): void => {
     this.checkEntryFolder()
+    this.checkPort(onSuccess)
+  }
+
+  private checkPort = (onSuccess: () => void): void => {
+    portscanner.checkPortStatus(this.port, LOCALHOST, (error, status) => {
+      if (status !== 'closed') {
+        console.log('Port already in use')
+        portscanner.findAPortNotInUse(DEFAULT_PORT, DEFAULT_PORT + 1000, LOCALHOST, (error, port) => {
+          console.log('Use port: ' + port)
+          this.port = port
+
+          onSuccess()
+        })      
+      } else {
+        onSuccess()
+      }
+    })
   }
 
   private checkEntryFolder = (): void => {
