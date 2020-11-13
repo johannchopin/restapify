@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.12.1",
     "@types/express": "^4.17.8",
     "@types/node": "^14.14.6",
+    "isomorphic-fetch": "^3.0.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
