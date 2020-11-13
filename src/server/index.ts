@@ -1,16 +1,19 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as express from 'express'
-import * as portscanner from 'portscanner'
 
+import { replaceAll } from '../utils'
 import { getVarsInPath } from './utils/server'
 
 const NUMBER_CAST_INDICATOR = '(number)'
-const LOCALHOST = '127.0.0.1'
 const DEFAULT_PORT = 6767
 
-const getDirs = (p: string) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
-const getFiles = (p: string) => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isFile())
+const getDirs = (p: string): string[] => {
+  return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
+}
+const getFiles = (p: string): string[] => {
+  return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isFile())
+}
 
 export interface RestApiFyParams {
   rootDir: string
@@ -27,19 +30,18 @@ class RestApiFy {
   public apiPrefix: string
 
   constructor({
-      rootDir,
-      port = DEFAULT_PORT,
-      apiPrefix = '/api'
-    }: RestApiFyParams) {
-      this.entryFolderPath = rootDir
-      this.entryFolderFullPath = path.resolve(__dirname, rootDir)
-      this.port = port
-      this.apiPrefix = apiPrefix
+    rootDir,
+    port = DEFAULT_PORT,
+    apiPrefix = '/api'
+  }: RestApiFyParams) {
+    this.entryFolderPath = rootDir
+    this.entryFolderFullPath = path.resolve(__dirname, rootDir)
+    this.port = port
+    this.apiPrefix = apiPrefix
 
-      this.check() 
-      this.configServer()
-      this.run()
-      
+    this.check()
+    this.configServer()
+    this.run()
   }
 
   private configServer = (): void => {
@@ -62,7 +64,7 @@ class RestApiFy {
           this.port = port
 
           onSuccess()
-        })      
+        })
       } else {
         onSuccess()
       }
@@ -80,46 +82,46 @@ class RestApiFy {
   private configFolder = (folderPath: string): void => {
     const dirs = getDirs(folderPath)
     const files = getFiles(folderPath)
-  
+
     files.forEach(filename => {
       this.configFile(path.resolve(folderPath, filename), filename)
     })
-  
+
     dirs.forEach(dir => {
       this.configFolder(path.resolve(folderPath, dir))
     })
   }
 
   private getNumbersToCast = (str: string): string[] => {
-    const re = /\"\(number\)\[([^,}]+)\]\"/gi
+    const re = /"\(number\)\[([^,}]+)\]"/gi
     const match = str.match(re)
-  
+
     return match !== null ? match : []
   }
-  
-  private getNormalizedApiRoute = (path: string, params: string[]): string => {
+
+  private getNormalizedApiRoute = (route: string, params: string[]): string => {
     params.forEach(param => {
-      path = replaceAll(path, `[${param}]`, `:${param}`)
+      route = replaceAll(route, `[${param}]`, `:${param}`)
     })
 
-    return path
+    return route
   }
-  
+
   private getRoute = (filePath: string, filename: string): string => {
     const route = `${this.apiPrefix}${filePath.replace(this.entryFolderFullPath, '')}`
     const params = getVarsInPath(route)
     const apiRoute = this.getNormalizedApiRoute(route, params).replace(filename, '')
     const fileVariable = filename.split('.')[0]
     const varInFilename = getVarsInPath(fileVariable)[0]
-  
+
     if (varInFilename) {
       return apiRoute.split('/').slice(0, -1).join('/') + '/:' + varInFilename
     }
-  
+
     if (fileVariable === '*') {
       return apiRoute.slice(0, -1)
     }
-  
+
     return apiRoute.split('/').slice(0, -1).join('/') + '/' + fileVariable
   }
 
@@ -134,15 +136,15 @@ class RestApiFy {
 
     numberParamsToCast.forEach(numberParamToCast => {
       fileContent = replaceAll(
-        fileContent, 
+        fileContent,
         numberParamToCast,
         numberParamToCast.slice(`"${NUMBER_CAST_INDICATOR}`.length, -1)
       )
     })
-  
-    const responseCallback = (req: any, res: any) => {
+
+    const responseCallback = (req: any, res: any): void => {
       let stringifyJson = fileContent
-  
+
       params.forEach(variable => {
         console.log(stringifyJson, `[${variable}]`, req.params[variable])
         stringifyJson = replaceAll(stringifyJson, `[${variable}]`, req.params[variable])
@@ -152,27 +154,27 @@ class RestApiFy {
 
       res.send(JSON.parse(stringifyJson))
     }
-  
+
     switch (httpVerbInFilename) {
-      case 'post':
-        this.app.post(apiRoute, responseCallback)
-        console.log(`> POST ${apiRoute}`)
-        break
-    
-      case 'delete':
-        this.app.delete(apiRoute, responseCallback)
-        console.log(`> DELETE ${apiRoute}`)
-        break
-      
-      case 'put':
-        this.app.put(apiRoute, responseCallback)
-        console.log(`> PUT ${apiRoute}`)
-        break
-      
-      case 'get': default:
-        this.app.get(apiRoute, responseCallback)
-        console.log(`> GET ${apiRoute}`)
-        break
+    case 'post':
+      this.app.post(apiRoute, responseCallback)
+      console.log(`> POST ${apiRoute}`)
+      break
+
+    case 'delete':
+      this.app.delete(apiRoute, responseCallback)
+      console.log(`> DELETE ${apiRoute}`)
+      break
+
+    case 'put':
+      this.app.put(apiRoute, responseCallback)
+      console.log(`> PUT ${apiRoute}`)
+      break
+
+    case 'get': default:
+      this.app.get(apiRoute, responseCallback)
+      console.log(`> GET ${apiRoute}`)
+      break
     }
   }
 
@@ -187,17 +189,13 @@ class RestApiFy {
   }
 
   public close = (): void => {
-    console.log(`Server stopped`)
+    console.log('Server stopped')
     this.server.close()
   }
 
   public kill = (): void => {
     process.exit(0)
   }
-}
-
-const replaceAll = (str: string, find: string, replace: string): string => {
- return str.split(find).join(replace)
 }
 
 export default RestApiFy

@@ -18,7 +18,7 @@ describe('Restapify', () => {
 
   beforeEach(() => {
     RestapifyInstance = new Restapify(restapifyParams)
-  });
+  })
 
   afterEach(() => {
     RestapifyInstance.close()
@@ -26,9 +26,9 @@ describe('Restapify', () => {
 
   describe('Running server', () => {
     it('should respond to a simple GET', async () => {
-      let response = await fetch(`${apiRoot}/users`);
+      let response = await fetch(`${apiRoot}/users`)
       let data = await response.json()
       expect(data).toStrictEqual(users)
-    });
-  });
-});
+    })
+  })
+})
