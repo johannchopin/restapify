@@ -36,10 +36,10 @@ class RestApiFy {
       this.port = port
       this.apiPrefix = apiPrefix
 
-      this.check(() => {
-        this.configServer()
-        this.run()
-      })
+      this.check() 
+      this.configServer()
+      this.run()
+      
   }
 
   private configServer = (): void => {
@@ -47,12 +47,13 @@ class RestApiFy {
     this.configFolder(this.entryFolderPath)
   }
 
-  private check = (onSuccess: () => void): void => {
+  private check = (): void => {
     this.checkEntryFolder()
-    this.checkPort(onSuccess)
+    this.checkPort()
   }
 
-  private checkPort = (onSuccess: () => void): void => {
+  private checkPort = (): void => {
+    /*
     portscanner.checkPortStatus(this.port, LOCALHOST, (error, status) => {
       if (status !== 'closed') {
         console.log('Port already in use')
@@ -66,6 +67,7 @@ class RestApiFy {
         onSuccess()
       }
     })
+    */
   }
 
   private checkEntryFolder = (): void => {
@@ -131,7 +133,11 @@ class RestApiFy {
     const apiRoute = this.getRoute(filePath, filename)
 
     numberParamsToCast.forEach(numberParamToCast => {
-      fileContent = replaceAll(fileContent, numberParamToCast, numberParamToCast.slice(`"${NUMBER_CAST_INDICATOR}`.length, -1))
+      fileContent = replaceAll(
+        fileContent, 
+        numberParamToCast,
+        numberParamToCast.slice(`"${NUMBER_CAST_INDICATOR}`.length, -1)
+      )
     })
   
     const responseCallback = (req: any, res: any) => {
