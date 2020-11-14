@@ -58,7 +58,6 @@ class RestApiFy {
 
   private check = (): void => {
     this.checkEntryFolder()
-    this.checkPort()
   }
 
   private handleHttpServerErrors = (): void => {
@@ -80,24 +79,6 @@ class RestApiFy {
   private restartServer = (): void => {
     this.close()
     this.init()
-  }
-
-  private checkPort = (): void => {
-    /*
-    portscanner.checkPortStatus(this.port, LOCALHOST, (error, status) => {
-      if (status !== 'closed') {
-        console.log('Port already in use')
-        portscanner.findAPortNotInUse(DEFAULT_PORT, DEFAULT_PORT + 1000, LOCALHOST, (error, port) => {
-          console.log('Use port: ' + port)
-          this.port = port
-
-          onSuccess()
-        })
-      } else {
-        onSuccess()
-      }
-    })
-    */
   }
 
   private checkEntryFolder = (): void => {
