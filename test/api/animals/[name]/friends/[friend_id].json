@@ -1,0 +1,10 @@
+{
+  "id": "[friend_id]",
+  "type": "cat",
+  "friends": [
+    {
+      "name": "[name]",
+      "type": "dog"
+    }
+  ]
+}
