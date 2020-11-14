@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as express from 'express'
+import * as http from 'http'
 
 import { replaceAll } from '../utils'
 import { getVarsInPath } from './utils/server'
@@ -39,6 +40,10 @@ class RestApiFy {
     this.port = port
     this.apiPrefix = apiPrefix
 
+    this.init()
+  }
+
+  private init = (): void => {
     this.check()
     this.configServer()
     this.run()
@@ -46,12 +51,35 @@ class RestApiFy {
 
   private configServer = (): void => {
     this.app = express()
+    this.server = http.createServer(this.app)
+    this.handleHttpServerErrors()
     this.configFolder(this.entryFolderPath)
   }
 
   private check = (): void => {
     this.checkEntryFolder()
     this.checkPort()
+  }
+
+  private handleHttpServerErrors = (): void => {
+    this.server.on('error', (e: any) => {
+      switch (e.code) {
+      case 'EADDRINUSE':
+        console.log(`Port ${this.port} not available`)
+        this.port += 1
+        this.restartServer()
+        break
+
+      default:
+        console.log(`Unknow error ${e.code}`)
+        break
+      }
+    })
+  }
+
+  private restartServer = (): void => {
+    this.close()
+    this.init()
   }
 
   private checkPort = (): void => {
@@ -131,7 +159,6 @@ class RestApiFy {
     const route = filePath.replace(this.entryFolderFullPath, '')
     const numberParamsToCast = this.getNumbersToCast(fileContent)
     const params = getVarsInPath(route)
-    console.log(params)
     const apiRoute = this.getRoute(filePath, filename)
 
     numberParamsToCast.forEach(numberParamToCast => {
@@ -146,11 +173,8 @@ class RestApiFy {
       let stringifyJson = fileContent
 
       params.forEach(variable => {
-        console.log(stringifyJson, `[${variable}]`, req.params[variable])
         stringifyJson = replaceAll(stringifyJson, `[${variable}]`, req.params[variable])
       })
-
-      console.log(stringifyJson)
 
       res.send(JSON.parse(stringifyJson))
     }
@@ -185,7 +209,7 @@ class RestApiFy {
 
   public run = (): void => {
     console.log(`Server started on port ${this.port}`)
-    this.server = this.app.listen(this.port)
+    this.server.listen(this.port)
   }
 
   public close = (): void => {
