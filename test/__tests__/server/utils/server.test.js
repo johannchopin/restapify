@@ -1,4 +1,4 @@
-import { getVarsInPath } from '../../../src/server/utils/server'
+import { getVarsInPath } from '../../../../src/server/utils/server'
 
 describe('getVarsInPath', () => {
   it('find no vars in path', () => {

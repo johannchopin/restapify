@@ -1,17 +1,17 @@
 import * as path from 'path'
 import 'isomorphic-fetch'
-import Restapify from '../../src/server/index'
+import Restapify from '../../../src/server/index'
 
 // D A T A
-import getAnimals from '../api/animals.json'
-import getAnimalsByName from '../api/animals/[name].json'
-import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
-import getPlants from '../api/plants.get.json'
-import getUsers from '../api/users/*.json'
-import getComments from '../api/comments/*.get.json'
+import getAnimals from '../../api/animals.json'
+import getAnimalsByName from '../../api/animals/[name].json'
+import getAnimalsByNameFriends from '../../api/animals/[name]/friends/[friend_id].json'
+import getPlants from '../../api/plants.get.json'
+import getUsers from '../../api/users/*.json'
+import getComments from '../../api/comments/*.get.json'
 
 const restapifyParams = {
-  rootDir: path.resolve(__dirname, '../api'),
+  rootDir: path.resolve(__dirname, '../../api'),
   port: 6767,
   apiPrefix: '/api'
 }
