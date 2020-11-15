@@ -1,7 +1,6 @@
 {
   "__header": {
-    "HTTP/1.1": 201,
-    "Content-Type": "application/json; charset=utf-8"
+    "Content-Type": "text/html; charset=UTF-8"
   },
   "__body": {
     "success": true,
