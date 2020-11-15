@@ -38,6 +38,7 @@
       }
     ],
     "no-param-reassign": "off",
+    "no-underscore-dangle": "off",
     "semi": [
       "error",
       "never"

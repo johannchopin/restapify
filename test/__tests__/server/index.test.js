@@ -6,9 +6,9 @@ import Restapify from '../../../src/server/index'
 import getAnimals from '../../api/animals.json'
 import getAnimalsByName from '../../api/animals/[name].json'
 import getAnimalsByNameFriends from '../../api/animals/[name]/friends/[friend_id].json'
-import getPlants from '../../api/plants.get.json'
+import getPlants from '../../api/plants.GET.json'
 import getUsers from '../../api/users/*.json'
-import getComments from '../../api/comments/*.get.json'
+import getComments from '../../api/comments/*.GET.json'
 
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../api'),
