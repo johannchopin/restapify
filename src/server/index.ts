@@ -186,22 +186,22 @@ class RestApiFy {
     }
 
     switch (httpVerbInFilename) {
-    case 'post':
+    case 'POST':
       this.app.post(apiRoute, responseCallback)
       console.log(`> POST ${apiRoute}`)
       break
 
-    case 'delete':
+    case 'DELETE':
       this.app.delete(apiRoute, responseCallback)
       console.log(`> DELETE ${apiRoute}`)
       break
 
-    case 'put':
+    case 'PUT':
       this.app.put(apiRoute, responseCallback)
       console.log(`> PUT ${apiRoute}`)
       break
 
-    case 'get': default:
+    case 'GET': default:
       this.app.get(apiRoute, responseCallback)
       console.log(`> GET ${apiRoute}`)
       break
