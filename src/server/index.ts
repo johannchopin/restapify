@@ -135,7 +135,7 @@ class RestApiFy {
   }
 
   private configFile = (filePath: string, filename: string): void => {
-    const httpVerbInFilename = filename.split('.')[-2]
+    const httpVerbInFilename = filename.split('.').slice(-2)[0]
     let fileContent = fs.readFileSync(filePath, 'utf8')
     const route = filePath.replace(this.entryFolderFullPath, '')
     const numberParamsToCast = this.getNumbersToCast(fileContent)
@@ -151,13 +151,38 @@ class RestApiFy {
     })
 
     const responseCallback = (req: any, res: any): void => {
-      let stringifyJson = fileContent
+      const json = JSON.parse(fileContent)
+      let body
 
-      params.forEach(variable => {
-        stringifyJson = replaceAll(stringifyJson, `[${variable}]`, req.params[variable])
-      })
+      if (json.__header || json.__body) {
+        if (json.__header) {
+          res.header(json.__header)
+        }
 
-      res.send(JSON.parse(stringifyJson))
+        if (json.__body) {
+          let stringifiedBody = JSON.stringify(json.__body)
+
+          params.forEach(variable => {
+            stringifiedBody = replaceAll(
+              stringifiedBody,
+              `[${variable}]`,
+              req.params[variable]
+            )
+          })
+
+          body = JSON.parse(stringifiedBody)
+        }
+
+        res.send(body)
+      } else {
+        let stringifiedJson = fileContent
+
+        params.forEach(variable => {
+          stringifiedJson = replaceAll(stringifiedJson, `[${variable}]`, req.params[variable])
+        })
+
+        res.send(JSON.parse(stringifiedJson))
+      }
     }
 
     switch (httpVerbInFilename) {
