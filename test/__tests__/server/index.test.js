@@ -8,6 +8,7 @@ import getAnimalsByName from '../../api/animals/[name].json'
 import getAnimalsByNameFriends from '../../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../../api/plants.GET.json'
 import getUsers from '../../api/users/*.json'
+import postUsers from '../../api/users/*.POST.json'
 import getComments from '../../api/comments/*.GET.json'
 
 const restapifyParams = {
@@ -91,5 +92,38 @@ describe('Restapify', () => {
       let data = await response.json()
       expect(data).toStrictEqual(expectedResponse)
     })
+  })
+
+  describe('Extended mock', () => {
+    it('should respond with __body', async () => {
+      let response = await fetch(`${apiRoot}/users/`, {
+        method: 'POST'
+      })
+      let data = await response.json()
+      expect(data).toStrictEqual(postUsers.__body)
+    })
+  })
+
+  it('should respond with custom __header', async () => {
+    let response = await fetch(`${apiRoot}/users/`, {
+      method: 'POST'
+    })
+
+    let headers = await response.headers
+
+    Object.keys(postUsers.__header).forEach(headerProperty => {
+      expect(headers.get(headerProperty)).toBe(postUsers.__header[headerProperty])
+    })
+  })
+
+  it('should respond with __statusCode HTTP Status Code', async () => {
+    const expectedStatusCode = postUsers.__statusCode
+    let response = await fetch(`${apiRoot}/users/`, {
+      method: 'POST'
+    })
+
+    let statusCode = await response.status
+
+    expect(statusCode).toBe(expectedStatusCode)
   })
 })
