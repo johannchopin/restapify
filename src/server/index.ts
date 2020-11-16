@@ -154,6 +154,8 @@ class RestApiFy {
       const json = JSON.parse(fileContent)
       let body
 
+      res.status(json.__statusCode || 200)
+
       if (json.__header || json.__body) {
         if (json.__header) {
           res.header(json.__header)
