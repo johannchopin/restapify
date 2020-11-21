@@ -1,7 +1,9 @@
 import {
   getContentWithReplacedVars,
   getNormalizedRoute,
-  getStateVarsInFilename
+  getStateVarsInFilename,
+  getFilenameFromFilePath,
+  getRouteFromFilePath
 } from '../../../src/server/getRoute'
 
 describe('Get route helpers', () => {
@@ -62,6 +64,36 @@ describe('Get route helpers', () => {
 
       expect(getContentWithReplacedVars(content, vars))
         .toStrictEqual(expectedContentWithReplacedVars)
+    })
+  })
+
+  describe('getFilenameFromFilePath', () => {
+    const filePath = '/posts/[post_id]/comments/[comment_id].POST.{ERR}.json'
+    const expectedFilename = '[comment_id].POST.{ERR}.json'
+
+    expect(getFilenameFromFilePath(filePath)).toBe(expectedFilename)
+  })
+
+  describe('getRouteFromFilePath', () => {
+    it('should return route with local route indicator', () => {
+      const filePath = '/posts/[post_id]/comments/*.POST.{ERR}.json'
+      const expectedRoute = '/posts/[post_id]/comments'
+
+      expect(getRouteFromFilePath(filePath)).toBe(expectedRoute)
+    })
+
+    it('should return route with fixed value', () => {
+      const filePath = '/posts/[post_id]/comments/45.POST.{ERR}.json'
+      const expectedRoute = '/posts/[post_id]/comments/45'
+
+      expect(getRouteFromFilePath(filePath)).toBe(expectedRoute)
+    })
+
+    it('should return route with variable notation', () => {
+      const filePath = '/posts/[post_id]/comments/[commentid].POST.{ERR}.json'
+      const expectedRoute = '/posts/[post_id]/comments/[commentid]'
+
+      expect(getRouteFromFilePath(filePath)).toBe(expectedRoute)
     })
   })
 })

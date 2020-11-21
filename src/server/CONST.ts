@@ -1,0 +1,1 @@
+export const CURRENT_LOCATION_ROUTE_SELECTOR = '*'

@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 
 import { replaceAll } from '../utils'
+import { CURRENT_LOCATION_ROUTE_SELECTOR } from './CONST'
 import { getVarsInPath } from './utils/server'
 
 // I N T E R F A C E S
@@ -16,12 +17,26 @@ export interface Route {
   fileContent: string
   stateVars: string[]
   statusCode: number
-  getFileContent: (vars: string[]) => string
+  getFileContent: (vars: {[key: string]: string}) => string
+}
+
+export const getFilenameFromFilePath = (filePath: string): string => {
+  const [filename] = filePath.split('/').slice(-1)
+
+  return filename
 }
 
 export const getRouteFromFilePath = (filePath: string): string => {
-  // TODO
-  return filePath
+  const filename = getFilenameFromFilePath(filePath)
+  const routeWithoutFilename = filePath.replace(filename, '')
+  const firstParamInFilename = filename.split('.')[0]
+
+  if (firstParamInFilename === CURRENT_LOCATION_ROUTE_SELECTOR) {
+    // remove last char which is a `/`
+    return routeWithoutFilename.slice(0, -1)
+  }
+
+  return routeWithoutFilename + firstParamInFilename
 }
 
 export const getNormalizedRoute = (route: string, vars: string[] = []): string => {
@@ -69,17 +84,19 @@ export const getRoute = ({
 }: RouteParams): Route => {
   // relative to the entry folder
   const relativeFilePath = filePath.replace(entryFolderPath, '')
-  const [filename] = relativeFilePath.split('/').slice(-1)
+  const filename = getFilenameFromFilePath(relativeFilePath)
   const route = getRouteFromFilePath(relativeFilePath)
   const vars = getVarsInPath(route)
   const normalizedRoute = getNormalizedRoute(route, vars)
   const fileContent = fs.readFileSync(filePath, 'utf8')
   const stateVars = getStateVarsInFilename(filename)
 
-  const getFileContent = (varsToReplace: string[]): string => {
-    // TODO:
-    console.log(varsToReplace)
-    return ''
+  const getFileContent = (varsToReplace?: {[key: string]: string}): string => {
+    if (varsToReplace) {
+      return getContentWithReplacedVars(fileContent, varsToReplace)
+    }
+
+    return fileContent
   }
 
   return {
