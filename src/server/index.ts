@@ -16,6 +16,7 @@ const getFiles = (p: string): string[] => {
   return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isFile())
 }
 
+// I N T E R F A C E S
 export interface RestApiFyParams {
   rootDir: string
   port?: number
