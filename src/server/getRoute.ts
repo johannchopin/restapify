@@ -12,7 +12,7 @@ export interface RouteParams {
 export interface Route {
   route: string
   normalizedRoute: string
-  vars: string[]
+  routeVars: string[]
   filename: string
   fileContent: string
   stateVars: string[]
@@ -85,8 +85,8 @@ export const getRoute = ({
   const relativeFilePath = filePath.replace(entryFolderPath, '')
   const filename = getFilenameFromFilePath(relativeFilePath)
   const route = getRouteFromFilePath(relativeFilePath)
-  const vars = getVarsInPath(route)
-  const normalizedRoute = getNormalizedRoute(route, vars)
+  const routeVars = getVarsInPath(route)
+  const normalizedRoute = getNormalizedRoute(route, routeVars)
   const fileContent = fs.readFileSync(filePath, 'utf8')
   const stateVars = getStateVarsInFilename(filename)
 
@@ -100,7 +100,7 @@ export const getRoute = ({
 
   return {
     route,
-    vars,
+    routeVars,
     normalizedRoute,
     filename,
     fileContent,
