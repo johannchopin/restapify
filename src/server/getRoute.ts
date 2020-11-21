@@ -1,5 +1,7 @@
 import * as fs from 'fs'
 
+import { HttpVerb } from './types'
+
 import { replaceAll } from '../utils'
 import { CURRENT_LOCATION_ROUTE_SELECTOR } from './CONST'
 import {
@@ -10,18 +12,15 @@ import {
 } from './utils'
 
 // I N T E R F A C E S
-export interface RouteParams {
-  filePath: string
-  entryFolderPath: string
-}
 export interface Route {
   route: string
   normalizedRoute: string
   routeVars: string[]
   filename: string
   fileContent: string
-  stateVars: string[]
+  httpVerb: HttpVerb
   statusCode: number
+  stateVars: string[]
   getFileContent: (vars: {[key: string]: string}) => string
 }
 
@@ -86,6 +85,20 @@ export const getStateVarsInFilename = (filename: string): string[] => {
   return stateVars
 }
 
+export const getHttpVerbInFilename = (filename: string): HttpVerb => {
+  const filenameElmts = filename.split('.')
+  let potentialHttpVerbElement = filenameElmts.slice(1, -1) // remove local indicator and file extension
+  let httpVerb: HttpVerb = 'GET'
+
+  potentialHttpVerbElement.forEach(elmt => {
+    if (isHttpVerb(elmt)) {
+      httpVerb = elmt as HttpVerb
+    }
+  })
+
+  return httpVerb
+}
+
 export const getContentWithReplacedVars = (
   content: string,
   vars: {[key: string]: string}
@@ -101,10 +114,10 @@ export const getContentWithReplacedVars = (
   return content
 }
 
-export const getRoute = ({
-  filePath,
-  entryFolderPath
-}: RouteParams): Route => {
+export const getRoute = (
+  filePath: string,
+  entryFolderPath: string
+): Route => {
   // relative to the entry folder
   const relativeFilePath = filePath.replace(entryFolderPath, '')
   const filename = getFilenameFromFilePath(relativeFilePath)
@@ -114,6 +127,7 @@ export const getRoute = ({
   const fileContent = fs.readFileSync(filePath, 'utf8')
   const stateVars = getStateVarsInFilename(filename)
   const statusCode = getResponseStatusCodeInFilename(filename)
+  const httpVerb = getHttpVerbInFilename(filename)
 
   const getFileContent = (varsToReplace?: {[key: string]: string}): string => {
     if (varsToReplace) {
@@ -131,6 +145,7 @@ export const getRoute = ({
     fileContent,
     getFileContent,
     stateVars,
-    statusCode
+    statusCode,
+    httpVerb
   }
 }
