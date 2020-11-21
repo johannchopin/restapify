@@ -8,7 +8,7 @@ import getAnimalsByName from '../../api/animals/[name].json'
 import getAnimalsByNameFriends from '../../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../../api/plants.GET.json'
 import getUsers from '../../api/users/*.json'
-import postUsers from '../../api/users/*.POST.json'
+import postUsers from '../../api/users/*.POST.201.json'
 import getComments from '../../api/comments/*.GET.json'
 
 const restapifyParams = {
@@ -116,8 +116,8 @@ describe('Restapify', () => {
     })
   })
 
-  it('should respond with __statusCode HTTP Status Code', async () => {
-    const expectedStatusCode = postUsers.__statusCode
+  it('should respond with defined HTTP Status Code', async () => {
+    const expectedStatusCode = 201
     let response = await fetch(`${apiRoot}/users/`, {
       method: 'POST'
     })
