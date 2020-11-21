@@ -49,6 +49,25 @@ export const getNormalizedRoute = (route: string, vars: string[] = []): string =
   return route
 }
 
+export const getResponseStatusCodeFromFilename = (filename: string): number => {
+  const filenameElmts = filename.split('.')
+  let potentialStatusCodeElement = filenameElmts.slice(1, -1) // remove local indicator and file extension
+
+  while (potentialStatusCodeElement.length > 0) {
+    const elmtToTest = potentialStatusCodeElement[0]
+    if (isHttpVerb(elmtToTest) || isStateVariable(elmtToTest)) {
+      potentialStatusCodeElement = potentialStatusCodeElement.slice(1)
+    } else {
+      if (isNumeric(elmtToTest)) {
+        return Number(elmtToTest)
+      }
+      potentialStatusCodeElement = potentialStatusCodeElement.slice(1)
+    }
+  }
+
+  return 200
+}
+
 export const getStateVarsInFilename = (filename: string): string[] => {
   let stateVars: string[] = []
   const explodedFilename = filename.split('.')

@@ -3,7 +3,8 @@ import {
   getNormalizedRoute,
   getStateVarsInFilename,
   getFilenameFromFilePath,
-  getRouteFromFilePath
+  getRouteFromFilePath,
+  getResponseStatusCodeFromFilename
 } from '../../../src/server/getRoute'
 
 describe('Get route helpers', () => {
@@ -94,6 +95,36 @@ describe('Get route helpers', () => {
       const expectedRoute = '/posts/[post_id]/comments/[commentid]'
 
       expect(getRouteFromFilePath(filePath)).toBe(expectedRoute)
+    })
+  })
+
+  describe('getResponseStatusCodeFromFilename', () => {
+    it('should return default 200 as default status code', () => {
+      const filename = '*.json'
+      const expectedStatusCode = 200
+
+      expect(getResponseStatusCodeFromFilename(filename)).toBe(expectedStatusCode)
+    })
+
+    it('should return 200 as default status code with state variable and HTTP verb', () => {
+      const filename = '*.POST.{ERR}.json'
+      const expectedStatusCode = 200
+
+      expect(getResponseStatusCodeFromFilename(filename)).toBe(expectedStatusCode)
+    })
+
+    it('should return status code ', () => {
+      const filename = '*.POST.204.json'
+      const expectedStatusCode = 204
+
+      expect(getResponseStatusCodeFromFilename(filename)).toBe(expectedStatusCode)
+    })
+
+    it('should return status code with state variable and HTTP verb', () => {
+      const filename = '*.DELETE.404.{ERR}.json'
+      const expectedStatusCode = 404
+
+      expect(getResponseStatusCodeFromFilename(filename)).toBe(expectedStatusCode)
     })
   })
 })
