@@ -21,7 +21,10 @@ export interface Route {
   httpVerb: HttpVerb
   statusCode: number
   stateVars: string[]
-  getFileContent: (vars: {[key: string]: string}) => string
+  isExtended: boolean
+  header?: {[key: string]: string | number}
+  body?: string
+  getBody: (vars: {[key: string]: string}) => string
 }
 
 export const getFilenameFromFilePath = (filePath: string): string => {
@@ -114,6 +117,10 @@ export const getContentWithReplacedVars = (
   return content
 }
 
+export const isStructureExtended = (jsonContent: {[key: string]: any}): boolean => {
+  return jsonContent.__header !== undefined || jsonContent.__body !== undefined
+}
+
 export const getRoute = (
   filePath: string,
   entryFolderPath: string
@@ -125,13 +132,19 @@ export const getRoute = (
   const routeVars = getVarsInPath(route)
   const normalizedRoute = getNormalizedRoute(route, routeVars)
   const fileContent = fs.readFileSync(filePath, 'utf8')
+  const jsonContent = JSON.parse(fileContent)
   const stateVars = getStateVarsInFilename(filename)
   const statusCode = getResponseStatusCodeInFilename(filename)
   const httpVerb = getHttpVerbInFilename(filename)
 
-  const getFileContent = (varsToReplace?: {[key: string]: string}): string => {
+  const isExtended = isStructureExtended(jsonContent)
+
+  const header = jsonContent.__header
+  const body = isExtended ? JSON.stringify(jsonContent.__body) : fileContent
+
+  const getBody = (varsToReplace?: {[key: string]: string}): string => {
     if (varsToReplace) {
-      return getContentWithReplacedVars(fileContent, varsToReplace)
+      return getContentWithReplacedVars(body, varsToReplace)
     }
 
     return fileContent
@@ -141,11 +154,14 @@ export const getRoute = (
     route,
     routeVars,
     normalizedRoute,
+    isExtended,
     filename,
     fileContent,
-    getFileContent,
     stateVars,
     statusCode,
-    httpVerb
+    httpVerb,
+    body,
+    header,
+    getBody
   }
 }

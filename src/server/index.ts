@@ -4,7 +4,8 @@ import * as express from 'express'
 import * as http from 'http'
 
 import { replaceAll } from '../utils'
-import { getVarsInPath } from './utils'
+import { getVarsInPath, routeResolve } from './utils'
+import { getRoute } from './getRoute'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
@@ -94,7 +95,7 @@ class RestApiFy {
     const files = getFiles(folderPath)
 
     files.forEach(filename => {
-      this.configFile(path.resolve(folderPath, filename), filename)
+      this.configFile(path.resolve(folderPath, filename))
     })
 
     dirs.forEach(dir => {
@@ -135,13 +136,12 @@ class RestApiFy {
     return apiRoute.split('/').slice(0, -1).join('/') + '/' + fileVariable
   }
 
-  private configFile = (filePath: string, filename: string): void => {
-    const httpVerbInFilename = filename.split('.').slice(-2)[0]
-    let fileContent = fs.readFileSync(filePath, 'utf8')
-    const route = filePath.replace(this.entryFolderFullPath, '')
+  private configFile = (filePath: string): void => {
+    const routeData = getRoute(filePath, this.entryFolderFullPath)
+
+    let fileContent = routeData.fileContent
     const numberParamsToCast = this.getNumbersToCast(fileContent)
-    const params = getVarsInPath(route)
-    const apiRoute = this.getRoute(filePath, filename)
+    const apiRoute = routeResolve(this.apiPrefix, routeData.normalizedRoute)
 
     numberParamsToCast.forEach(numberParamToCast => {
       fileContent = replaceAll(
@@ -152,43 +152,21 @@ class RestApiFy {
     })
 
     const responseCallback = (req: any, res: any): void => {
-      const json = JSON.parse(fileContent)
-      let body
+      res.status(routeData.statusCode)
 
-      res.status(json.__statusCode || 200)
-
-      if (json.__header || json.__body) {
-        if (json.__header) {
-          res.header(json.__header)
-        }
-
-        if (json.__body) {
-          let stringifiedBody = JSON.stringify(json.__body)
-
-          params.forEach(variable => {
-            stringifiedBody = replaceAll(
-              stringifiedBody,
-              `[${variable}]`,
-              req.params[variable]
-            )
-          })
-
-          body = JSON.parse(stringifiedBody)
-        }
-
-        res.send(body)
-      } else {
-        let stringifiedJson = fileContent
-
-        params.forEach(variable => {
-          stringifiedJson = replaceAll(stringifiedJson, `[${variable}]`, req.params[variable])
-        })
-
-        res.send(JSON.parse(stringifiedJson))
+      if (routeData.header) {
+        res.header(routeData.header)
       }
+
+      let vars: {[key: string]: string} = {}
+      routeData.routeVars.forEach(variable => {
+        vars[variable] = req.params[variable]
+      })
+
+      res.send(JSON.parse(routeData.getBody(vars)))
     }
 
-    switch (httpVerbInFilename) {
+    switch (routeData.httpVerb) {
     case 'POST':
       this.app.post(apiRoute, responseCallback)
       console.log(`> POST ${apiRoute}`)
