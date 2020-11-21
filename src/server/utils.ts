@@ -32,3 +32,22 @@ export const isNumeric = (str:string):boolean=> {
   return !Number.isNaN(str) // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
          && !Number.isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
+
+export const routeResolve = (...routes: string[]): string => {
+  let finalRoute = ''
+
+  routes.forEach((route, routeId) => {
+    const hasPreviousRouteFinalSlash = !!routes[routeId - 1]?.endsWith('/')
+    const hasRouteFirstSlash = route.startsWith('/')
+
+    if (hasPreviousRouteFinalSlash && hasRouteFirstSlash) {
+      finalRoute += route.slice(1)
+    } else if (!hasPreviousRouteFinalSlash && !hasRouteFirstSlash) {
+      finalRoute += '/' + route
+    } else {
+      finalRoute += route
+    }
+  })
+
+  return finalRoute
+}
