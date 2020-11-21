@@ -1,4 +1,4 @@
-import { getVarsInPath } from '../../../../src/server/utils/server'
+import { getVarsInPath, routeResolve } from '../../../src/server/utils'
 
 describe('getVarsInPath', () => {
   it('find no vars in path', () => {
@@ -27,5 +27,25 @@ describe('getVarsInPath', () => {
     const expectedFoundVars = ['postid', 'commentid']
 
     expect(getVarsInPath(path)).toStrictEqual(expectedFoundVars)
+  })
+})
+
+describe('routeResolve', () => {
+  it('should concat 2 routes that have conflict in slash', () => {
+    const expectedRoute = '/users/comments/tests'
+
+    expect(routeResolve('/users/comments/', '/tests')).toBe(expectedRoute)
+  })
+
+  it('should concat 2 routes that have no slash', () => {
+    const expectedRoute = '/users/comments/tests'
+
+    expect(routeResolve('/users/comments', 'tests')).toBe(expectedRoute)
+  })
+
+  it('should concat 2 routes that have 1 slash', () => {
+    const expectedRoute = '/users/comments/tests'
+
+    expect(routeResolve('/users/comments/', 'tests')).toBe(expectedRoute)
   })
 })
