@@ -2,7 +2,9 @@ import * as fs from 'fs'
 
 import { replaceAll } from '../utils'
 import { CURRENT_LOCATION_ROUTE_SELECTOR } from './CONST'
-import { getVarsInPath } from './utils/server'
+import {
+  getVarsInPath, isHttpVerb, isNumeric, isStateVariable
+} from './utils'
 
 // I N T E R F A C E S
 export interface RouteParams {

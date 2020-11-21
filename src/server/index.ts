@@ -4,7 +4,7 @@ import * as express from 'express'
 import * as http from 'http'
 
 import { replaceAll } from '../utils'
-import { getVarsInPath } from './utils/server'
+import { getVarsInPath } from './utils'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
