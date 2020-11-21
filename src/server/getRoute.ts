@@ -52,7 +52,7 @@ export const getNormalizedRoute = (route: string, vars: string[] = []): string =
   return route
 }
 
-export const getResponseStatusCodeFromFilename = (filename: string): number => {
+export const getResponseStatusCodeInFilename = (filename: string): number => {
   const filenameElmts = filename.split('.')
   let potentialStatusCodeElement = filenameElmts.slice(1, -1) // remove local indicator and file extension
 
@@ -113,7 +113,7 @@ export const getRoute = ({
   const normalizedRoute = getNormalizedRoute(route, routeVars)
   const fileContent = fs.readFileSync(filePath, 'utf8')
   const stateVars = getStateVarsInFilename(filename)
-  const statusCode = getResponseStatusCodeFromFilename(filename)
+  const statusCode = getResponseStatusCodeInFilename(filename)
 
   const getFileContent = (varsToReplace?: {[key: string]: string}): string => {
     if (varsToReplace) {
