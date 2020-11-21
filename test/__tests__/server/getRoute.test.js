@@ -1,4 +1,8 @@
-import { getNormalizedRoute, getStateVarsInFilename } from '../../../src/server/getRoute'
+import {
+  getContentWithReplacedVars,
+  getNormalizedRoute,
+  getStateVarsInFilename
+} from '../../../src/server/getRoute'
 
 describe('Get route helpers', () => {
   describe('getNormalizedRoute', () => {
@@ -38,6 +42,26 @@ describe('Get route helpers', () => {
       const expectedStateVars = ['INV_CRED', 'ERR', 'INV_INPUT']
 
       expect(getStateVarsInFilename(filename)).toStrictEqual(expectedStateVars)
+    })
+  })
+
+  describe('getContentWithReplacedVars', () => {
+    it('should replace all variables in text content', () => {
+      const content = JSON.stringify({
+        post: '[postid]',
+        comment: '[commentid]'
+      })
+      const vars = {
+        postid: 'just-a-post',
+        commentid: 'just-a-comment'
+      }
+      const expectedContentWithReplacedVars = JSON.stringify({
+        post: 'just-a-post',
+        comment: 'just-a-comment'
+      })
+
+      expect(getContentWithReplacedVars(content, vars))
+        .toStrictEqual(expectedContentWithReplacedVars)
     })
   })
 })

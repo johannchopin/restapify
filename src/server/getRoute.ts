@@ -12,6 +12,7 @@ export interface Route {
   route: string
   normalizedRoute: string
   vars: string[]
+  filename: string
   fileContent: string
   stateVars: string[]
   statusCode: number
@@ -46,17 +47,34 @@ export const getStateVarsInFilename = (filename: string): string[] => {
   return stateVars
 }
 
+export const getContentWithReplacedVars = (
+  content: string,
+  vars: {[key: string]: string}
+): string => {
+  Object.keys(vars).forEach((variable) => {
+    // TODO: Check that variable isn't unscaped with '\'
+    content = replaceAll(
+      content,
+      `[${variable}]`,
+      vars[variable]
+    )
+  })
+
+  return content
+}
+
 export const getRoute = ({
   filePath,
   entryFolderPath
 }: RouteParams): Route => {
   // relative to the entry folder
   const relativeFilePath = filePath.replace(entryFolderPath, '')
+  const [filename] = relativeFilePath.split('/').slice(-1)
   const route = getRouteFromFilePath(relativeFilePath)
   const vars = getVarsInPath(route)
   const normalizedRoute = getNormalizedRoute(route, vars)
   const fileContent = fs.readFileSync(filePath, 'utf8')
-  const stateVars = getStateVarsInFilename(route)
+  const stateVars = getStateVarsInFilename(filename)
 
   const getFileContent = (varsToReplace: string[]): string => {
     // TODO:
@@ -68,6 +86,7 @@ export const getRoute = ({
     route,
     vars,
     normalizedRoute,
+    filename,
     fileContent,
     getFileContent,
     stateVars,
