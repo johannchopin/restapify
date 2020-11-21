@@ -67,7 +67,6 @@ export const getContentWithReplacedVars = (
   vars: {[key: string]: string}
 ): string => {
   Object.keys(vars).forEach((variable) => {
-    // TODO: Check that variable isn't unscaped with '\'
     content = replaceAll(
       content,
       `[${variable}]`,
