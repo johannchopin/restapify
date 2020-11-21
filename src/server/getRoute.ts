@@ -3,7 +3,10 @@ import * as fs from 'fs'
 import { replaceAll } from '../utils'
 import { CURRENT_LOCATION_ROUTE_SELECTOR } from './CONST'
 import {
-  getVarsInPath, isHttpVerb, isNumeric, isStateVariable
+  getVarsInPath,
+  isHttpVerb,
+  isNumeric,
+  isStateVariable
 } from './utils'
 
 // I N T E R F A C E S
@@ -110,6 +113,7 @@ export const getRoute = ({
   const normalizedRoute = getNormalizedRoute(route, routeVars)
   const fileContent = fs.readFileSync(filePath, 'utf8')
   const stateVars = getStateVarsInFilename(filename)
+  const statusCode = getResponseStatusCodeFromFilename(filename)
 
   const getFileContent = (varsToReplace?: {[key: string]: string}): string => {
     if (varsToReplace) {
@@ -127,6 +131,6 @@ export const getRoute = ({
     fileContent,
     getFileContent,
     stateVars,
-    statusCode: 200
+    statusCode
   }
 }
