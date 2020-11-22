@@ -123,8 +123,9 @@ class RestApiFy {
 
   private configRoute = (routeData: Route): void => {
     let fileContent = routeData.fileContent
+    let { route, normalizedRoute } = routeData
     const numberParamsToCast = this.getNumbersToCast(fileContent)
-    const apiRoute = routeResolve(this.apiPrefix, routeData.normalizedRoute)
+    normalizedRoute = routeResolve(this.apiPrefix, normalizedRoute)
 
     numberParamsToCast.forEach(numberParamToCast => {
       fileContent = replaceAll(
@@ -149,7 +150,7 @@ class RestApiFy {
       res.send(JSON.parse(routeData.getBody(vars)))
     }
 
-    this.listenRoute(routeData.httpVerb, apiRoute, responseCallback)
+    this.listenRoute(routeData.httpVerb, normalizedRoute, route, responseCallback)
   }
 
   private configFile = (filePath: string): void => {
@@ -168,24 +169,29 @@ class RestApiFy {
 
   private listenRoute = (
     method: HttpVerb,
+    normalizedRoute: string,
     route: string,
     callback: (req: any, res: any) => void
   ): void => {
     switch (method) {
     case 'POST':
-      this.app.post(route, callback)
+      this.app.post(normalizedRoute, callback)
       break
 
     case 'DELETE':
-      this.app.delete(route, callback)
+      this.app.delete(normalizedRoute, callback)
       break
 
     case 'PUT':
-      this.app.put(route, callback)
+      this.app.put(normalizedRoute, callback)
+      break
+
+    case 'PATCH':
+      this.app.patch(normalizedRoute, callback)
       break
 
     case 'GET': default:
-      this.app.get(route, callback)
+      this.app.get(normalizedRoute, callback)
       break
     }
 
