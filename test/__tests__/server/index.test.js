@@ -111,7 +111,7 @@ describe('Restapify', () => {
       method: 'POST'
     })
 
-    let headers = await response.headers
+    let headers = response.headers
 
     Object.keys(postUsers.__header).forEach(headerProperty => {
       expect(headers.get(headerProperty)).toBe(postUsers.__header[headerProperty])
@@ -124,7 +124,7 @@ describe('Restapify', () => {
       method: 'POST'
     })
 
-    let statusCode = await response.status
+    let statusCode = response.status
 
     expect(statusCode).toBe(expectedStatusCode)
   })
@@ -154,7 +154,7 @@ describe('Restapify', () => {
         method: 'DELETE'
       })
 
-      let statusCode = await response.status
+      let statusCode = response.status
       let data = await response.json()
 
       expect(data).toStrictEqual(deleteUserErr.__body)
