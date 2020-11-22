@@ -10,6 +10,7 @@ import getPlants from '../../api/plants.GET.json'
 import getUsers from '../../api/users/*.json'
 import postUsers from '../../api/users/*.POST.201.json'
 import getComments from '../../api/comments/*.GET.json'
+import deleteUserErr from '../../api/users/[userid].DELETE.400.{ERR}.json'
 
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../api'),
@@ -125,5 +126,38 @@ describe('Restapify', () => {
     let statusCode = await response.status
 
     expect(statusCode).toBe(expectedStatusCode)
+  })
+
+  describe('State variables', () => {
+    let RestapifyInstance
+
+    beforeEach(() => {
+      RestapifyInstance = new Restapify({
+        ...restapifyParams,
+        states: [
+          {
+            route: '/users/[userid]',
+            state: 'ERR',
+            method: 'DELETE'
+          }
+        ]
+      })
+    })
+
+    afterEach(() => {
+      RestapifyInstance.close()
+    })
+
+    it('should respond according to state variable', async () => {
+      let response = await fetch(`${apiRoot}/users/123`, {
+        method: 'DELETE'
+      })
+
+      let statusCode = await response.status
+      let data = await response.json()
+
+      expect(data).toStrictEqual(deleteUserErr.__body)
+      expect(statusCode).toBe(400)
+    })
   })
 })
