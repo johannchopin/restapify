@@ -5,6 +5,9 @@
     "strictNullChecks": true,
     "target": "esnext",
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "exclude": [
+      "node_modules"
+    ]
   }
 }
