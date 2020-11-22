@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
+// @ts-ignore
 import * as express from 'express'
 import * as http from 'http'
 
