@@ -8,9 +8,11 @@ import { replaceAll } from '../utils'
 import { routeResolve } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { HttpVerb } from './types'
+import { INTERNAL_API_PREFIX } from './CONST'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
+const WEBSITE_FOLDER_PATH = path.resolve(__dirname, '../website/public')
 
 const getDirs = (p: string): string[] => {
   return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
@@ -76,6 +78,7 @@ class RestApiFy {
   private init = (): void => {
     this.check()
     this.configServer()
+    this.configWebsite()
     this.run()
   }
 
@@ -84,6 +87,10 @@ class RestApiFy {
     this.server = http.createServer(this.app)
     this.handleHttpServerErrors()
     this.configFolder(this.entryFolderPath)
+  }
+
+  private configWebsite = (): void => {
+    this.app.use('/restapify', express.static(WEBSITE_FOLDER_PATH))
   }
 
   private check = (): void => {
