@@ -8,7 +8,7 @@
     "test": "jest",
     "run": "yarn ts-node-dev --files test/run.ts",
     "start": "yarn nodemon --watch test src/index.js",
-    "compile": "yarn ts-node-dev --files src/index.ts",
+    "transpile": "yarn tsc",
     "lint": "yarn eslint . --ext .js,.ts"
   },
   "dependencies": {

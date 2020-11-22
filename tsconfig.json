@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "dist",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "target": "esnext",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "exclude": [
-      "node_modules"
-    ]
-  }
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*"
+  ]
 }
