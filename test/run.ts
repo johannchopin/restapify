@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as path from 'path'
 import Restapify from '../src/server/index'
 
