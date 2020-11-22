@@ -156,7 +156,8 @@ class RestApiFy {
     }
 
     this.listenRoute(routeData.httpVerb, normalizedRoute, responseCallback)
-    console.log(`> ${routeData.httpVerb} ${route} ${stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''}`)
+    const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
+    console.log(`> ${routeData.httpVerb} ${route} ${stateVarsString}`)
   }
 
   private configFile = (filePath: string): void => {
