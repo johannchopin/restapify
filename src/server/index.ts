@@ -183,7 +183,7 @@ class RestApiFy {
   }
 
   private logRouteListening = (routeData: RouteData): void => {
-    const { route, stateVars, httpVerb} = routeData
+    const { route, stateVars, httpVerb } = routeData
     const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
     console.log(`> ${httpVerb} ${route} ${stateVarsString}`)
   }
