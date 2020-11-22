@@ -6,7 +6,7 @@ import * as http from 'http'
 
 import { replaceAll } from '../utils'
 import { routeResolve } from './utils'
-import { getRoute, Route } from './getRoute'
+import { getRoute, Route as RouteData } from './getRoute'
 import { HttpVerb } from './types'
 
 const NUMBER_CAST_INDICATOR = '(number)'
@@ -34,10 +34,22 @@ export interface RestApiFyParams {
   apiPrefix?: string
   states?: RouteState[]
 }
+type Routes = {
+  [method in HttpVerb]: {
+    [url: string]: RouteData
+  }
+}
 
 class RestApiFy {
   protected app: express.Express
   protected server: any
+  public routes: Routes = {
+    GET: {},
+    POST: {},
+    PUT: {},
+    PATCH: {},
+    DELETE: {}
+  }
   public entryFolderPath: string
   public port: number
   public entryFolderFullPath: string
@@ -126,9 +138,14 @@ class RestApiFy {
     return match !== null ? match : []
   }
 
-  private configRoute = (routeData: Route): void => {
+  private configRoute = (routeData: RouteData): void => {
     let fileContent = routeData.fileContent
-    let { route, normalizedRoute, stateVars } = routeData
+    let {
+      normalizedRoute,
+      routeVars,
+      statusCode,
+      header
+    } = routeData
     const numberParamsToCast = this.getNumbersToCast(fileContent)
     normalizedRoute = routeResolve(this.apiPrefix, normalizedRoute)
 
@@ -141,23 +158,34 @@ class RestApiFy {
     })
 
     const responseCallback = (req: any, res: any): void => {
-      res.status(routeData.statusCode)
+      res.status(statusCode)
 
-      if (routeData.header) {
-        res.header(routeData.header)
+      if (header) {
+        res.header(header)
       }
 
       let vars: {[key: string]: string} = {}
-      routeData.routeVars.forEach(variable => {
+      routeVars.forEach(variable => {
         vars[variable] = req.params[variable]
       })
 
       res.send(JSON.parse(routeData.getBody(vars)))
     }
 
+    this.addRoute(routeData)
+    this.logRouteListening(routeData)
     this.listenRoute(routeData.httpVerb, normalizedRoute, responseCallback)
+  }
+
+  private addRoute = (routeData: RouteData): void => {
+    const { route, httpVerb } = routeData
+    this.routes[httpVerb][route] = routeData
+  }
+
+  private logRouteListening = (routeData: RouteData): void => {
+    const { route, stateVars, httpVerb} = routeData
     const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
-    console.log(`> ${routeData.httpVerb} ${route} ${stateVarsString}`)
+    console.log(`> ${httpVerb} ${route} ${stateVarsString}`)
   }
 
   private configFile = (filePath: string): void => {
