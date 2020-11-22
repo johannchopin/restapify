@@ -22,8 +22,11 @@ const getFiles = (p: string): string[] => {
 // I N T E R F A C E S
 export interface RouteState {
   route: string
-  state: string
+  state?: string
   method?: HttpVerb
+}
+interface PrivateRouteState extends Omit<RouteState, 'state'> {
+  state: string
 }
 export interface RestApiFyParams {
   rootDir: string
@@ -39,7 +42,7 @@ class RestApiFy {
   public port: number
   public entryFolderFullPath: string
   public apiPrefix: string
-  public states: RouteState[] = []
+  public states: PrivateRouteState[] = []
 
   constructor({
     rootDir,
@@ -51,7 +54,9 @@ class RestApiFy {
     this.entryFolderFullPath = path.resolve(__dirname, rootDir)
     this.port = port
     this.apiPrefix = apiPrefix
-    this.states = states
+    this.states = states.filter(state => {
+      return state.state !== undefined
+    }) as PrivateRouteState[]
 
     this.init()
   }
@@ -206,6 +211,31 @@ class RestApiFy {
   public run = (): void => {
     console.log(`Server started on port ${this.port}`)
     this.server.listen(this.port)
+  }
+
+  private removeState = (route: string, method?: HttpVerb): void => {
+    this.states = this.states.filter(state => {
+      return state.route !== route && state.method !== method
+    })
+  }
+
+  public setState = (newState: RouteState): void => {
+    if (newState.state) {
+      const actualStateIndex = this.states.findIndex(state => {
+        return state.route === newState.route && state.method === newState.method
+      })
+      const stateExist = actualStateIndex !== -1
+
+      if (stateExist) {
+        this.states[actualStateIndex] = newState as PrivateRouteState
+      } else {
+        this.states.push(newState as PrivateRouteState)
+      }
+    } else {
+      this.removeState(newState.route, newState.method)
+    }
+
+    this.restartServer()
   }
 
   public close = (): void => {
