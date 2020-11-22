@@ -36,22 +36,16 @@ export interface RestApiFyParams {
   apiPrefix?: string
   states?: RouteState[]
 }
-type Routes = {
-  [method in HttpVerb]: {
-    [url: string]: RouteData
+export type Routes = {
+  [url: string]: {
+    [method in HttpVerb]: RouteData
   }
 }
 
 class RestApiFy {
   protected app: express.Express
   protected server: any
-  public routes: Routes = {
-    GET: {},
-    POST: {},
-    PUT: {},
-    PATCH: {},
-    DELETE: {}
-  }
+  public routes: Routes = {}
   public entryFolderPath: string
   public port: number
   public entryFolderFullPath: string
@@ -99,6 +93,9 @@ class RestApiFy {
       res.status(204)
       res.send()
       this.close()
+    })
+    this.app.get(`${INTERNAL_API_PREFIX}/routes`, (req: any, res: any): void => {
+      res.json(this.routes)
     })
   }
 
@@ -195,7 +192,12 @@ class RestApiFy {
 
   private addRoute = (routeData: RouteData): void => {
     const { route, httpVerb } = routeData
-    this.routes[httpVerb][route] = routeData
+    if (this.routes[route] === undefined) {
+      // @ts-ignore
+      this.routes[route] = {}
+    }
+
+    this.routes[route][httpVerb] = routeData
   }
 
   private logRouteListening = (routeData: RouteData): void => {
