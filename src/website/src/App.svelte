@@ -15,10 +15,15 @@
 		})
 	})
 
+	const close = (): void => {
+		api.get('/close')
+	}
+
 </script>
 
 <header>
 	<h1>Restapify</h1>
+	<button on:click={close}>Close server</button>
 </header>
 
 <main>
