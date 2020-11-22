@@ -9,10 +9,11 @@ import getAnimalsByName from '../../api/animals/[name].json'
 import getAnimalsByNameFriends from '../../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../../api/plants.GET.json'
 import getUsers from '../../api/users/*.json'
+import getUserErr from '../../api/users/[userid].404.{ERR}.json'
 import postUsers from '../../api/users/*.POST.201.json'
 import getComments from '../../api/comments/*.GET.json'
 import deleteUser from '../../api/users/[userid].DELETE.json'
-import deleteUserErr from '../../api/users/[userid].DELETE.400.{ERR}.json'
+import deleteUserErr from '../../api/users/[userid].DELETE.404.{ERR}.json'
 
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../api'),
@@ -97,7 +98,7 @@ describe('Restapify', () => {
     })
   })
 
-  describe('Extended mock', () => {
+  describe('Extended structure', () => {
     it('should respond with __body', async () => {
       let response = await fetch(`${apiRoot}/users/`, {
         method: 'POST'
@@ -129,92 +130,109 @@ describe('Restapify', () => {
 
     expect(statusCode).toBe(expectedStatusCode)
   })
+})
 
-  describe('State variables', () => {
-    let RestapifyInstance
-    const states = [
-      {
+describe('Restapify with state variables', () => {
+  let RestapifyInstance
+  const states = [
+    {
+      route: '/users/[userid]',
+      method: 'DELETE',
+      state: 'ERR'
+    },
+    {
+      route: '/users/[userid]',
+      state: 'ERR'
+    }
+  ]
+
+  beforeEach(() => {
+    RestapifyInstance = new Restapify({
+      ...restapifyParams,
+      states
+    })
+  })
+
+  afterEach(() => {
+    RestapifyInstance.close()
+  })
+
+  it('should respond according to state variable', async () => {
+    let response = await fetch(`${apiRoot}/users/123`, {
+      method: 'DELETE'
+    })
+
+    let statusCode = response.status
+    let data = await response.json()
+
+    expect(data).toStrictEqual(deleteUserErr.__body)
+    expect(statusCode).toBe(404)
+  })
+
+  it('should respond according to state variable with default method', async () => {
+    let response = await fetch(`${apiRoot}/users/123`)
+
+    let statusCode = response.status
+    let data = await response.json()
+
+    expect(data).toStrictEqual(getUserErr)
+    expect(statusCode).toBe(404)
+  })
+
+  it('should update state variable and respond with new data', async () => {
+    RestapifyInstance.setState({
+      route: '/users/[userid]',
+      method: 'DELETE'
+    })
+
+    let response = await fetch(`${apiRoot}/users/123`, {
+      method: 'DELETE'
+    })
+
+    let statusCode = response.status
+    let data = await response.json()
+
+    expect(data).toStrictEqual(deleteUser.__body)
+    expect(statusCode).toBe(200)
+  })
+
+  describe('setState', () => {
+    it('should update state variable', async () => {
+      const updatedState = {
         route: '/users/[userid]',
-        state: 'ERR',
+        state: 'TEST',
         method: 'DELETE'
       }
-    ]
+      const expectedStates = [updatedState, {
+        route: '/users/[userid]',
+        state: 'ERR'
+      }]
+      RestapifyInstance.setState(updatedState)
 
-    beforeEach(() => {
-      RestapifyInstance = new Restapify({
-        ...restapifyParams,
-        states
-      })
+      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
     })
 
-    afterEach(() => {
-      RestapifyInstance.close()
+    it('should add state variable', async () => {
+      const newState = {
+        route: '/users/[userid]/comments',
+        state: 'ERR',
+        method: 'POST'
+      }
+      const expectedStates = [...states, newState]
+      RestapifyInstance.setState(newState)
+
+      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
     })
 
-    it('should respond according to state variable', async () => {
-      let response = await fetch(`${apiRoot}/users/123`, {
+    it('should remove state variable', async () => {
+      const updatedState = {
+        route: '/users/[userid]',
         method: 'DELETE'
-      })
+      }
+      const expectedStates = []
+      RestapifyInstance.setState(updatedState)
 
-      let statusCode = response.status
-      let data = await response.json()
-
-      expect(data).toStrictEqual(deleteUserErr.__body)
-      expect(statusCode).toBe(400)
-    })
-
-    describe('Name of the group', () => {
-      it('should update state variable', async () => {
-        const updatedState = {
-          route: '/users/[userid]',
-          state: 'TEST',
-          method: 'DELETE'
-        }
-        const expectedStates = [updatedState]
-        RestapifyInstance.setState(updatedState)
-
-        expect(RestapifyInstance.states).toStrictEqual(expectedStates)
-      })
-
-      it('should add state variable', async () => {
-        const newState = {
-          route: '/users/[userid]/comments',
-          state: 'ERR',
-          method: 'POST'
-        }
-        const expectedStates = [...states, newState]
-        RestapifyInstance.setState(newState)
-
-        expect(RestapifyInstance.states).toStrictEqual(expectedStates)
-      })
-
-      it('should remove state variable', async () => {
-        const updatedState = {
-          route: '/users/[userid]',
-          method: 'DELETE'
-        }
-        const expectedStates = []
-        RestapifyInstance.setState(updatedState)
-
-        expect(RestapifyInstance.states).toStrictEqual(expectedStates)
-      })
-
-      it('should update state variable and respond with new data', async () => {
-        RestapifyInstance.setState({
-          route: '/users/[userid]',
-          method: 'DELETE'
-        })
-
-        let response = await fetch(`${apiRoot}/users/123`, {
-          method: 'DELETE'
-        })
-
-        let statusCode = response.status
-        let data = await response.json()
-
-        expect(data).toStrictEqual(deleteUser.__body)
-        expect(statusCode).toBe(200)
-      })
+      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
     })
   })
 })

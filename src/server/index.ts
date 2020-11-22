@@ -128,7 +128,7 @@ class RestApiFy {
 
   private configRoute = (routeData: Route): void => {
     let fileContent = routeData.fileContent
-    let { route, normalizedRoute } = routeData
+    let { route, normalizedRoute, stateVars } = routeData
     const numberParamsToCast = this.getNumbersToCast(fileContent)
     normalizedRoute = routeResolve(this.apiPrefix, normalizedRoute)
 
@@ -155,7 +155,8 @@ class RestApiFy {
       res.send(JSON.parse(routeData.getBody(vars)))
     }
 
-    this.listenRoute(routeData.httpVerb, normalizedRoute, route, responseCallback)
+    this.listenRoute(routeData.httpVerb, normalizedRoute, responseCallback)
+    console.log(`> ${routeData.httpVerb} ${route} ${stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''}`)
   }
 
   private configFile = (filePath: string): void => {
@@ -163,10 +164,11 @@ class RestApiFy {
 
     const matchingState = this.states.find(state => {
       return state.route === routeData.route
-        && state.method === routeData.httpVerb
+        && (state.method === routeData.httpVerb
+          || (state.method === undefined && routeData.httpVerb === 'GET'))
     })
 
-    if (matchingState === undefined
+    if ((matchingState === undefined && routeData.stateVars.length <= 0)
       || (matchingState && routeData.stateVars.includes(matchingState.state))) {
       this.configRoute(routeData)
     }
@@ -174,33 +176,30 @@ class RestApiFy {
 
   private listenRoute = (
     method: HttpVerb,
-    normalizedRoute: string,
     route: string,
     callback: (req: any, res: any) => void
   ): void => {
     switch (method) {
     case 'POST':
-      this.app.post(normalizedRoute, callback)
+      this.app.post(route, callback)
       break
 
     case 'DELETE':
-      this.app.delete(normalizedRoute, callback)
+      this.app.delete(route, callback)
       break
 
     case 'PUT':
-      this.app.put(normalizedRoute, callback)
+      this.app.put(route, callback)
       break
 
     case 'PATCH':
-      this.app.patch(normalizedRoute, callback)
+      this.app.patch(route, callback)
       break
 
     case 'GET': default:
-      this.app.get(normalizedRoute, callback)
+      this.app.get(route, callback)
       break
     }
-
-    console.log(`> ${method} ${route}`)
   }
 
   private logError = (error: string): void => {
