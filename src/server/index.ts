@@ -79,6 +79,7 @@ class RestApiFy {
     this.check()
     this.configServer()
     this.configWebsite()
+    this.configInternalApi()
     this.run()
   }
 
@@ -91,6 +92,14 @@ class RestApiFy {
 
   private configWebsite = (): void => {
     this.app.use('/restapify', express.static(WEBSITE_FOLDER_PATH))
+  }
+
+  private configInternalApi = (): void => {
+    this.app.get(`${INTERNAL_API_PREFIX}/close`, (req: any, res: any): void => {
+      res.status(204)
+      res.send()
+      this.close()
+    })
   }
 
   private check = (): void => {
