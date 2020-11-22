@@ -6,7 +6,7 @@
   "private": false,
   "scripts": {
     "test": "jest",
-    "run": "yarn ts-node-dev --files test/run.ts",
+    "test:manual": "yarn ts-node-dev --files test/run.ts",
     "start": "yarn nodemon --watch test src/index.js",
     "transpile": "yarn tsc",
     "lint": "yarn eslint . --ext .js,.ts"

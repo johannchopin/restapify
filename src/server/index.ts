@@ -5,8 +5,9 @@ import * as express from 'express'
 import * as http from 'http'
 
 import { replaceAll } from '../utils'
-import { getVarsInPath, routeResolve } from './utils'
-import { getRoute } from './getRoute'
+import { routeResolve } from './utils'
+import { getRoute, Route } from './getRoute'
+import { HttpVerb } from './types'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
@@ -19,10 +20,19 @@ const getFiles = (p: string): string[] => {
 }
 
 // I N T E R F A C E S
+export interface RouteState {
+  route: string
+  state?: string
+  method?: HttpVerb
+}
+interface PrivateRouteState extends Omit<RouteState, 'state'> {
+  state: string
+}
 export interface RestApiFyParams {
   rootDir: string
   port?: number
   apiPrefix?: string
+  states?: RouteState[]
 }
 
 class RestApiFy {
@@ -32,16 +42,21 @@ class RestApiFy {
   public port: number
   public entryFolderFullPath: string
   public apiPrefix: string
+  public states: PrivateRouteState[] = []
 
   constructor({
     rootDir,
     port = DEFAULT_PORT,
-    apiPrefix = '/api'
+    apiPrefix = '/api',
+    states = []
   }: RestApiFyParams) {
     this.entryFolderPath = rootDir
     this.entryFolderFullPath = path.resolve(__dirname, rootDir)
     this.port = port
     this.apiPrefix = apiPrefix
+    this.states = states.filter(state => {
+      return state.state !== undefined
+    }) as PrivateRouteState[]
 
     this.init()
   }
@@ -111,38 +126,11 @@ class RestApiFy {
     return match !== null ? match : []
   }
 
-  private getNormalizedApiRoute = (route: string, params: string[]): string => {
-    params.forEach(param => {
-      route = replaceAll(route, `[${param}]`, `:${param}`)
-    })
-
-    return route
-  }
-
-  private getRoute = (filePath: string, filename: string): string => {
-    const route = `${this.apiPrefix}${filePath.replace(this.entryFolderFullPath, '')}`
-    const params = getVarsInPath(route)
-    const apiRoute = this.getNormalizedApiRoute(route, params).replace(filename, '')
-    const fileVariable = filename.split('.')[0]
-    const varInFilename = getVarsInPath(fileVariable)[0]
-
-    if (varInFilename) {
-      return apiRoute.split('/').slice(0, -1).join('/') + '/:' + varInFilename
-    }
-
-    if (fileVariable === '*') {
-      return apiRoute.slice(0, -1)
-    }
-
-    return apiRoute.split('/').slice(0, -1).join('/') + '/' + fileVariable
-  }
-
-  private configFile = (filePath: string): void => {
-    const routeData = getRoute(filePath, this.entryFolderFullPath)
-
+  private configRoute = (routeData: Route): void => {
     let fileContent = routeData.fileContent
+    let { route, normalizedRoute, stateVars } = routeData
     const numberParamsToCast = this.getNumbersToCast(fileContent)
-    const apiRoute = routeResolve(this.apiPrefix, routeData.normalizedRoute)
+    normalizedRoute = routeResolve(this.apiPrefix, normalizedRoute)
 
     numberParamsToCast.forEach(numberParamToCast => {
       fileContent = replaceAll(
@@ -167,25 +155,50 @@ class RestApiFy {
       res.send(JSON.parse(routeData.getBody(vars)))
     }
 
-    switch (routeData.httpVerb) {
+    this.listenRoute(routeData.httpVerb, normalizedRoute, responseCallback)
+    const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
+    console.log(`> ${routeData.httpVerb} ${route} ${stateVarsString}`)
+  }
+
+  private configFile = (filePath: string): void => {
+    const routeData = getRoute(filePath, this.entryFolderFullPath)
+
+    const matchingState = this.states.find(state => {
+      return state.route === routeData.route
+        && (state.method === routeData.httpVerb
+          || (state.method === undefined && routeData.httpVerb === 'GET'))
+    })
+
+    if ((matchingState === undefined && routeData.stateVars.length <= 0)
+      || (matchingState && routeData.stateVars.includes(matchingState.state))) {
+      this.configRoute(routeData)
+    }
+  }
+
+  private listenRoute = (
+    method: HttpVerb,
+    route: string,
+    callback: (req: any, res: any) => void
+  ): void => {
+    switch (method) {
     case 'POST':
-      this.app.post(apiRoute, responseCallback)
-      console.log(`> POST ${apiRoute}`)
+      this.app.post(route, callback)
       break
 
     case 'DELETE':
-      this.app.delete(apiRoute, responseCallback)
-      console.log(`> DELETE ${apiRoute}`)
+      this.app.delete(route, callback)
       break
 
     case 'PUT':
-      this.app.put(apiRoute, responseCallback)
-      console.log(`> PUT ${apiRoute}`)
+      this.app.put(route, callback)
+      break
+
+    case 'PATCH':
+      this.app.patch(route, callback)
       break
 
     case 'GET': default:
-      this.app.get(apiRoute, responseCallback)
-      console.log(`> GET ${apiRoute}`)
+      this.app.get(route, callback)
       break
     }
   }
@@ -198,6 +211,31 @@ class RestApiFy {
   public run = (): void => {
     console.log(`Server started on port ${this.port}`)
     this.server.listen(this.port)
+  }
+
+  private removeState = (route: string, method?: HttpVerb): void => {
+    this.states = this.states.filter(state => {
+      return state.route !== route && state.method !== method
+    })
+  }
+
+  public setState = (newState: RouteState): void => {
+    if (newState.state) {
+      const actualStateIndex = this.states.findIndex(state => {
+        return state.route === newState.route && state.method === newState.method
+      })
+      const stateExist = actualStateIndex !== -1
+
+      if (stateExist) {
+        this.states[actualStateIndex] = newState as PrivateRouteState
+      } else {
+        this.states.push(newState as PrivateRouteState)
+      }
+    } else {
+      this.removeState(newState.route, newState.method)
+    }
+
+    this.restartServer()
   }
 
   public close = (): void => {
