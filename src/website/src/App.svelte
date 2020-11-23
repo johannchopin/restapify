@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
+	import type { Routes } from '../../types'
 
 	import api from './axiosStore'
 
-	let routes: any = []
+	let routes: Routes | null = null
 
 	onMount(async () => {
-		api.get('/routes')
+		api.get<Routes>('/routes')
 		.then(function (response) {
 			routes = response.data
 		})
@@ -27,7 +28,7 @@
 </header>
 
 <main>
-	{JSON.stringify(routes)}
+	{routes ? JSON.stringify(routes) : 'Loading...'}
 </main>
 
 <style>
