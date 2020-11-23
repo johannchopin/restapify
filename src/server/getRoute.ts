@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 
-import { HttpVerb } from './types'
+import { HttpVerb } from '../types'
 
 import { replaceAll } from '../utils'
 import { CURRENT_LOCATION_ROUTE_SELECTOR } from './CONST'

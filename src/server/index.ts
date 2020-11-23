@@ -4,10 +4,11 @@ import * as path from 'path'
 import * as express from 'express'
 import * as http from 'http'
 
+import { HttpVerb } from '../types'
+
 import { replaceAll } from '../utils'
 import { routeResolve } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
-import { HttpVerb } from './types'
 import { getInitialisedInternalApi } from '../internalApi'
 
 const NUMBER_CAST_INDICATOR = '(number)'
