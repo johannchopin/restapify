@@ -183,11 +183,11 @@ class RestApiFy {
 
     this.addRoute(routeData)
     this.logRouteListening(routeData)
-    this.listenRoute(routeData.httpVerb, normalizedRoute, responseCallback)
+    this.listenRoute(routeData.method, normalizedRoute, responseCallback)
   }
 
   private addRoute = (routeData: RouteData): void => {
-    const { route, httpVerb } = routeData
+    const { route, method: httpVerb } = routeData
     if (this.routes[route] === undefined) {
       // @ts-ignore
       this.routes[route] = {}
@@ -197,7 +197,7 @@ class RestApiFy {
   }
 
   private logRouteListening = (routeData: RouteData): void => {
-    const { route, stateVars, httpVerb } = routeData
+    const { route, stateVars, method: httpVerb } = routeData
     const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
     console.log(`> ${httpVerb} ${route} ${stateVarsString}`)
   }
@@ -207,8 +207,8 @@ class RestApiFy {
 
     const matchingState = this.states.find(state => {
       return state.route === routeData.route
-        && (state.method === routeData.httpVerb
-          || (state.method === undefined && routeData.httpVerb === 'GET'))
+        && (state.method === routeData.method
+          || (state.method === undefined && routeData.method === 'GET'))
     })
 
     if ((matchingState === undefined && routeData.stateVars.length <= 0)

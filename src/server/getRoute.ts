@@ -18,7 +18,7 @@ export interface Route {
   routeVars: string[]
   filename: string
   fileContent: string
-  httpVerb: HttpVerb
+  method: HttpVerb
   statusCode: number
   stateVars: string[]
   isExtended: boolean
@@ -135,7 +135,7 @@ export const getRoute = (
   const jsonContent = JSON.parse(fileContent)
   const stateVars = getStateVarsInFilename(filename)
   const statusCode = getResponseStatusCodeInFilename(filename)
-  const httpVerb = getHttpVerbInFilename(filename)
+  const method = getHttpVerbInFilename(filename)
 
   const isExtended = isStructureExtended(jsonContent)
 
@@ -159,7 +159,7 @@ export const getRoute = (
     fileContent,
     stateVars,
     statusCode,
-    httpVerb,
+    method,
     body,
     header,
     getBody
