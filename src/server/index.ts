@@ -8,7 +8,7 @@ import { replaceAll } from '../utils'
 import { routeResolve } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { HttpVerb } from './types'
-import { INTERNAL_API_PREFIX } from './CONST'
+import { getInitialisedInternalApi } from '../internalApi'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
@@ -89,13 +89,9 @@ class RestApiFy {
   }
 
   private configInternalApi = (): void => {
-    this.app.get(`${INTERNAL_API_PREFIX}/close`, (req: any, res: any): void => {
-      res.status(204)
-      res.send()
-      this.close()
-    })
-    this.app.get(`${INTERNAL_API_PREFIX}/routes`, (req: any, res: any): void => {
-      res.json(this.routes)
+    this.app = getInitialisedInternalApi(this.app, {
+      routes: this.routes,
+      onClose: this.close
     })
   }
 
