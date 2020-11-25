@@ -13,7 +13,7 @@ import { getInitialisedInternalApi } from '../internalApi'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
-const WEBSITE_FOLDER_PATH = path.resolve(__dirname, '../website/public')
+const DASHBOARD_FOLDER_PATH = path.resolve(__dirname, '../dashboard/public')
 
 const getDirs = (p: string): string[] => {
   return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
@@ -73,7 +73,7 @@ class RestApiFy {
   private init = (): void => {
     this.check()
     this.configServer()
-    this.configWebsite()
+    this.configDashboard()
     this.configInternalApi()
     this.run()
   }
@@ -85,8 +85,8 @@ class RestApiFy {
     this.configFolder(this.entryFolderPath)
   }
 
-  private configWebsite = (): void => {
-    this.app.use('/restapify', express.static(WEBSITE_FOLDER_PATH))
+  private configDashboard = (): void => {
+    this.app.use('/restapify', express.static(DASHBOARD_FOLDER_PATH))
   }
 
   private configInternalApi = (): void => {
