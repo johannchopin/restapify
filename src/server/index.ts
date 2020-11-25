@@ -4,13 +4,16 @@ import * as path from 'path'
 import * as express from 'express'
 import * as http from 'http'
 
+import { HttpVerb } from '../types'
+
 import { replaceAll } from '../utils'
 import { routeResolve } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
-import { HttpVerb } from './types'
+import { getInitialisedInternalApi } from '../internalApi'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
+const DASHBOARD_FOLDER_PATH = path.resolve(__dirname, '../dashboard/public')
 
 const getDirs = (p: string): string[] => {
   return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
@@ -34,22 +37,16 @@ export interface RestApiFyParams {
   apiPrefix?: string
   states?: RouteState[]
 }
-type Routes = {
-  [method in HttpVerb]: {
-    [url: string]: RouteData
+export type Routes = {
+  [url: string]: {
+    [method in HttpVerb]: RouteData
   }
 }
 
 class RestApiFy {
   protected app: express.Express
   protected server: any
-  public routes: Routes = {
-    GET: {},
-    POST: {},
-    PUT: {},
-    PATCH: {},
-    DELETE: {}
-  }
+  public routes: Routes = {}
   public entryFolderPath: string
   public port: number
   public entryFolderFullPath: string
@@ -76,6 +73,8 @@ class RestApiFy {
   private init = (): void => {
     this.check()
     this.configServer()
+    this.configDashboard()
+    this.configInternalApi()
     this.run()
   }
 
@@ -84,6 +83,17 @@ class RestApiFy {
     this.server = http.createServer(this.app)
     this.handleHttpServerErrors()
     this.configFolder(this.entryFolderPath)
+  }
+
+  private configDashboard = (): void => {
+    this.app.use('/restapify', express.static(DASHBOARD_FOLDER_PATH))
+  }
+
+  private configInternalApi = (): void => {
+    this.app = getInitialisedInternalApi(this.app, {
+      routes: this.routes,
+      onClose: this.close
+    })
   }
 
   private check = (): void => {
@@ -174,16 +184,21 @@ class RestApiFy {
 
     this.addRoute(routeData)
     this.logRouteListening(routeData)
-    this.listenRoute(routeData.httpVerb, normalizedRoute, responseCallback)
+    this.listenRoute(routeData.method, normalizedRoute, responseCallback)
   }
 
   private addRoute = (routeData: RouteData): void => {
-    const { route, httpVerb } = routeData
-    this.routes[httpVerb][route] = routeData
+    const { route, method: httpVerb } = routeData
+    if (this.routes[route] === undefined) {
+      // @ts-ignore
+      this.routes[route] = {}
+    }
+
+    this.routes[route][httpVerb] = routeData
   }
 
   private logRouteListening = (routeData: RouteData): void => {
-    const { route, stateVars, httpVerb } = routeData
+    const { route, stateVars, method: httpVerb } = routeData
     const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
     console.log(`> ${httpVerb} ${route} ${stateVarsString}`)
   }
@@ -193,8 +208,8 @@ class RestApiFy {
 
     const matchingState = this.states.find(state => {
       return state.route === routeData.route
-        && (state.method === routeData.httpVerb
-          || (state.method === undefined && routeData.httpVerb === 'GET'))
+        && (state.method === routeData.method
+          || (state.method === undefined && routeData.method === 'GET'))
     })
 
     if ((matchingState === undefined && routeData.stateVars.length <= 0)

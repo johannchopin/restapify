@@ -5,9 +5,14 @@
     "strictNullChecks": true,
     "target": "esnext",
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "declaration": true
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "node_module",
+    "src/dashboard"
   ]
 }
