@@ -1,5 +1,5 @@
 {
-  "name": "json-route-api",
+  "name": "restapify",
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "MIT",
@@ -10,6 +10,13 @@
     "start": "yarn nodemon --watch test src/index.js",
     "transpile": "yarn tsc",
     "lint": "yarn eslint . --ext .js,.ts"
+  },
+  "bin": {
+    "@johannchopin/restapify": "bin/restapify",
+    "restapify": "bin/restapify"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "arg": "^5.0.0",
