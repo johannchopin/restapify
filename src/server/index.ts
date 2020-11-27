@@ -34,7 +34,7 @@ interface PrivateRouteState extends Omit<RouteState, 'state'> {
 export interface RestApiFyParams {
   rootDir: string
   port?: number
-  apiPrefix?: string
+  baseURL?: string
   states?: RouteState[]
 }
 export type Routes = {
@@ -43,26 +43,24 @@ export type Routes = {
   }
 }
 
-class RestApiFy {
+class Restapify {
   protected app: express.Express
   protected server: any
   public routes: Routes = {}
   public entryFolderPath: string
   public port: number
-  public entryFolderFullPath: string
   public apiPrefix: string
   public states: PrivateRouteState[] = []
 
   constructor({
     rootDir,
     port = DEFAULT_PORT,
-    apiPrefix = '/api',
+    baseURL = '/api',
     states = []
   }: RestApiFyParams) {
     this.entryFolderPath = rootDir
-    this.entryFolderFullPath = path.resolve(__dirname, rootDir)
     this.port = port
-    this.apiPrefix = apiPrefix
+    this.apiPrefix = baseURL
     this.states = states.filter(state => {
       return state.state !== undefined
     }) as PrivateRouteState[]
@@ -86,6 +84,7 @@ class RestApiFy {
   }
 
   private configDashboard = (): void => {
+    console.log('> Serve Restapify dashboard')
     this.app.use('/restapify', express.static(DASHBOARD_FOLDER_PATH))
   }
 
@@ -122,7 +121,7 @@ class RestApiFy {
   }
 
   private checkEntryFolder = (): void => {
-    const folderExists = fs.existsSync(this.entryFolderFullPath)
+    const folderExists = fs.existsSync(this.entryFolderPath)
     if (!folderExists) {
       this.logError(`Folder ${this.entryFolderPath}`)
     }
@@ -204,7 +203,7 @@ class RestApiFy {
   }
 
   private configFile = (filePath: string): void => {
-    const routeData = getRoute(filePath, this.entryFolderFullPath)
+    const routeData = getRoute(filePath, this.entryFolderPath)
 
     const matchingState = this.states.find(state => {
       return state.route === routeData.route
@@ -291,4 +290,4 @@ class RestApiFy {
   }
 }
 
-export default RestApiFy
+export default Restapify

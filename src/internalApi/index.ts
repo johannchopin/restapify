@@ -1,6 +1,6 @@
 import * as express from 'express'
 
-import { INTERNAL_API_PREFIX } from '../server/CONST'
+import { INTERNAL_API_BASEURL } from '../server/CONST'
 import { Routes } from '../server'
 
 // I N T E R F A C E S
@@ -10,7 +10,7 @@ export interface InternalApiParams {
 }
 
 const getRoute = (route: string): string => {
-  return INTERNAL_API_PREFIX + route
+  return INTERNAL_API_BASEURL + route
 }
 
 export const getInitialisedInternalApi = (
