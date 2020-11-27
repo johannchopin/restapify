@@ -1,4 +1,7 @@
 import * as arg from 'arg'
+import * as path from 'path'
+
+import Restapify from '../server'
 
 export const cli = (cliArgs: string[]): void => {
   const args = arg({
@@ -9,9 +12,22 @@ export const cli = (cliArgs: string[]): void => {
     '--port': Number,
     '-p': '--port',
 
-    '--root': String,
-    '-r': '--root'
+    '--baseURL': String,
+    '--b': '--baseURL',
+
+    '--dir': String,
+    '-d': '--dir'
   }, { argv: cliArgs })
 
-  console.log(args)
+  const {
+    '--dir': rootDir = '.',
+    '--port': port,
+    '--baseURL': baseURL
+  } = args
+
+  const RestapifyInstance = new Restapify({
+    rootDir: path.resolve(rootDir),
+    port,
+    baseURL
+  })
 }
