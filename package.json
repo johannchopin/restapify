@@ -1,5 +1,5 @@
 {
-  "name": "json-route-api",
+  "name": "restapify",
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "MIT",
@@ -11,8 +11,17 @@
     "transpile": "yarn tsc",
     "lint": "yarn eslint . --ext .js,.ts"
   },
+  "bin": {
+    "@johannchopin/restapify": "bin/restapify",
+    "restapify": "bin/restapify"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
+    "arg": "^5.0.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "http": "^0.0.1-security",
     "nodemon": "^2.0.5"
