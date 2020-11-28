@@ -41,4 +41,11 @@ describe('Internal API', () => {
     let data = await response.json()
     expect(data).toStrictEqual(expectedResponse)
   })
+
+  it('should fetch /states', async () => {
+    const expectedResponse = RestapifyInstance.states
+    let response = await fetch(`${apiRoot}/states`)
+    let data = await response.json()
+    expect(data).toStrictEqual(expectedResponse)
+  })
 })

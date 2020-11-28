@@ -29,7 +29,7 @@ export interface RouteState {
   state?: string
   method?: HttpVerb
 }
-interface PrivateRouteState extends Omit<RouteState, 'state'> {
+export interface PrivateRouteState extends Omit<RouteState, 'state'> {
   state: string
 }
 export interface RestapifyParams {
@@ -99,8 +99,10 @@ class Restapify {
   }
 
   private configInternalApi = (): void => {
+    const { routes, states } = this
     this.app = getInitialisedInternalApi(this.app, {
-      routes: this.routes,
+      routes,
+      states,
       onClose: this.close
     })
   }

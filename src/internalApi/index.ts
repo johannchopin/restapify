@@ -1,10 +1,11 @@
 import * as express from 'express'
 
 import { INTERNAL_API_BASEURL } from '../server/CONST'
-import { Routes } from '../server'
+import { Routes, PrivateRouteState } from '../server'
 
 // I N T E R F A C E S
 export interface InternalApiParams {
+  states: PrivateRouteState[]
   routes: Routes
   onClose: () => void
 }
@@ -17,7 +18,11 @@ export const getInitialisedInternalApi = (
   app: express.Express,
   params: InternalApiParams
 ): any => {
-  const { routes, onClose } = params
+  const {
+    states,
+    routes,
+    onClose
+  } = params
 
   app.get(getRoute('/close'), (req, res): void => {
     res.status(204)
@@ -27,6 +32,10 @@ export const getInitialisedInternalApi = (
 
   app.get(getRoute('/routes'), (req, res): void => {
     res.json(routes)
+  })
+
+  app.get(getRoute('/states'), (req, res): void => {
+    res.json(states)
   })
 
   return app
