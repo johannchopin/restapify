@@ -18,11 +18,11 @@ import deleteUserErr from '../../api/users/[userid].DELETE.404.{ERR}.json'
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../api'),
   port: 6767,
-  apiPrefix: '/api'
+  baseURL: '/api'
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
-const apiRoot = `${baseUrl}${restapifyParams.apiPrefix}`
+const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
 
 describe('Restapify', () => {
   let RestapifyInstance
