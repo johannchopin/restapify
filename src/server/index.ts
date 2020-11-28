@@ -32,7 +32,7 @@ export interface RouteState {
 interface PrivateRouteState extends Omit<RouteState, 'state'> {
   state: string
 }
-export interface RestApiFyParams {
+export interface RestapifyParams {
   rootDir: string
   port?: number
   baseURL?: string
@@ -58,7 +58,7 @@ class Restapify {
     port = DEFAULT_PORT,
     baseURL = '/api',
     states = []
-  }: RestApiFyParams) {
+  }: RestapifyParams) {
     this.entryFolderPath = rootDir
     this.port = port
     this.apiPrefix = baseURL
