@@ -13,7 +13,7 @@ export const cli = (cliArgs: string[]): void => {
     '-p': '--port',
 
     '--baseURL': String,
-    '--b': '--baseURL',
+    '-b': '--baseURL',
 
     '--dir': String,
     '-d': '--dir'
