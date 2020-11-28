@@ -1,14 +1,17 @@
 {
   "name": "restapify",
   "version": "0.1.0",
-  "main": "src/index.js",
+  "main": "dist/server/index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "private": false,
   "scripts": {
     "test": "jest",
     "test:manual": "yarn ts-node-dev --files test/run.ts",
     "start": "yarn nodemon --watch test src/index.js",
-    "transpile": "yarn tsc",
+    "build": "yarn tsc",
     "lint": "yarn eslint . --ext .js,.ts"
   },
   "bin": {
