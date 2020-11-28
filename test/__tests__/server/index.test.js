@@ -21,7 +21,8 @@ const restapifyParams = {
   apiPrefix: '/api'
 }
 
-const apiRoot = `http://localhost:${restapifyParams.port}${restapifyParams.apiPrefix}`
+const baseUrl = `http://localhost:${restapifyParams.port}`
+const apiRoot = `${baseUrl}${restapifyParams.apiPrefix}`
 
 describe('Restapify', () => {
   let RestapifyInstance
@@ -105,6 +106,17 @@ describe('Restapify', () => {
       })
       let data = await response.json()
       expect(data).toStrictEqual(postUsers.__body)
+    })
+  })
+
+  describe('Dashboard', () => {
+    it('should serve dashboard', async () => {
+      const expectedPageTitle = '<title>Svelte app</title>'
+      let response = await fetch(`${baseUrl}/restapify`)
+      const text = await response.text()
+
+      expect(response.status).toBe(200)
+      expect(text).toContain(expectedPageTitle)
     })
   })
 
