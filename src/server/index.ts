@@ -13,7 +13,8 @@ import { getInitialisedInternalApi } from '../internalApi'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
-const DASHBOARD_FOLDER_PATH = path.resolve(__dirname, '../dashboard/public')
+const DASHBOARD_FOLDER_PATH = path.resolve(__dirname,
+  '../../node_modules/restapify-dashboard/public/')
 
 const getDirs = (p: string): string[] => {
   return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
@@ -84,7 +85,7 @@ class Restapify {
   }
 
   private configDashboard = (): void => {
-    console.log('> Serve Restapify dashboard')
+    console.log('> Serve Restapify dashboard ' + DASHBOARD_FOLDER_PATH)
     this.app.use('/restapify', express.static(DASHBOARD_FOLDER_PATH))
   }
 
