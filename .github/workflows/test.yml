@@ -13,6 +13,6 @@ jobs:
       - name: Run tests
         run: |
           yarn install
-          yarn transpile
+          yarn build
           yarn lint
           yarn test
