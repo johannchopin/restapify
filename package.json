@@ -1,6 +1,6 @@
 {
   "name": "restapify",
-  "version": "0.1.0",
+  "version": "0.0.5",
   "main": "dist/server/index.js",
   "files": [
     "dist"

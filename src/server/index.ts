@@ -80,6 +80,15 @@ class Restapify {
   private configServer = (): void => {
     this.app = express()
     this.server = http.createServer(this.app)
+
+    // Handle CORS
+    this.app.use((req: any, res: any, next) => {
+      res.append('Access-Control-Allow-Origin', ['*'])
+      res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH')
+      res.append('Access-Control-Allow-Headers', 'Content-Type')
+      next()
+    })
+
     this.handleHttpServerErrors()
     this.configFolder(this.entryFolderPath)
   }
@@ -284,6 +293,7 @@ class Restapify {
   public close = (): void => {
     console.log('Server stopped')
     this.server.close()
+    this.kill()
   }
 
   public kill = (): void => {
