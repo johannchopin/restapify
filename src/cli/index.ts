@@ -25,6 +25,7 @@ export const cli = (cliArgs: string[]): void => {
     '--baseURL': baseURL
   } = args
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const RestapifyInstance = new Restapify({
     rootDir: path.resolve(rootDir),
     port,
