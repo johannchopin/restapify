@@ -293,7 +293,6 @@ class Restapify {
   public close = (): void => {
     console.log('Server stopped')
     this.server.close()
-    this.kill()
   }
 
   public kill = (): void => {
