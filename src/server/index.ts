@@ -81,6 +81,9 @@ class Restapify {
     this.app = express()
     this.server = http.createServer(this.app)
 
+    // Add middleware to parse request's body
+    this.app.use(express.json())
+
     // Handle CORS
     this.app.use((req: any, res: any, next) => {
       res.append('Access-Control-Allow-Origin', ['*'])
@@ -103,6 +106,7 @@ class Restapify {
     this.app = getInitialisedInternalApi(this.app, {
       routes,
       states,
+      setState: this.setState,
       onClose: this.close
     })
   }

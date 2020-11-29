@@ -1,10 +1,12 @@
 import * as express from 'express'
 
 import { INTERNAL_API_BASEURL } from '../server/CONST'
-import { Routes, PrivateRouteState } from '../server'
+import { Routes, PrivateRouteState, RouteState } from '../server'
+import { HTTP_VERBS } from '../server/CONST'
 
 // I N T E R F A C E S
 export interface InternalApiParams {
+  setState: (newState: RouteState) => void
   states: PrivateRouteState[]
   routes: Routes
   onClose: () => void
@@ -21,6 +23,7 @@ export const getInitialisedInternalApi = (
   const {
     states,
     routes,
+    setState,
     onClose
   } = params
 
@@ -36,6 +39,23 @@ export const getInitialisedInternalApi = (
 
   app.get(getRoute('/states'), (req, res): void => {
     res.json(states)
+  })
+
+  app.put(getRoute('/states'), (req, res): void => {
+    const { route, state, method = 'GET' } = req.body
+    const isMethodValid = HTTP_VERBS.includes(method)
+
+    if (!route || !isMethodValid) {
+      res.status(401).end()
+    }
+
+    setState({
+      route,
+      state,
+      method
+    })
+
+    res.status(204).end()
   })
 
   return app

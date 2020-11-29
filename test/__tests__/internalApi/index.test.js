@@ -48,4 +48,34 @@ describe('Internal API', () => {
     let data = await response.json()
     expect(data).toStrictEqual(expectedResponse)
   })
+
+  describe('Update states', () => {
+    it('should update states', async () => {
+      const expectedResponseStatus = 204
+      const updatedStateObject = {
+        route: '/users/[userid]',
+        state: 'ERR',
+        method: 'POST'
+      }
+      let response = await fetch(`${apiRoot}/states`, {
+        method: 'PUT',
+        body: JSON.stringify(updatedStateObject),
+        headers:{
+          "Content-Type": "application/json"
+        }
+      })
+
+      expect(response.status).toBe(expectedResponseStatus)
+      expect(RestapifyInstance.states).toContainEqual(updatedStateObject)
+    })
+
+    it('should response with error on invalid body', async () => {
+      const expectedResponseStatus = 401
+      let response = await fetch(`${apiRoot}/states`, {
+        method: 'PUT'
+      })
+
+      expect(response.status).toBe(expectedResponseStatus)
+    })
+  })
 })
