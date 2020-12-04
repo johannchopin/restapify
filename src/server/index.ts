@@ -7,7 +7,7 @@ import * as http from 'http'
 import { HttpVerb } from '../types'
 
 import { replaceAll } from '../utils'
-import { routeResolve } from './utils'
+import { routeResolve, withoutUndefinedFromObject } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from '../internalApi'
 
@@ -94,6 +94,7 @@ class Restapify {
 
     this.handleHttpServerErrors()
     this.configFolder(this.entryFolderPath)
+    this.serveRoutes()
   }
 
   private configDashboard = (): void => {
@@ -163,7 +164,28 @@ class Restapify {
     return match !== null ? match : []
   }
 
-  private configRoute = (routeData: RouteData): void => {
+  private serveRoutes = (): void => {
+    Object.keys(this.routes).forEach(route => {
+      (Object.keys(this.routes[route]) as HttpVerb[]).forEach(method => {
+        const routeData = this.routes[route][method]
+        const matchingState = this.states.find(state => {
+          return state.route === route
+            && (state.method === method
+              || (state.method === undefined && method === 'GET'))
+        })
+
+        if (matchingState && routeData.states) {
+          const { state } = matchingState
+
+          this.serveRoute({ ...routeData, ...routeData.states[state] })
+        } else {
+          this.serveRoute(routeData)
+        }
+      })
+    })
+  }
+
+  private serveRoute = (routeData: RouteData): void => {
     let fileContent = routeData.fileContent
     let {
       normalizedRoute,
@@ -220,16 +242,47 @@ class Restapify {
 
   private configFile = (filePath: string): void => {
     const routeData = getRoute(filePath, this.entryFolderPath)
+    const {
+      route,
+      method,
+      stateVars,
+      body,
+      getBody,
+      header,
+      isExtended,
+      statusCode,
+      fileContent
+    } = routeData
+    const routeExist = this.routes[route] !== undefined
+    const routeContainsStates = stateVars.length > 0
 
-    const matchingState = this.states.find(state => {
-      return state.route === routeData.route
-        && (state.method === routeData.method
-          || (state.method === undefined && routeData.method === 'GET'))
-    })
+    if (!routeExist) {
+      // @ts-ignore
+      this.routes[route] = {}
+    }
 
-    if ((matchingState === undefined && routeData.stateVars.length <= 0)
-      || (matchingState && routeData.stateVars.includes(matchingState.state))) {
-      this.configRoute(routeData)
+    if (routeContainsStates) {
+      if (this.routes[route][method] === undefined) {
+        this.routes[route][method] = {} as RouteData
+      }
+
+      if (this.routes[route][method].states === undefined) {
+        this.routes[route][method].states = {}
+      }
+
+      stateVars.forEach(stateVar => {
+        // @ts-ignore
+        this.routes[route][method].states[stateVar] = withoutUndefinedFromObject({
+          body,
+          fileContent,
+          header,
+          isExtended,
+          statusCode,
+          getBody
+        })
+      })
+    } else {
+      this.routes[route][method] = { ...this.routes[route][method], ...routeData }
     }
   }
 
