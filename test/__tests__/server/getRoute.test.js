@@ -5,7 +5,7 @@ import {
   getFilenameFromFilePath,
   getRouteFromFilePath,
   getResponseStatusCodeInFilename,
-  getHttpVerbInFilename
+  getHttpMethodInFilename
 } from '../../../src/server/getRoute'
 
 describe('Get route helpers', () => {
@@ -129,19 +129,19 @@ describe('Get route helpers', () => {
     })
   })
 
-  describe('getHttpVerbInFilename', () => {
+  describe('getHttpMethodInFilename', () => {
     it('should return default GET', () => {
       const filename = '*.json'
       const expectedHttpVerb = 'GET'
 
-      expect(getHttpVerbInFilename(filename)).toBe(expectedHttpVerb)
+      expect(getHttpMethodInFilename(filename)).toBe(expectedHttpVerb)
     })
 
     it('should return detected HTTP verb', () => {
       const filename = '*.POST.json'
       const expectedHttpVerb = 'POST'
 
-      expect(getHttpVerbInFilename(filename)).toBe(expectedHttpVerb)
+      expect(getHttpMethodInFilename(filename)).toBe(expectedHttpVerb)
     })
   })
 })

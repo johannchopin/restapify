@@ -51,3 +51,9 @@ export const routeResolve = (...routes: string[]): string => {
 
   return finalRoute
 }
+
+export const withoutUndefinedFromObject = (obj: Object): Object => {
+  // @ts-ignore
+  Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
+  return obj
+}

@@ -14,6 +14,9 @@ import postUsers from '../../api/users/*.POST.201.json'
 import getComments from '../../api/comments/*.GET.json'
 import deleteUser from '../../api/users/[userid].DELETE.json'
 import deleteUserErr from '../../api/users/[userid].DELETE.404.{ERR}.json'
+import deleteUserInvCred from '../../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
+
+import { getHttpMethodInFilename } from '../../../src/server/utils'
 
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../api'),
@@ -206,6 +209,44 @@ describe('Restapify with state variables', () => {
 
     expect(data).toStrictEqual(deleteUser.__body)
     expect(statusCode).toBe(200)
+  })
+
+  describe('define routes states', () => {
+    it('should not set states in route that don\'t have any', () => {
+      const getUsersRoute = RestapifyInstance.routes['/users'].GET
+      expect(getUsersRoute.states).toBe(undefined)
+    })
+
+    it('should set correct state to route', () => {
+      const deleteUserRoute = RestapifyInstance.routes['/users/[userid]'].DELETE.states
+
+      const expectedState = {
+        'INV_CRED': {
+          fileContent: JSON.stringify(deleteUserInvCred),
+          statusCode: 401,
+          body: JSON.stringify({}),
+          isExtended: false,
+          getBody: expect.any(Function)
+        },
+        'INV_TOKEN': {
+          fileContent: JSON.stringify(deleteUserInvCred),
+          statusCode: 401,
+          body: JSON.stringify({}),
+          isExtended: false,
+          getBody: expect.any(Function)
+        },
+        'ERR': {
+          fileContent: JSON.stringify(deleteUserErr, null, '  '),
+          statusCode: 404,
+          header: deleteUserErr.__header,
+          body: JSON.stringify(deleteUserErr.__body),
+          isExtended: true,
+          getBody: expect.any(Function)
+        }
+      }
+
+      expect(deleteUserRoute).toStrictEqual(expectedState)
+    })
   })
 
   describe('setState', () => {

@@ -25,6 +25,15 @@ export interface Route {
   header?: {[key: string]: string | number}
   body?: string
   getBody: (vars: {[key: string]: string}) => string
+  states?: {
+    [state: string]: Pick<Route, 'fileContent'
+      | 'statusCode'
+      | 'header'
+      | 'body'
+      | 'isExtended'
+      | 'getBody'
+    >
+  }
 }
 
 export const getFilenameFromFilePath = (filePath: string): string => {
@@ -88,7 +97,7 @@ export const getStateVarsInFilename = (filename: string): string[] => {
   return stateVars
 }
 
-export const getHttpVerbInFilename = (filename: string): HttpVerb => {
+export const getHttpMethodInFilename = (filename: string): HttpVerb => {
   const filenameElmts = filename.split('.')
   let potentialHttpVerbElement = filenameElmts.slice(1, -1) // remove local indicator and file extension
   let httpVerb: HttpVerb = 'GET'
@@ -135,7 +144,7 @@ export const getRoute = (
   const jsonContent = JSON.parse(fileContent)
   const stateVars = getStateVarsInFilename(filename)
   const statusCode = getResponseStatusCodeInFilename(filename)
-  const method = getHttpVerbInFilename(filename)
+  const method = getHttpMethodInFilename(filename)
 
   const isExtended = isStructureExtended(jsonContent)
 

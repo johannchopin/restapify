@@ -33,6 +33,14 @@ describe('Internal API', () => {
           rest = {...rest, header}
         }
 
+        // remove getBody callback from response
+        if (rest.states) {
+          Object.keys(rest.states).forEach(state => {
+            const {getBody, ...stateRest} = rest.states[state]
+            rest.states[state] = stateRest
+          })
+        }
+
         expectedResponse[route][method] = rest
       })
     })
