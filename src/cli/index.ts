@@ -3,9 +3,9 @@ import * as path from 'path'
 
 import Restapify from '../server'
 
-export const cli = (cliArgs: string[]): void => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): void => {
   const args = arg({
-    // Types
     '--help': Boolean,
     '-h': '--help',
 
@@ -13,21 +13,17 @@ export const cli = (cliArgs: string[]): void => {
     '-p': '--port',
 
     '--baseURL': String,
-    '-b': '--baseURL',
-
-    '--dir': String,
-    '-d': '--dir'
+    '-b': '--baseURL'
   }, { argv: cliArgs })
 
   const {
-    '--dir': rootDir = '.',
     '--port': port,
     '--baseURL': baseURL
   } = args
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const RestapifyInstance = new Restapify({
-    rootDir: path.resolve(rootDir),
+    rootDir: path.resolve(entryFolder),
     port,
     baseURL
   })
