@@ -114,7 +114,7 @@ describe('Restapify', () => {
 
   describe('Dashboard', () => {
     it('should serve dashboard', async () => {
-      const expectedPageTitle = '<title>Svelte app</title>'
+      const expectedPageTitle = '<title>Restapify - Dashboard</title>'
       let response = await fetch(`${baseUrl}/restapify`)
       const text = await response.text()
 
