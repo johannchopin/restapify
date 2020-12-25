@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "jest --silent",
+    "test": "jest --silent --no-cache",
     "test:manual": "yarn ts-node-dev --files test/run.ts",
     "start": "yarn nodemon --watch test src/index.js",
     "build": "yarn tsc",
