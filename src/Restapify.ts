@@ -164,21 +164,36 @@ class Restapify {
     return match !== null ? match : []
   }
 
+  private getRouteData = (
+    method: HttpVerb,
+    route: string
+  ): RouteData | null => {
+    if (!this.routes[method][route]) {
+      return null
+    }
+
+    const routeData = this.routes[method][route]
+    const matchingState = this.states.find(state => {
+      return state.route === route
+            && (state.method === method
+              || (state.method === undefined && method === 'GET'))
+    })
+
+    if (matchingState && routeData.states) {
+      const { state } = matchingState
+
+      return { ...routeData, ...routeData.states[state] }
+    }
+
+    return routeData
+  }
+
   private serveRoutes = (): void => {
     (Object.keys(this.routes) as HttpVerb[]).forEach(method => {
       Object.keys(this.routes[method]).forEach(route => {
-        const routeData = this.routes[method][route]
-        const matchingState = this.states.find(state => {
-          return state.route === route
-            && (state.method === method
-              || (state.method === undefined && method === 'GET'))
-        })
+        const routeData = this.getRouteData(method, route)
 
-        if (matchingState && routeData.states) {
-          const { state } = matchingState
-
-          this.serveRoute({ ...routeData, ...routeData.states[state] })
-        } else {
+        if (routeData) {
           this.serveRoute(routeData)
         }
       })
@@ -219,18 +234,8 @@ class Restapify {
       res.send(JSON.parse(routeData.getBody(vars)))
     }
 
-    this.addRoute(routeData)
     this.logRouteListening(routeData)
     this.listenRoute(routeData.method, normalizedRoute, responseCallback)
-  }
-
-  private addRoute = (routeData: RouteData): void => {
-    const { route, method } = routeData
-    if (this.routes[method][route] === undefined) {
-      this.routes[method][route] = {} as RouteData
-    }
-
-    this.routes[method][route] = routeData
   }
 
   private logRouteListening = (routeData: RouteData): void => {
@@ -256,8 +261,7 @@ class Restapify {
     const routeContainsStates = stateVars.length > 0
 
     if (!routeExist) {
-      // @ts-ignore
-      this.routes[route] = {}
+      this.routes[method][route] = {} as RouteData
     }
 
     if (routeContainsStates) {
