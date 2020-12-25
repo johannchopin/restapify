@@ -6,7 +6,7 @@ import {
   getRouteFromFilePath,
   getResponseStatusCodeInFilename,
   getHttpMethodInFilename
-} from '../../../src/server/getRoute'
+} from '../../src/getRoute'
 
 describe('Get route helpers', () => {
   describe('getNormalizedRoute', () => {

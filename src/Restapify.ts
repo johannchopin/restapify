@@ -7,8 +7,8 @@ import * as http from 'http'
 import { HttpVerb } from './types'
 
 import { replaceAll } from './utils'
-import { routeResolve, withoutUndefinedFromObject } from './server/utils'
-import { getRoute, Route as RouteData } from './server/getRoute'
+import { routeResolve, withoutUndefinedFromObject } from './utils'
+import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
 
 const NUMBER_CAST_INDICATOR = '(number)'

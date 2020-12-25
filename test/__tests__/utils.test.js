@@ -1,4 +1,4 @@
-import { getVarsInPath, routeResolve } from '../../../src/server/utils'
+import { getVarsInPath, routeResolve } from '../../src/utils'
 
 describe('getVarsInPath', () => {
   it('find no vars in path', () => {

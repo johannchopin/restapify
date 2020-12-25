@@ -16,8 +16,6 @@ import deleteUser from '../api/users/[userid].DELETE.json'
 import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
 import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
 
-import { getHttpMethodInFilename } from '../../src/server/utils'
-
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
