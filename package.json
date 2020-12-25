@@ -29,8 +29,8 @@
     "express": "^4.17.1",
     "http": "^0.0.1-security",
     "nodemon": "^2.0.5",
-    "restapify-dashboard": "^1.0.4"
     "open": "^7.3.0",
+    "restapify-dashboard": "^1.0.7"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.12.1",
