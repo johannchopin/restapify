@@ -1,17 +1,28 @@
+import * as fs from 'fs'
+import * as path from 'path'
+
+import { HTTP_VERBS } from './CONST'
+
+export const getDirs = (p: string): string[] => {
+  return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
+}
+
+export const getFiles = (p: string): string[] => {
+  return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isFile())
+}
+
 export const replaceAll = (str: string, find: string, replace: string): string => {
   return str.split(find).join(replace)
 }
 
-import { HTTP_VERBS } from './CONST'
-
-export const getVarsInPath = (path: string): string[] => {
+export const getVarsInPath = (pathParam: string): string[] => {
   const vars: string[] = []
 
-  if (path.endsWith('.json')) {
-    path = path.slice(0, -'.json'.length)
+  if (pathParam.endsWith('.json')) {
+    pathParam = pathParam.slice(0, -'.json'.length)
   }
 
-  const explodedPath = path.split('/')
+  const explodedPath = pathParam.split('/')
 
   explodedPath.forEach(pathElement => {
     const isVar = pathElement.startsWith('[') && pathElement.endsWith(']')

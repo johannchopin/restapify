@@ -6,20 +6,18 @@ import * as http from 'http'
 
 import { HttpVerb } from './types'
 
-import { routeResolve, withoutUndefinedFromObject } from './utils'
+import {
+  getDirs,
+  getFiles,
+  routeResolve,
+  withoutUndefinedFromObject
+} from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
 
 const DEFAULT_PORT = 6767
 const DASHBOARD_FOLDER_PATH = path.resolve(__dirname,
   '../../node_modules/restapify-dashboard/public/')
-
-const getDirs = (p: string): string[] => {
-  return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
-}
-const getFiles = (p: string): string[] => {
-  return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isFile())
-}
 
 // I N T E R F A C E S
 export interface RouteState {
