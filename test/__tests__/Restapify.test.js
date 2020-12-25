@@ -202,12 +202,12 @@ describe('Restapify with state variables', () => {
 
   describe('define routes states', () => {
     it('should not set states in route that don\'t have any', () => {
-      const getUsersRoute = RestapifyInstance.routes['/users'].GET
+      const getUsersRoute = RestapifyInstance.routes.GET['/users']
       expect(getUsersRoute.states).toBe(undefined)
     })
 
     it('should set correct state to route', () => {
-      const deleteUserRoute = RestapifyInstance.routes['/users/[userid]'].DELETE.states
+      const deleteUserRoute = RestapifyInstance.routes.DELETE['/users/[userid]'].states
 
       const expectedState = {
         'INV_CRED': {

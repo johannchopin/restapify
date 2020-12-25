@@ -39,15 +39,15 @@ export interface RestapifyParams {
   states?: RouteState[]
 }
 export type Routes = {
-  [url: string]: {
-    [method in HttpVerb]: RouteData
-  }
+  [method in HttpVerb]: {[url: string]: RouteData}
 }
 
 class Restapify {
   protected app: express.Express
   protected server: any
-  public routes: Routes = {}
+  public routes: Routes = {
+    GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
+  }
   public entryFolderPath: string
   public port: number
   public apiPrefix: string
@@ -165,9 +165,9 @@ class Restapify {
   }
 
   private serveRoutes = (): void => {
-    Object.keys(this.routes).forEach(route => {
-      (Object.keys(this.routes[route]) as HttpVerb[]).forEach(method => {
-        const routeData = this.routes[route][method]
+    (Object.keys(this.routes) as HttpVerb[]).forEach(method => {
+      Object.keys(this.routes[method]).forEach(route => {
+        const routeData = this.routes[method][route]
         const matchingState = this.states.find(state => {
           return state.route === route
             && (state.method === method
@@ -225,13 +225,12 @@ class Restapify {
   }
 
   private addRoute = (routeData: RouteData): void => {
-    const { route, method: httpVerb } = routeData
-    if (this.routes[route] === undefined) {
-      // @ts-ignore
-      this.routes[route] = {}
+    const { route, method } = routeData
+    if (this.routes[method][route] === undefined) {
+      this.routes[method][route] = {} as RouteData
     }
 
-    this.routes[route][httpVerb] = routeData
+    this.routes[method][route] = routeData
   }
 
   private logRouteListening = (routeData: RouteData): void => {
@@ -253,7 +252,7 @@ class Restapify {
       statusCode,
       fileContent
     } = routeData
-    const routeExist = this.routes[route] !== undefined
+    const routeExist = this.routes[method][route] !== undefined
     const routeContainsStates = stateVars.length > 0
 
     if (!routeExist) {
@@ -262,17 +261,17 @@ class Restapify {
     }
 
     if (routeContainsStates) {
-      if (this.routes[route][method] === undefined) {
-        this.routes[route][method] = {} as RouteData
+      if (this.routes[method][route] === undefined) {
+        this.routes[method][route] = {} as RouteData
       }
 
-      if (this.routes[route][method].states === undefined) {
-        this.routes[route][method].states = {}
+      if (this.routes[method][route].states === undefined) {
+        this.routes[method][route].states = {}
       }
 
       stateVars.forEach(stateVar => {
         // @ts-ignore
-        this.routes[route][method].states[stateVar] = withoutUndefinedFromObject({
+        this.routes[method][route].states[stateVar] = withoutUndefinedFromObject({
           body,
           fileContent,
           header,
@@ -282,7 +281,7 @@ class Restapify {
         })
       })
     } else {
-      this.routes[route][method] = { ...this.routes[route][method], ...routeData }
+      this.routes[method][route] = { ...this.routes[method][route], ...routeData }
     }
   }
 
