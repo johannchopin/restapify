@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import * as path from 'path'
 import 'isomorphic-fetch'
-import Restapify from '../../../src/server/index'
+import Restapify from '../../../src/Restapify'
 
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../api'),

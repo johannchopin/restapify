@@ -1,25 +1,23 @@
 /* eslint-disable no-shadow */
 import * as path from 'path'
 import 'isomorphic-fetch'
-import Restapify from '../../../src/server/index'
+import Restapify from '../../src/Restapify'
 
 // D A T A
-import getAnimals from '../../api/animals.json'
-import getAnimalsByName from '../../api/animals/[name].json'
-import getAnimalsByNameFriends from '../../api/animals/[name]/friends/[friend_id].json'
-import getPlants from '../../api/plants.GET.json'
-import getUsers from '../../api/users/*.json'
-import getUserErr from '../../api/users/[userid].404.{ERR}.json'
-import postUsers from '../../api/users/*.POST.201.json'
-import getComments from '../../api/comments/*.GET.json'
-import deleteUser from '../../api/users/[userid].DELETE.json'
-import deleteUserErr from '../../api/users/[userid].DELETE.404.{ERR}.json'
-import deleteUserInvCred from '../../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
-
-import { getHttpMethodInFilename } from '../../../src/server/utils'
+import getAnimals from '../api/animals.json'
+import getAnimalsByName from '../api/animals/[name].json'
+import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
+import getPlants from '../api/plants.GET.json'
+import getUsers from '../api/users/*.json'
+import getUserErr from '../api/users/[userid].404.{ERR}.json'
+import postUsers from '../api/users/*.POST.201.json'
+import getComments from '../api/comments/*.GET.json'
+import deleteUser from '../api/users/[userid].DELETE.json'
+import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
+import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
 
 const restapifyParams = {
-  rootDir: path.resolve(__dirname, '../../api'),
+  rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
   baseURL: '/api'
 }
@@ -109,17 +107,6 @@ describe('Restapify', () => {
       })
       let data = await response.json()
       expect(data).toStrictEqual(postUsers.__body)
-    })
-  })
-
-  describe('Dashboard', () => {
-    it('should serve dashboard', async () => {
-      const expectedPageTitle = '<title>Restapify - Dashboard</title>'
-      let response = await fetch(`${baseUrl}/restapify`)
-      const text = await response.text()
-
-      expect(response.status).toBe(200)
-      expect(text).toContain(expectedPageTitle)
     })
   })
 
@@ -213,12 +200,12 @@ describe('Restapify with state variables', () => {
 
   describe('define routes states', () => {
     it('should not set states in route that don\'t have any', () => {
-      const getUsersRoute = RestapifyInstance.routes['/users'].GET
+      const getUsersRoute = RestapifyInstance.routes.GET['/users']
       expect(getUsersRoute.states).toBe(undefined)
     })
 
     it('should set correct state to route', () => {
-      const deleteUserRoute = RestapifyInstance.routes['/users/[userid]'].DELETE.states
+      const deleteUserRoute = RestapifyInstance.routes.DELETE['/users/[userid]'].states
 
       const expectedState = {
         'INV_CRED': {

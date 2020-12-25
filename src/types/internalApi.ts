@@ -1,4 +1,4 @@
-import { Route as RouteData } from '../server/getRoute'
+import { Route as RouteData } from '../getRoute'
 import { HttpVerb } from '.'
 
 export type Route = Pick<RouteData,

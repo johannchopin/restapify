@@ -1,8 +1,8 @@
 import * as express from 'express'
 
-import { INTERNAL_API_BASEURL } from '../server/CONST'
-import { Routes, PrivateRouteState, RouteState } from '../server'
-import { HTTP_VERBS } from '../server/CONST'
+import { INTERNAL_API_BASEURL } from '../CONST'
+import { Routes, PrivateRouteState, RouteState } from '../Restapify'
+import { HTTP_VERBS } from '../CONST'
 
 // I N T E R F A C E S
 export interface InternalApiParams {
