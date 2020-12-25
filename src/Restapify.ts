@@ -4,12 +4,12 @@ import * as path from 'path'
 import * as express from 'express'
 import * as http from 'http'
 
-import { HttpVerb } from '../types'
+import { HttpVerb } from './types'
 
-import { replaceAll } from '../utils'
-import { routeResolve, withoutUndefinedFromObject } from './utils'
-import { getRoute, Route as RouteData } from './getRoute'
-import { getInitialisedInternalApi } from '../internalApi'
+import { replaceAll } from './utils'
+import { routeResolve, withoutUndefinedFromObject } from './server/utils'
+import { getRoute, Route as RouteData } from './server/getRoute'
+import { getInitialisedInternalApi } from './internalApi'
 
 const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767

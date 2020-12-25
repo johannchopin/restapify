@@ -2,7 +2,7 @@ import * as arg from 'arg'
 import * as path from 'path'
 import * as open from 'open'
 
-import Restapify from '../server'
+import Restapify from '../Restapify'
 
 const openDashboard = (port: number): void => {
   open(`http://localhost:${port}/restapify`)

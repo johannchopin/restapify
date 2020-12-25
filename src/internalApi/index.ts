@@ -1,7 +1,7 @@
 import * as express from 'express'
 
 import { INTERNAL_API_BASEURL } from '../server/CONST'
-import { Routes, PrivateRouteState, RouteState } from '../server'
+import { Routes, PrivateRouteState, RouteState } from '../Restapify'
 import { HTTP_VERBS } from '../server/CONST'
 
 // I N T E R F A C E S
