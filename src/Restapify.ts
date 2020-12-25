@@ -6,12 +6,10 @@ import * as http from 'http'
 
 import { HttpVerb } from './types'
 
-import { replaceAll } from './utils'
 import { routeResolve, withoutUndefinedFromObject } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
 
-const NUMBER_CAST_INDICATOR = '(number)'
 const DEFAULT_PORT = 6767
 const DASHBOARD_FOLDER_PATH = path.resolve(__dirname,
   '../../node_modules/restapify-dashboard/public/')
@@ -157,13 +155,6 @@ class Restapify {
     })
   }
 
-  private getNumbersToCast = (str: string): string[] => {
-    const re = /"\(number\)\[([^,}]+)\]"/gi
-    const match = str.match(re)
-
-    return match !== null ? match : []
-  }
-
   private getRouteData = (
     method: HttpVerb,
     route: string
@@ -201,23 +192,14 @@ class Restapify {
   }
 
   private serveRoute = (routeData: RouteData): void => {
-    let fileContent = routeData.fileContent
     let {
       normalizedRoute,
       routeVars,
       statusCode,
       header
     } = routeData
-    const numberParamsToCast = this.getNumbersToCast(fileContent)
-    normalizedRoute = routeResolve(this.apiPrefix, normalizedRoute)
 
-    numberParamsToCast.forEach(numberParamToCast => {
-      fileContent = replaceAll(
-        fileContent,
-        numberParamToCast,
-        numberParamToCast.slice(`"${NUMBER_CAST_INDICATOR}`.length, -1)
-      )
-    })
+    normalizedRoute = routeResolve(this.apiPrefix, normalizedRoute)
 
     const responseCallback = (req: any, res: any): void => {
       res.status(statusCode)

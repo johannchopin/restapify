@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import { HttpVerb } from './types'
 
 import { replaceAll } from './utils'
-import { CURRENT_LOCATION_ROUTE_SELECTOR } from './CONST'
+import { CURRENT_LOCATION_ROUTE_SELECTOR, NUMBER_CAST_INDICATOR } from './CONST'
 import {
   getVarsInPath,
   isHttpVerb,
@@ -116,11 +116,8 @@ export const getContentWithReplacedVars = (
   vars: {[key: string]: string}
 ): string => {
   Object.keys(vars).forEach((variable) => {
-    content = replaceAll(
-      content,
-      `[${variable}]`,
-      vars[variable]
-    )
+    content = replaceAll(content, `"${NUMBER_CAST_INDICATOR}[${variable}]"`, vars[variable])
+    content = replaceAll(content, `[${variable}]`, vars[variable])
   })
 
   return content

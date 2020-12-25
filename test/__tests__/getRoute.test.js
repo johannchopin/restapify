@@ -5,7 +5,7 @@ import {
   getFilenameFromFilePath,
   getRouteFromFilePath,
   getResponseStatusCodeInFilename,
-  getHttpMethodInFilename
+  getHttpMethodInFilename,
 } from '../../src/getRoute'
 
 describe('Get route helpers', () => {
@@ -62,6 +62,24 @@ describe('Get route helpers', () => {
       const expectedContentWithReplacedVars = JSON.stringify({
         post: 'just-a-post',
         comment: 'just-a-comment'
+      })
+
+      expect(getContentWithReplacedVars(content, vars))
+        .toStrictEqual(expectedContentWithReplacedVars)
+    })
+
+    it('should replace and cast number variables', () => {
+      const content = JSON.stringify({
+        post: '[postid]',
+        comment: 'n:[commentid]'
+      })
+      const vars = {
+        postid: 'just-a-post',
+        commentid: '123'
+      }
+      const expectedContentWithReplacedVars = JSON.stringify({
+        post: 'just-a-post',
+        comment: 123
       })
 
       expect(getContentWithReplacedVars(content, vars))
