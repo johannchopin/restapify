@@ -6,7 +6,8 @@ import Restapify from '../../../src/Restapify'
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../api'),
   port: 6767,
-  baseURL: '/api'
+  baseURL: '/api',
+  hotWatch: false
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
