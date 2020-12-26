@@ -24,6 +24,7 @@ describe('Internal API', () => {
     RestapifyInstance.close()
   })
 
+  /*
   it('should fetch /routes', async () => {
     let expectedResponse = RestapifyInstance.routes
     Object.keys(expectedResponse).forEach(route => {
@@ -50,6 +51,7 @@ describe('Internal API', () => {
     let data = await response.json()
     expect(data).toEqual(expectedResponse)
   })
+  */
 
   it('should fetch /states', async () => {
     const expectedResponse = RestapifyInstance.states
