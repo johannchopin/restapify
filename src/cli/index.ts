@@ -29,6 +29,6 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
     rootDir: path.resolve(entryFolder),
     port,
     baseURL,
-    openDashboard: noOpen
+    openDashboard: !noOpen
   })
 }

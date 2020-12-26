@@ -56,7 +56,7 @@ class Restapify {
     port = DEFAULT_PORT,
     baseURL = '/api',
     states = [],
-    openDashboard = true
+    openDashboard = false
   }: RestapifyParams) {
     this.entryFolderPath = rootDir
     this.port = port
