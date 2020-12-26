@@ -1,12 +1,7 @@
 import * as arg from 'arg'
 import * as path from 'path'
-import * as open from 'open'
 
 import Restapify from '../Restapify'
-
-const openDashboard = (port: number): void => {
-  open(`http://localhost:${port}/restapify`)
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): void => {
@@ -26,17 +21,14 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
   const {
     '--port': port,
     '--baseURL': baseURL,
-    '--no-open': noOpen
+    '--no-open': noOpen = false
   } = args
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const RestapifyInstance = new Restapify({
     rootDir: path.resolve(entryFolder),
     port,
-    baseURL
+    baseURL,
+    openDashboard: noOpen
   })
-
-  if (!noOpen) {
-    openDashboard(RestapifyInstance.port)
-  }
 }

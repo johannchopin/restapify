@@ -3,6 +3,7 @@ import * as path from 'path'
 // @ts-ignore
 import * as express from 'express'
 import * as http from 'http'
+import * as open from 'open'
 
 import { HttpVerb } from './types'
 
@@ -33,6 +34,7 @@ export interface RestapifyParams {
   port?: number
   baseURL?: string
   states?: RouteState[]
+  openDashboard?: boolean
 }
 export type Routes = {
   [method in HttpVerb]: {[url: string]: RouteData}
@@ -53,7 +55,8 @@ class Restapify {
     rootDir,
     port = DEFAULT_PORT,
     baseURL = '/api',
-    states = []
+    states = [],
+    openDashboard = true
   }: RestapifyParams) {
     this.entryFolderPath = rootDir
     this.port = port
@@ -63,6 +66,10 @@ class Restapify {
     }) as PrivateRouteState[]
 
     this.init()
+
+    if (openDashboard) {
+      this.openDashboard()
+    }
   }
 
   private init = (): void => {
@@ -330,6 +337,10 @@ class Restapify {
     }
 
     this.restartServer()
+  }
+
+  public openDashboard = (): void => {
+    open(`http://localhost:${this.port}/restapify`)
   }
 
   public close = (): void => {
