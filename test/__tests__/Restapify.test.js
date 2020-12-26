@@ -19,7 +19,8 @@ import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TO
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
-  baseURL: '/api'
+  baseURL: '/api',
+  hotWatch: false
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`

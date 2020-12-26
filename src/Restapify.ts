@@ -4,6 +4,7 @@ import * as path from 'path'
 import * as express from 'express'
 import * as http from 'http'
 import * as open from 'open'
+import * as chokidar from 'chokidar'
 
 import { HttpVerb } from './types'
 
@@ -35,6 +36,7 @@ export interface RestapifyParams {
   baseURL?: string
   states?: RouteState[]
   openDashboard?: boolean
+  hotWatch?: boolean
 }
 export type Routes = {
   [method in HttpVerb]: {[url: string]: RouteData}
@@ -50,26 +52,27 @@ class Restapify {
   public port: number
   public apiPrefix: string
   public states: PrivateRouteState[] = []
+  public hotWatch: boolean
 
   constructor({
     rootDir,
     port = DEFAULT_PORT,
     baseURL = '/api',
     states = [],
-    openDashboard = false
+    openDashboard = false,
+    hotWatch = true
   }: RestapifyParams) {
     this.entryFolderPath = rootDir
     this.port = port
     this.apiPrefix = baseURL
+    this.hotWatch = hotWatch
     this.states = states.filter(state => {
       return state.state !== undefined
     }) as PrivateRouteState[]
 
     this.init()
 
-    if (openDashboard) {
-      this.openDashboard()
-    }
+    if (openDashboard) this.openDashboard()
   }
 
   private init = (): void => {
@@ -77,7 +80,18 @@ class Restapify {
     this.configServer()
     this.configDashboard()
     this.configInternalApi()
+    this.configHotWatch()
     this.run()
+  }
+
+  private configHotWatch = (): void => {
+    if (this.hotWatch) {
+      chokidar.watch(this.entryFolderPath, {
+        ignoreInitial: true
+      }).on('all', () => {
+        this.restartServer()
+      })
+    }
   }
 
   private configServer = (): void => {
