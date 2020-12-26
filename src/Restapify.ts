@@ -20,7 +20,7 @@ import { getInitialisedInternalApi } from './internalApi'
 
 const DEFAULT_PORT = 6767
 const DASHBOARD_FOLDER_PATH = path.resolve(__dirname,
-  '../../node_modules/restapify-dashboard/public/')
+  '../node_modules/restapify-dashboard/public/')
 
 // I N T E R F A C E S
 export interface RouteState {
