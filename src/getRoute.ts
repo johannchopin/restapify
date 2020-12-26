@@ -115,10 +115,54 @@ export const getContentWithReplacedVars = (
   content: string,
   vars: {[key: string]: string}
 ): string => {
+  const getEscapedVar = (variable: string): string => {
+    return `\`[${variable}]\``
+  }
+
+  const getVarsToEscape = (): string[] => {
+    return Object.keys(vars).filter(variable => {
+      return content.includes(getEscapedVar(variable))
+    })
+  }
+
+  const varsToEscape = getVarsToEscape()
+
+  const getContentWithSanitizedEscapedVars = (contentToSanitize: string): string => {
+    varsToEscape.forEach(escapedVar => {
+      contentToSanitize = replaceAll(
+        contentToSanitize,
+        getEscapedVar(escapedVar),
+        getEscapedVar(`__${escapedVar}__`)
+      )
+    })
+
+    return contentToSanitize
+  }
+
+  const getContentWithUnsanitizedEscapedVars = (contentToUnsanitize: string): string => {
+    varsToEscape.forEach(escapedVar => {
+      contentToUnsanitize = replaceAll(
+        contentToUnsanitize,
+        getEscapedVar(`__${escapedVar}__`),
+        `[${escapedVar}]`
+      )
+    })
+
+    return contentToUnsanitize
+  }
+
+  // sanitize variables to escape
+  content = getContentWithSanitizedEscapedVars(content)
+
   Object.keys(vars).forEach((variable) => {
+    // replace number casted variables
     content = replaceAll(content, `"${NUMBER_CAST_INDICATOR}[${variable}]"`, vars[variable])
+    // replace simple variables
     content = replaceAll(content, `[${variable}]`, vars[variable])
   })
+
+  // unsanitize variables to escape
+  content = getContentWithUnsanitizedEscapedVars(content)
 
   return content
 }
