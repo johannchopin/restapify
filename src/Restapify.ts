@@ -116,7 +116,6 @@ class Restapify {
   }
 
   private configDashboard = (): void => {
-    console.log('> Serve Restapify dashboard ' + DASHBOARD_FOLDER_PATH)
     this.app.use('/restapify', express.static(DASHBOARD_FOLDER_PATH))
   }
 
@@ -318,7 +317,6 @@ class Restapify {
   }
 
   public run = (): void => {
-    console.log(`Server started on port ${this.port}`)
     this.server.listen(this.port)
   }
 
@@ -359,7 +357,6 @@ class Restapify {
   }
 
   public close = (): void => {
-    console.log('Server stopped')
     this.server.close()
   }
 
