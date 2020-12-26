@@ -2,7 +2,7 @@ import * as arg from 'arg'
 import * as path from 'path'
 
 import Restapify from '../Restapify'
-import { getMethodOutput } from './utils'
+import { getInstanceOverviewOutput, getMethodOutput } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): void => {
@@ -40,4 +40,6 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
 
     console.log(`${methodOutput} ${servedRoute.route}`)
   })
+
+  console.log(getInstanceOverviewOutput(RestapifyInstance.port, RestapifyInstance.apiBaseUrl))
 }
