@@ -85,6 +85,24 @@ describe('Get route helpers', () => {
       expect(getContentWithReplacedVars(content, vars))
         .toStrictEqual(expectedContentWithReplacedVars)
     })
+
+    it('should not replace escaped variables', () => {
+      const content = JSON.stringify({
+        post: '[postid]',
+        comment: 'I like to write comments that contains `[commentid]`'
+      })
+      const vars = {
+        postid: 'just-a-post',
+        commentid: '123'
+      }
+      const expectedContentWithReplacedVars = JSON.stringify({
+        post: 'just-a-post',
+        comment: 'I like to write comments that contains [commentid]'
+      })
+
+      expect(getContentWithReplacedVars(content, vars))
+        .toStrictEqual(expectedContentWithReplacedVars)
+    })
   })
 
   describe('getFilenameFromFilePath', () => {

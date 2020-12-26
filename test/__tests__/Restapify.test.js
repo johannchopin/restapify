@@ -72,7 +72,7 @@ describe('Restapify', () => {
     })
   })
 
-  describe('Route Variables', () => {
+  describe('Route variables', () => {
     it('should respond with injected variable', async () => {
       const variable = 'toby'
       const expectedResponse = { ...getAnimalsByName, name: variable }
@@ -96,6 +96,19 @@ describe('Restapify', () => {
       }
       let response = await fetch(`${apiRoot}/animals/${animalName}/friends/${friendId}`)
       let data = await response.json()
+      expect(data).toStrictEqual(expectedResponse)
+    })
+  })
+
+  describe('Route escaped variables', () => {
+    it('should respond with escaped variable', async () => {
+      let response = await fetch(`${apiRoot}/users/123/friends`)
+      const expectedResponse = {
+        user: "123",
+        friends: [{bio: "I love to use the [userid] variable"}]
+      }
+
+      const data = await response.json()
       expect(data).toStrictEqual(expectedResponse)
     })
   })
