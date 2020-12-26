@@ -11,6 +11,7 @@ import { HttpVerb } from './types'
 import {
   getDirs,
   getFiles,
+  getRoutesByFileOrder as getRoutesByFileOrderHelper,
   routeResolve,
   withoutUndefinedFromObject
 } from './utils'
@@ -351,6 +352,13 @@ class Restapify {
     }
 
     this.restartServer()
+  }
+
+  public getServedRoutes = ():{
+    route: string,
+    method: HttpVerb
+  }[] => {
+    return getRoutesByFileOrderHelper(this.routes)
   }
 
   public openDashboard = (): void => {
