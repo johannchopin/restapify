@@ -47,7 +47,7 @@ describe('Internal API', () => {
 
     let response = await fetch(`${apiRoot}/routes`)
     let data = await response.json()
-    expect(data).toStrictEqual(expectedResponse)
+    expect(data).toEqual(expectedResponse)
   })
 
   it('should fetch /states', async () => {
