@@ -236,14 +236,7 @@ class Restapify {
       res.send(JSON.parse(routeData.getBody(vars)))
     }
 
-    this.logRouteListening(routeData)
     this.listenRoute(routeData.method, normalizedRoute, responseCallback)
-  }
-
-  private logRouteListening = (routeData: RouteData): void => {
-    const { route, stateVars, method: httpVerb } = routeData
-    const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
-    console.log(`> ${httpVerb} ${route} ${stateVarsString}`)
   }
 
   private configFile = (filePath: string): void => {
