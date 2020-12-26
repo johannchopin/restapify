@@ -353,7 +353,10 @@ class Restapify {
   }
 
   public openDashboard = (): void => {
-    open(`http://localhost:${this.port}/restapify`)
+    // open with delay so user has time to see the console output
+    setTimeout(() => {
+      open(`http://localhost:${this.port}/restapify`)
+    }, 1000)
   }
 
   public close = (): void => {
