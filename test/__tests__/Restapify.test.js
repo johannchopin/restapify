@@ -100,6 +100,16 @@ describe('Restapify', () => {
     })
   })
 
+  describe('Route body', () => {
+    it('should respond with empty body', async () => {
+      let response = await fetch(`${apiRoot}/users/123`, {
+        method: 'PUT'
+      })
+      const body = await response.text()
+      expect(body).toBe('')
+    })
+  })
+
   describe('Extended structure', () => {
     it('should respond with __body', async () => {
       let response = await fetch(`${apiRoot}/users/`, {
@@ -211,14 +221,12 @@ describe('Restapify with state variables', () => {
         'INV_CRED': {
           fileContent: JSON.stringify(deleteUserInvCred),
           statusCode: 401,
-          body: JSON.stringify({}),
           isExtended: false,
           getBody: expect.any(Function)
         },
         'INV_TOKEN': {
           fileContent: JSON.stringify(deleteUserInvCred),
           statusCode: 401,
-          body: JSON.stringify({}),
           isExtended: false,
           getBody: expect.any(Function)
         },
