@@ -146,10 +146,19 @@ export const getRoute = (
   const isExtended = isStructureExtended(jsonContent)
 
   const header = jsonContent.__header
-  const body = isExtended ? JSON.stringify(jsonContent.__body) : fileContent
+
+  const getBodyValue = (): string | undefined => {
+    if (fileContent === '[null]') {
+      return undefined
+    }
+
+    return isExtended ? JSON.stringify(jsonContent.__body) : fileContent
+  }
+
+  const body = getBodyValue()
 
   const getBody = (varsToReplace?: {[key: string]: string}): string => {
-    if (varsToReplace) {
+    if (varsToReplace && body) {
       return getContentWithReplacedVars(body, varsToReplace)
     }
 
