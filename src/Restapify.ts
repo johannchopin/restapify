@@ -11,6 +11,7 @@ import { HttpVerb } from './types'
 import {
   getDirs,
   getFiles,
+  getRoutesByFileOrder as getRoutesByFileOrderHelper,
   routeResolve,
   withoutUndefinedFromObject
 } from './utils'
@@ -19,7 +20,7 @@ import { getInitialisedInternalApi } from './internalApi'
 
 const DEFAULT_PORT = 6767
 const DASHBOARD_FOLDER_PATH = path.resolve(__dirname,
-  '../../node_modules/restapify-dashboard/public/')
+  '../node_modules/restapify-dashboard/public/')
 
 // I N T E R F A C E S
 export interface RouteState {
@@ -50,7 +51,7 @@ class Restapify {
   }
   public entryFolderPath: string
   public port: number
-  public apiPrefix: string
+  public apiBaseUrl: string
   public states: PrivateRouteState[] = []
   public hotWatch: boolean
 
@@ -64,7 +65,7 @@ class Restapify {
   }: RestapifyParams) {
     this.entryFolderPath = rootDir
     this.port = port
-    this.apiPrefix = baseURL
+    this.apiBaseUrl = baseURL
     this.hotWatch = hotWatch
     this.states = states.filter(state => {
       return state.state !== undefined
@@ -218,7 +219,7 @@ class Restapify {
       header
     } = routeData
 
-    normalizedRoute = routeResolve(this.apiPrefix, normalizedRoute)
+    normalizedRoute = routeResolve(this.apiBaseUrl, normalizedRoute)
 
     const responseCallback = (req: any, res: any): void => {
       res.status(statusCode)
@@ -235,14 +236,7 @@ class Restapify {
       res.send(JSON.parse(routeData.getBody(vars)))
     }
 
-    this.logRouteListening(routeData)
     this.listenRoute(routeData.method, normalizedRoute, responseCallback)
-  }
-
-  private logRouteListening = (routeData: RouteData): void => {
-    const { route, stateVars, method: httpVerb } = routeData
-    const stateVarsString = stateVars.length > 0 ? '{' + stateVars.join('|') + '}' : ''
-    console.log(`> ${httpVerb} ${route} ${stateVarsString}`)
   }
 
   private configFile = (filePath: string): void => {
@@ -351,6 +345,13 @@ class Restapify {
     }
 
     this.restartServer()
+  }
+
+  public getServedRoutes = ():{
+    route: string,
+    method: HttpVerb
+  }[] => {
+    return getRoutesByFileOrderHelper(this.routes)
   }
 
   public openDashboard = (): void => {

@@ -2,6 +2,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 import { HTTP_VERBS } from './CONST'
+import { HttpVerb } from './types'
+import { Routes } from './Restapify'
 
 export const getDirs = (p: string): string[] => {
   return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory())
@@ -71,4 +73,30 @@ export const withoutUndefinedFromObject = (obj: Object): Object => {
   // @ts-ignore
   Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
   return obj
+}
+
+interface OrderedRoutes {
+  route: string,
+  method: HttpVerb
+}
+export const getRoutesByFileOrder = (routes: Routes): OrderedRoutes[] => {
+  const orderedRoutes: OrderedRoutes[] = []
+  let routesLink: string[] = []
+
+  HTTP_VERBS.forEach(method => {
+    routesLink = [...routesLink, ...Object.keys(routes[method])]
+  })
+
+  // remove duplicates and sort
+  routesLink = [...new Set(routesLink)].sort()
+
+  routesLink.forEach(routeLink => {
+    HTTP_VERBS.forEach(method => {
+      if (routes[method][routeLink]) {
+        orderedRoutes.push({ method, route: routeLink })
+      }
+    })
+  })
+
+  return orderedRoutes
 }

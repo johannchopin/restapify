@@ -34,7 +34,8 @@
       "error",
       {
         "code": 95,
-        "ignoreComments": true
+        "ignoreComments": true,
+        "ignoreStrings": true
       }
     ],
     "no-unused-vars": "off",
