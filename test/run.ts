@@ -10,5 +10,6 @@ const mockedApi = new Restapify({
       state: 'ERR',
       method: 'DELETE'
     }
-  ]
+  ],
+  openDashboard: true
 })
