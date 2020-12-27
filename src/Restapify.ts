@@ -136,12 +136,11 @@ class Restapify {
   private handleHttpServerErrors = (): void => {
     this.server.on('error', (e: any) => {
       switch (e.code) {
-      case 'EADDRINUSE':
-        console.log(`Port ${this.port} not available`)
-        this.port += 1
-        this.restartServer()
+      case 'EADDRINUSE': {
+        const error: RestapifyErrorName = 'MISS:PORT'
+        this.executeCallbacksForSingleEvent('error', { error })
         break
-
+      }
       default:
         console.log(`Unknow error ${e.code}`)
         break
@@ -319,6 +318,7 @@ class Restapify {
 
   public run = ():void => {
     try {
+      this.configEventsCallbacks()
       this.check()
       this.configServer()
       this.configDashboard()
@@ -330,6 +330,15 @@ class Restapify {
     } catch (error) {
       this.executeCallbacks('error', { error: error.message })
     }
+  }
+
+  private configEventsCallbacks = ():void => {
+    this.onError(({ error }) => {
+      if (error === 'MISS:PORT') {
+        this.port += 1
+        this.restartServer()
+      }
+    })
   }
 
   private removeState = (route: string, method?: HttpVerb): void => {
