@@ -99,7 +99,7 @@ class Restapify {
       chokidar.watch(this.rootDir, {
         ignoreInitial: true
       }).on('all', () => {
-        this.restartServer()
+        this.restartServer(true)
       })
     }
   }
@@ -153,9 +153,9 @@ class Restapify {
     })
   }
 
-  private restartServer = (): void => {
+  private restartServer = (hardRestart = false): void => {
     this.close()
-    this.run(true)
+    this.run(!hardRestart)
   }
 
   private checkApiBaseUrl = (): void => {
@@ -365,7 +365,7 @@ class Restapify {
     this.onError(({ error }) => {
       if (error === 'MISS:PORT') {
         this.port += 1
-        this.restartServer()
+        this.restartServer(true)
       }
     })
   }
