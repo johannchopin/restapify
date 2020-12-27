@@ -17,9 +17,9 @@ import {
 import { INTERNAL_BASEURL } from './CONST'
 
 import {
-  getDirs,
-  getFiles,
+  getRouteFiles,
   getRoutesByFileOrder as getRoutesByFileOrderHelper,
+  isJsonString,
   routeResolve,
   withoutUndefinedFromObject
 } from './utils'
@@ -53,11 +53,15 @@ export type Routes = {
 type EventCallbackStore = {
   [event in RestapifyEventName]?: RestapifyEventCallback[]
 }
+type ListedFiles = {
+  [filename: string]: string
+}
 
 class Restapify {
   private eventCallbacksStore: EventCallbackStore = {}
   private app: express.Express
   private server: any
+  private listedRouteFiles: ListedFiles = {}
   public routes: Routes = {
     GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
   }
@@ -86,6 +90,10 @@ class Restapify {
     }) as PrivateRouteState[]
   }
 
+  private listRouteFiles = (): void => {
+    this.listedRouteFiles = getRouteFiles(this.rootDir)
+  }
+
   private configHotWatch = (): void => {
     if (this.hotWatch) {
       chokidar.watch(this.rootDir, {
@@ -112,7 +120,7 @@ class Restapify {
     })
 
     this.handleHttpServerErrors()
-    this.configFolder(this.rootDir)
+    this.configRoutesFromListedFiles()
     this.serveRoutes()
   }
 
@@ -128,11 +136,6 @@ class Restapify {
       setState: this.setState,
       onClose: this.close
     })
-  }
-
-  private check = (): void => {
-    this.checkApiBaseUrl()
-    this.checkEntryFolder()
   }
 
   private handleHttpServerErrors = (): void => {
@@ -152,7 +155,7 @@ class Restapify {
 
   private restartServer = (): void => {
     this.close()
-    this.run()
+    this.run(true)
   }
 
   private checkApiBaseUrl = (): void => {
@@ -162,7 +165,7 @@ class Restapify {
     }
   }
 
-  private checkEntryFolder = (): void => {
+  private checkRootDirectory = (): void => {
     const folderExists = fs.existsSync(this.rootDir)
     if (!folderExists) {
       const error: RestapifyErrorName = 'MISS:ROOT_DIR'
@@ -170,16 +173,66 @@ class Restapify {
     }
   }
 
-  private configFolder = (folderPath: string): void => {
-    const dirs = getDirs(folderPath)
-    const files = getFiles(folderPath)
+  private checkJsonFiles = (): void => {
+    Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
+      const routeFileContent = this.listedRouteFiles[routeFilePath]
+      const isJsonValid = isJsonString(routeFileContent)
 
-    files.forEach(filename => {
-      this.configFile(path.resolve(folderPath, filename))
+      if (!isJsonValid) {
+        const error: RestapifyErrorName = 'INV:JSON_FILE'
+        throw new Error(`${error} ${routeFilePath}`)
+      }
     })
+  }
 
-    dirs.forEach(dir => {
-      this.configFolder(path.resolve(folderPath, dir))
+  private configRoutesFromListedFiles = (): void => {
+    Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
+      const routeData = getRoute(
+        routeFilePath,
+        this.rootDir,
+        this.listedRouteFiles[routeFilePath]
+      )
+      const {
+        route,
+        method,
+        stateVars,
+        body,
+        getBody,
+        header,
+        isExtended,
+        statusCode,
+        fileContent
+      } = routeData
+      const routeExist = this.routes[method][route] !== undefined
+      const routeContainsStates = stateVars.length > 0
+
+      if (!routeExist) {
+        this.routes[method][route] = {} as RouteData
+      }
+
+      if (routeContainsStates) {
+        if (this.routes[method][route] === undefined) {
+          this.routes[method][route] = {} as RouteData
+        }
+
+        if (this.routes[method][route].states === undefined) {
+          this.routes[method][route].states = {}
+        }
+
+        stateVars.forEach(stateVar => {
+        // @ts-ignore
+          this.routes[method][route].states[stateVar] = withoutUndefinedFromObject({
+            body,
+            fileContent,
+            header,
+            isExtended,
+            statusCode,
+            getBody
+          })
+        })
+      } else {
+        this.routes[method][route] = { ...this.routes[method][route], ...routeData }
+      }
     })
   }
 
@@ -247,51 +300,6 @@ class Restapify {
     this.listenRoute(routeData.method, normalizedRoute, responseCallback)
   }
 
-  private configFile = (filePath: string): void => {
-    const routeData = getRoute(filePath, this.rootDir)
-    const {
-      route,
-      method,
-      stateVars,
-      body,
-      getBody,
-      header,
-      isExtended,
-      statusCode,
-      fileContent
-    } = routeData
-    const routeExist = this.routes[method][route] !== undefined
-    const routeContainsStates = stateVars.length > 0
-
-    if (!routeExist) {
-      this.routes[method][route] = {} as RouteData
-    }
-
-    if (routeContainsStates) {
-      if (this.routes[method][route] === undefined) {
-        this.routes[method][route] = {} as RouteData
-      }
-
-      if (this.routes[method][route].states === undefined) {
-        this.routes[method][route].states = {}
-      }
-
-      stateVars.forEach(stateVar => {
-        // @ts-ignore
-        this.routes[method][route].states[stateVar] = withoutUndefinedFromObject({
-          body,
-          fileContent,
-          header,
-          isExtended,
-          statusCode,
-          getBody
-        })
-      })
-    } else {
-      this.routes[method][route] = { ...this.routes[method][route], ...routeData }
-    }
-  }
-
   private listenRoute = (
     method: HttpVerb,
     route: string,
@@ -322,20 +330,32 @@ class Restapify {
 
   private startServer = (): void => {
     this.server.listen(this.port)
-    this.executeCallbacks('server:start')
   }
 
-  public run = ():void => {
+  public run = (restartedBecauseOfHotWatch = false):void => {
     try {
-      this.configEventsCallbacks()
-      this.check()
+      if (!restartedBecauseOfHotWatch) {
+        this.configEventsCallbacks()
+        this.checkApiBaseUrl()
+        this.checkRootDirectory()
+      }
+
+      this.listRouteFiles()
+      this.checkJsonFiles()
       this.configServer()
-      this.configDashboard()
+
+      if (!restartedBecauseOfHotWatch) this.configDashboard()
+
       this.configInternalApi()
-      this.configHotWatch()
-      if (this.autoOpenDashboard) this.openDashboard()
+
+      if (!restartedBecauseOfHotWatch) this.configHotWatch()
+      if (!restartedBecauseOfHotWatch && this.autoOpenDashboard) this.openDashboard()
+      if (!restartedBecauseOfHotWatch) this.executeCallbacks('server:start')
+
       this.startServer()
-      this.executeCallbacks('start')
+
+      if (!restartedBecauseOfHotWatch) this.executeCallbacks('start')
+      else this.executeCallbacks('server:restart')
     } catch (error) {
       this.executeCallbacks('error', { error: error.message })
     }

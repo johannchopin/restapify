@@ -1,5 +1,3 @@
-import * as fs from 'fs'
-
 import { HttpVerb } from './types'
 
 import { replaceAll } from './utils'
@@ -173,7 +171,8 @@ export const isStructureExtended = (jsonContent: {[key: string]: any}): boolean 
 
 export const getRoute = (
   filePath: string,
-  entryFolderPath: string
+  entryFolderPath: string,
+  fileContent: string
 ): Route => {
   // relative to the entry folder
   const relativeFilePath = filePath.replace(entryFolderPath, '')
@@ -181,7 +180,6 @@ export const getRoute = (
   const route = getRouteFromFilePath(relativeFilePath)
   const routeVars = getVarsInPath(route)
   const normalizedRoute = getNormalizedRoute(route, routeVars)
-  const fileContent = fs.readFileSync(filePath, 'utf8')
   const jsonContent = JSON.parse(fileContent)
   const stateVars = getStateVarsInFilename(filename)
   const statusCode = getResponseStatusCodeInFilename(filename)
