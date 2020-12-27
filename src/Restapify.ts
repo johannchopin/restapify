@@ -60,6 +60,7 @@ class Restapify {
   public apiBaseUrl: string
   public states: PrivateRouteState[] = []
   public hotWatch: boolean
+  public autoOpenDashboard: boolean
 
   constructor({
     rootDir,
@@ -73,22 +74,10 @@ class Restapify {
     this.port = port
     this.apiBaseUrl = baseURL
     this.hotWatch = hotWatch
+    this.autoOpenDashboard = openDashboard
     this.states = states.filter(state => {
       return state.state !== undefined
     }) as PrivateRouteState[]
-
-    this.init()
-
-    if (openDashboard) this.openDashboard()
-  }
-
-  private init = (): void => {
-    this.check()
-    this.configServer()
-    this.configDashboard()
-    this.configInternalApi()
-    this.configHotWatch()
-    this.run()
   }
 
   private configHotWatch = (): void => {
@@ -157,7 +146,7 @@ class Restapify {
 
   private restartServer = (): void => {
     this.close()
-    this.init()
+    this.run()
   }
 
   private checkEntryFolder = (): void => {
@@ -322,8 +311,18 @@ class Restapify {
     this.kill()
   }
 
-  public run = (): void => {
+  private runServer = (): void => {
     this.server.listen(this.port)
+  }
+
+  public run = ():void => {
+    this.check()
+    this.configServer()
+    this.configDashboard()
+    this.configInternalApi()
+    this.configHotWatch()
+    if (this.autoOpenDashboard) this.openDashboard()
+    this.runServer()
   }
 
   private removeState = (route: string, method?: HttpVerb): void => {
