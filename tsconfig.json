@@ -3,6 +3,7 @@
     "outDir": "dist",
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "resolveJsonModule": true,
     "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",

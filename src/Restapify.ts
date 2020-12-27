@@ -42,7 +42,7 @@ export interface PrivateRouteState extends Omit<RouteState, 'state'> {
 export interface RestapifyParams {
   rootDir: string
   port?: number
-  baseURL?: string
+  baseUrl?: string
   states?: RouteState[]
   openDashboard?: boolean
   hotWatch?: boolean
@@ -75,14 +75,14 @@ class Restapify {
   constructor({
     rootDir,
     port = DEFAULT_PORT,
-    baseURL = '/api',
+    baseUrl = '/api',
     states = [],
     openDashboard = false,
     hotWatch = true
   }: RestapifyParams) {
     this.rootDir = rootDir
     this.port = port
-    this.apiBaseUrl = baseURL
+    this.apiBaseUrl = baseUrl
     this.hotWatch = hotWatch
     this.autoOpenDashboard = openDashboard
     this.states = states.filter(state => {

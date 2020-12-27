@@ -1,37 +1,25 @@
-import * as arg from 'arg'
 import * as path from 'path'
 import * as chalk from 'chalk'
+import { program } from 'commander'
 
-import Restapify from '../Restapify'
+import * as packageJson from '../../package.json'
+
+import Restapify, { RestapifyParams } from '../Restapify'
 import { getInstanceOverviewOutput, getMethodOutput, onRestapifyInstanceError } from './utils'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): void => {
-  const args = arg({
-    '--help': Boolean,
-    '-h': '--help',
-
-    '--port': Number,
-    '-p': '--port',
-
-    '--baseURL': String,
-    '-b': '--baseURL',
-
-    '--no-open': Boolean
-  }, { argv: cliArgs })
-
+const startRestapifyServer = (options: RestapifyParams): void => {
   const {
-    '--port': port,
-    '--baseURL': baseURL,
-    '--no-open': noOpen = false
-  } = args
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const RestapifyInstance = new Restapify({
-    rootDir: path.resolve(entryFolder),
+    rootDir,
     port,
-    baseURL,
-    openDashboard: !noOpen
+    baseUrl,
+    openDashboard
+  } = options
+
+  const RestapifyInstance = new Restapify({
+    rootDir: path.resolve(rootDir),
+    port: port,
+    baseUrl: baseUrl,
+    openDashboard: openDashboard
   })
   RestapifyInstance.on('server:start', () => {
     console.log(`\n🏗 Try to serve on port ${RestapifyInstance.port}`)
@@ -65,4 +53,27 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
   })
 
   RestapifyInstance.run()
+}
+
+export const cli = (cliArgs: string[]): void => {
+  program
+    .version(packageJson.version, '-v, --version', 'output the current version')
+    .option('-p, --port <number>', 'port to serve Restapify instance')
+    .option('-b, --baseUrl <string>', 'base url to serve the API')
+    .option('-o, --open', 'open dashboard on server start', true)
+    .option('--no-open', 'don\'t open dashboard on server start')
+
+  program
+    .command('serve <rootDir>')
+    .description('serve a mocked API from folder <rootDir>')
+    .action((rootDir, options) => {
+      startRestapifyServer({
+        rootDir,
+        baseUrl: options.parent.baseUrl,
+        port: options.parent.port,
+        openDashboard: options.parent.open
+      })
+    })
+
+  program.parse(cliArgs)
 }
