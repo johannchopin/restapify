@@ -132,7 +132,7 @@ class Restapify {
 
   private check = (): void => {
     this.checkApiBaseUrl()
-    this.checkEntryFolder()
+    this.checkRootDirectory()
   }
 
   private handleHttpServerErrors = (): void => {
@@ -162,7 +162,7 @@ class Restapify {
     }
   }
 
-  private checkEntryFolder = (): void => {
+  private checkRootDirectory = (): void => {
     const folderExists = fs.existsSync(this.rootDir)
     if (!folderExists) {
       const error: RestapifyErrorName = 'MISS:ROOT_DIR'
