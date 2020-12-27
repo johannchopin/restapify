@@ -100,3 +100,32 @@ export const getRoutesByFileOrder = (routes: Routes): OrderedRoutes[] => {
 
   return orderedRoutes
 }
+
+export const getRouteFiles = (
+  rootDir: string,
+  files: {[filename: string]: string} = {}
+): {[filename: string]: string} => {
+  const dirNames = getDirs(rootDir)
+  const fileNames = getFiles(rootDir)
+
+  fileNames.forEach(filename => {
+    const filePath = path.resolve(rootDir, filename)
+    files[filePath] = fs.readFileSync(filePath, 'utf8')
+  })
+
+  dirNames.forEach(dir => {
+    return getRouteFiles(path.resolve(rootDir, dir), files)
+  })
+
+  return files
+}
+
+export const isJsonString = (str: string): boolean => {
+  try {
+    JSON.parse(str)
+  } catch (e) {
+    return false
+  }
+
+  return true
+}

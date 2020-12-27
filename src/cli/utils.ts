@@ -56,21 +56,16 @@ export const onRestapifyInstanceError = (
   const { rootDir, port, apiBaseUrl } = instanceData
   let logMessage
   const errorPrepend = chalk.red.bold.underline('\n❌ERROR:')
-  switch (error) {
-  case 'MISS:ROOT_DIR':
+
+  if (error.startsWith('MISS:ROOT_DIR')) {
     logMessage = `${errorPrepend} The given folder ${rootDir} doesn't exist!`
-    break
-
-  case 'MISS:PORT':
+  } else if (error.startsWith('MISS:PORT')) {
     logMessage = `${errorPrepend} port ${port} is already in use!`
-    break
-
-  case 'INV:API_BASEURL':
+  } else if (error.startsWith('INV:API_BASEURL')) {
     logMessage = `${errorPrepend} Impossible to use ${apiBaseUrl} as the API base URL since it's already needed for internal purposes!`
-    break
-
-  default:
-    break
+  } else if (error.startsWith('INV:JSON_FILE')) {
+    const filePath = error.split(' ')[1]
+    logMessage = `${errorPrepend} Impossible to parse the JSON file ${filePath}!`
   }
 
   console.log(logMessage)

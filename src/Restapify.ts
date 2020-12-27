@@ -19,7 +19,9 @@ import { INTERNAL_BASEURL } from './CONST'
 import {
   getDirs,
   getFiles,
+  getRouteFiles,
   getRoutesByFileOrder as getRoutesByFileOrderHelper,
+  isJsonString,
   routeResolve,
   withoutUndefinedFromObject
 } from './utils'
@@ -53,11 +55,15 @@ export type Routes = {
 type EventCallbackStore = {
   [event in RestapifyEventName]?: RestapifyEventCallback[]
 }
+type ListedFiles = {
+  [filename: string]: string
+}
 
 class Restapify {
   private eventCallbacksStore: EventCallbackStore = {}
   private app: express.Express
   private server: any
+  private listedRouteFiles: ListedFiles = {}
   public routes: Routes = {
     GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
   }
@@ -84,6 +90,10 @@ class Restapify {
     this.states = states.filter(state => {
       return state.state !== undefined
     }) as PrivateRouteState[]
+  }
+
+  private listRouteFiles = (): void => {
+    this.listedRouteFiles = getRouteFiles(this.rootDir)
   }
 
   private configHotWatch = (): void => {
@@ -130,11 +140,6 @@ class Restapify {
     })
   }
 
-  private check = (): void => {
-    this.checkApiBaseUrl()
-    this.checkRootDirectory()
-  }
-
   private handleHttpServerErrors = (): void => {
     this.server.on('error', (e: any) => {
       switch (e.code) {
@@ -168,6 +173,18 @@ class Restapify {
       const error: RestapifyErrorName = 'MISS:ROOT_DIR'
       throw new Error(error)
     }
+  }
+
+  private checkJsonFiles = (): void => {
+    Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
+      const routeFileContent = this.listedRouteFiles[routeFilePath]
+      const isJsonValid = isJsonString(routeFileContent)
+
+      if (!isJsonValid) {
+        const error: RestapifyErrorName = 'INV:JSON_FILE'
+        throw new Error(`${error} ${routeFilePath}`)
+      }
+    })
   }
 
   private configFolder = (folderPath: string): void => {
@@ -328,7 +345,10 @@ class Restapify {
   public run = ():void => {
     try {
       this.configEventsCallbacks()
-      this.check()
+      this.checkApiBaseUrl()
+      this.checkRootDirectory()
+      this.listRouteFiles()
+      this.checkJsonFiles()
       this.configServer()
       this.configDashboard()
       this.configInternalApi()
