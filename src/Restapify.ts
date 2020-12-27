@@ -7,7 +7,11 @@ import * as open from 'open'
 import * as chokidar from 'chokidar'
 
 import {
-  HttpVerb, RestapifyEventCallback, RestapifyEventCallbackParam, RestapifyEventName
+  HttpVerb,
+  RestapifyErrorName,
+  RestapifyEventCallback,
+  RestapifyEventCallbackParam,
+  RestapifyEventName
 } from './types'
 
 import {
@@ -152,7 +156,8 @@ class Restapify {
   private checkEntryFolder = (): void => {
     const folderExists = fs.existsSync(this.entryFolderPath)
     if (!folderExists) {
-      this.logError(`Folder ${this.entryFolderPath}`)
+      const error: RestapifyErrorName = 'MISS:ROOT_DIR'
+      throw new Error(error)
     }
   }
 
@@ -306,23 +311,22 @@ class Restapify {
     }
   }
 
-  private logError = (error: string): void => {
-    console.error(`ERROR: ${error}`)
-    this.kill()
-  }
-
   private runServer = (): void => {
     this.server.listen(this.port)
   }
 
   public run = ():void => {
-    this.check()
-    this.configServer()
-    this.configDashboard()
-    this.configInternalApi()
-    this.configHotWatch()
-    if (this.autoOpenDashboard) this.openDashboard()
-    this.runServer()
+    try {
+      this.check()
+      this.configServer()
+      this.configDashboard()
+      this.configInternalApi()
+      this.configHotWatch()
+      if (this.autoOpenDashboard) this.openDashboard()
+      this.runServer()
+    } catch (error) {
+      this.executeCallbacks('error', { error: error.message })
+    }
   }
 
   private removeState = (route: string, method?: HttpVerb): void => {
