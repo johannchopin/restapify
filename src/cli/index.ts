@@ -32,6 +32,7 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
     baseURL,
     openDashboard: !noOpen
   })
+  RestapifyInstance.run()
 
   const servedRoutes = RestapifyInstance.getServedRoutes()
 

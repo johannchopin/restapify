@@ -18,6 +18,7 @@ describe('Internal API', () => {
 
   beforeEach(() => {
     RestapifyInstance = new Restapify(restapifyParams)
+    RestapifyInstance.run()
   })
 
   afterEach(() => {

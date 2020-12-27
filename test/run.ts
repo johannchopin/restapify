@@ -2,7 +2,7 @@
 import * as path from 'path'
 import Restapify from '../src/Restapify'
 
-const mockedApi = new Restapify({
+const RestapifyInstance = new Restapify({
   rootDir: path.resolve(__dirname, './api'),
   states: [
     {
@@ -10,6 +10,11 @@ const mockedApi = new Restapify({
       state: 'ERR',
       method: 'DELETE'
     }
-  ],
-  openDashboard: true
+  ]
 })
+
+RestapifyInstance.on('error', ({ error }) => {
+  console.log(error)
+})
+
+RestapifyInstance.run()

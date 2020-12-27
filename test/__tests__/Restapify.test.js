@@ -31,6 +31,7 @@ describe('Restapify', () => {
 
   beforeEach(() => {
     RestapifyInstance = new Restapify(restapifyParams)
+    RestapifyInstance.run()
   })
 
   afterEach(() => {
@@ -177,6 +178,8 @@ describe('Restapify with state variables', () => {
       ...restapifyParams,
       states
     })
+
+    RestapifyInstance.run()
   })
 
   afterEach(() => {
