@@ -326,6 +326,7 @@ class Restapify {
       this.configHotWatch()
       if (this.autoOpenDashboard) this.openDashboard()
       this.startServer()
+      this.executeCallbacks('start')
     } catch (error) {
       this.executeCallbacks('error', { error: error.message })
     }

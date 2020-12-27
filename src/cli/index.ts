@@ -2,7 +2,7 @@ import * as arg from 'arg'
 import * as path from 'path'
 
 import Restapify from '../Restapify'
-import { getInstanceOverviewOutput, getMethodOutput } from './utils'
+import { getInstanceOverviewOutput, getMethodOutput, onRestapifyInstanceError } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): void => {
@@ -32,15 +32,28 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
     baseURL,
     openDashboard: !noOpen
   })
-  RestapifyInstance.run()
-
-  const servedRoutes = RestapifyInstance.getServedRoutes()
-
-  servedRoutes.forEach(servedRoute => {
-    let methodOutput = getMethodOutput(servedRoute.method)
-
-    console.log(`${methodOutput} ${servedRoute.route}`)
+  RestapifyInstance.onError(({ error }) => {
+    onRestapifyInstanceError(error, {
+      rootDir: RestapifyInstance.rootDir,
+      apiBaseUrl: RestapifyInstance.apiBaseUrl,
+      port: RestapifyInstance.port
+    })
   })
 
-  console.log(getInstanceOverviewOutput(RestapifyInstance.port, RestapifyInstance.apiBaseUrl))
+  RestapifyInstance.on('start', () => {
+    const servedRoutes = RestapifyInstance.getServedRoutes()
+
+    servedRoutes.forEach(servedRoute => {
+      let methodOutput = getMethodOutput(servedRoute.method)
+
+      console.log(`${methodOutput} ${servedRoute.route}`)
+    })
+
+    console.log(getInstanceOverviewOutput(
+      RestapifyInstance.port,
+      RestapifyInstance.apiBaseUrl
+    ))
+  })
+
+  RestapifyInstance.run()
 }
