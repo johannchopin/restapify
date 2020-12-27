@@ -13,8 +13,11 @@ const RestapifyInstance = new Restapify({
   ]
 })
 
-RestapifyInstance.on('error', ({ error }) => {
+RestapifyInstance.onError(({ error }) => {
   console.log(`Ouuups> ${error}`)
+})
+RestapifyInstance.on('server:start', () => {
+  console.log('server start')
 })
 
 RestapifyInstance.run()
