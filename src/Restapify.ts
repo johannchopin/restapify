@@ -17,8 +17,6 @@ import {
 import { INTERNAL_BASEURL } from './CONST'
 
 import {
-  getDirs,
-  getFiles,
   getRouteFiles,
   getRoutesByFileOrder as getRoutesByFileOrderHelper,
   isJsonString,
@@ -122,7 +120,7 @@ class Restapify {
     })
 
     this.handleHttpServerErrors()
-    this.configFolder(this.rootDir)
+    this.configRoutesFromListedFiles()
     this.serveRoutes()
   }
 
@@ -187,16 +185,54 @@ class Restapify {
     })
   }
 
-  private configFolder = (folderPath: string): void => {
-    const dirs = getDirs(folderPath)
-    const files = getFiles(folderPath)
+  private configRoutesFromListedFiles = (): void => {
+    Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
+      const routeData = getRoute(
+        routeFilePath,
+        this.rootDir,
+        this.listedRouteFiles[routeFilePath]
+      )
+      const {
+        route,
+        method,
+        stateVars,
+        body,
+        getBody,
+        header,
+        isExtended,
+        statusCode,
+        fileContent
+      } = routeData
+      const routeExist = this.routes[method][route] !== undefined
+      const routeContainsStates = stateVars.length > 0
 
-    files.forEach(filename => {
-      this.configFile(path.resolve(folderPath, filename))
-    })
+      if (!routeExist) {
+        this.routes[method][route] = {} as RouteData
+      }
 
-    dirs.forEach(dir => {
-      this.configFolder(path.resolve(folderPath, dir))
+      if (routeContainsStates) {
+        if (this.routes[method][route] === undefined) {
+          this.routes[method][route] = {} as RouteData
+        }
+
+        if (this.routes[method][route].states === undefined) {
+          this.routes[method][route].states = {}
+        }
+
+        stateVars.forEach(stateVar => {
+        // @ts-ignore
+          this.routes[method][route].states[stateVar] = withoutUndefinedFromObject({
+            body,
+            fileContent,
+            header,
+            isExtended,
+            statusCode,
+            getBody
+          })
+        })
+      } else {
+        this.routes[method][route] = { ...this.routes[method][route], ...routeData }
+      }
     })
   }
 
@@ -262,51 +298,6 @@ class Restapify {
     }
 
     this.listenRoute(routeData.method, normalizedRoute, responseCallback)
-  }
-
-  private configFile = (filePath: string): void => {
-    const routeData = getRoute(filePath, this.rootDir)
-    const {
-      route,
-      method,
-      stateVars,
-      body,
-      getBody,
-      header,
-      isExtended,
-      statusCode,
-      fileContent
-    } = routeData
-    const routeExist = this.routes[method][route] !== undefined
-    const routeContainsStates = stateVars.length > 0
-
-    if (!routeExist) {
-      this.routes[method][route] = {} as RouteData
-    }
-
-    if (routeContainsStates) {
-      if (this.routes[method][route] === undefined) {
-        this.routes[method][route] = {} as RouteData
-      }
-
-      if (this.routes[method][route].states === undefined) {
-        this.routes[method][route].states = {}
-      }
-
-      stateVars.forEach(stateVar => {
-        // @ts-ignore
-        this.routes[method][route].states[stateVar] = withoutUndefinedFromObject({
-          body,
-          fileContent,
-          header,
-          isExtended,
-          statusCode,
-          getBody
-        })
-      })
-    } else {
-      this.routes[method][route] = { ...this.routes[method][route], ...routeData }
-    }
   }
 
   private listenRoute = (
