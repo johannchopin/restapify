@@ -6,7 +6,15 @@ import * as http from 'http'
 import * as open from 'open'
 import * as chokidar from 'chokidar'
 
-import { HttpVerb } from './types'
+import {
+  HttpVerb,
+  RestapifyErrorCallbackParam,
+  RestapifyErrorName,
+  RestapifyEventCallback,
+  RestapifyEventCallbackParam,
+  RestapifyEventName
+} from './types'
+import { INTERNAL_BASEURL } from './CONST'
 
 import {
   getDirs,
@@ -42,18 +50,23 @@ export interface RestapifyParams {
 export type Routes = {
   [method in HttpVerb]: {[url: string]: RouteData}
 }
+type EventCallbackStore = {
+  [event in RestapifyEventName]?: RestapifyEventCallback[]
+}
 
 class Restapify {
-  protected app: express.Express
-  protected server: any
+  private eventCallbacksStore: EventCallbackStore = {}
+  private app: express.Express
+  private server: any
   public routes: Routes = {
     GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
   }
-  public entryFolderPath: string
+  public rootDir: string
   public port: number
   public apiBaseUrl: string
   public states: PrivateRouteState[] = []
   public hotWatch: boolean
+  public autoOpenDashboard: boolean
 
   constructor({
     rootDir,
@@ -63,31 +76,19 @@ class Restapify {
     openDashboard = false,
     hotWatch = true
   }: RestapifyParams) {
-    this.entryFolderPath = rootDir
+    this.rootDir = rootDir
     this.port = port
     this.apiBaseUrl = baseURL
     this.hotWatch = hotWatch
+    this.autoOpenDashboard = openDashboard
     this.states = states.filter(state => {
       return state.state !== undefined
     }) as PrivateRouteState[]
-
-    this.init()
-
-    if (openDashboard) this.openDashboard()
-  }
-
-  private init = (): void => {
-    this.check()
-    this.configServer()
-    this.configDashboard()
-    this.configInternalApi()
-    this.configHotWatch()
-    this.run()
   }
 
   private configHotWatch = (): void => {
     if (this.hotWatch) {
-      chokidar.watch(this.entryFolderPath, {
+      chokidar.watch(this.rootDir, {
         ignoreInitial: true
       }).on('all', () => {
         this.restartServer()
@@ -111,12 +112,12 @@ class Restapify {
     })
 
     this.handleHttpServerErrors()
-    this.configFolder(this.entryFolderPath)
+    this.configFolder(this.rootDir)
     this.serveRoutes()
   }
 
   private configDashboard = (): void => {
-    this.app.use('/restapify', express.static(DASHBOARD_FOLDER_PATH))
+    this.app.use(INTERNAL_BASEURL, express.static(DASHBOARD_FOLDER_PATH))
   }
 
   private configInternalApi = (): void => {
@@ -130,18 +131,18 @@ class Restapify {
   }
 
   private check = (): void => {
+    this.checkApiBaseUrl()
     this.checkEntryFolder()
   }
 
   private handleHttpServerErrors = (): void => {
     this.server.on('error', (e: any) => {
       switch (e.code) {
-      case 'EADDRINUSE':
-        console.log(`Port ${this.port} not available`)
-        this.port += 1
-        this.restartServer()
+      case 'EADDRINUSE': {
+        const error: RestapifyErrorName = 'MISS:PORT'
+        this.executeCallbacksForSingleEvent('error', { error })
         break
-
+      }
       default:
         console.log(`Unknow error ${e.code}`)
         break
@@ -151,13 +152,21 @@ class Restapify {
 
   private restartServer = (): void => {
     this.close()
-    this.init()
+    this.run()
+  }
+
+  private checkApiBaseUrl = (): void => {
+    if (this.apiBaseUrl.startsWith(INTERNAL_BASEURL)) {
+      const error: RestapifyErrorName = 'INV:API_BASEURL'
+      throw new Error(error)
+    }
   }
 
   private checkEntryFolder = (): void => {
-    const folderExists = fs.existsSync(this.entryFolderPath)
+    const folderExists = fs.existsSync(this.rootDir)
     if (!folderExists) {
-      this.logError(`Folder ${this.entryFolderPath}`)
+      const error: RestapifyErrorName = 'MISS:ROOT_DIR'
+      throw new Error(error)
     }
   }
 
@@ -239,7 +248,7 @@ class Restapify {
   }
 
   private configFile = (filePath: string): void => {
-    const routeData = getRoute(filePath, this.entryFolderPath)
+    const routeData = getRoute(filePath, this.rootDir)
     const {
       route,
       method,
@@ -311,19 +320,98 @@ class Restapify {
     }
   }
 
-  private logError = (error: string): void => {
-    console.error(`ERROR: ${error}`)
-    this.kill()
+  private startServer = (): void => {
+    this.server.listen(this.port)
+    this.executeCallbacks('server:start')
   }
 
-  public run = (): void => {
-    this.server.listen(this.port)
+  public run = ():void => {
+    try {
+      this.configEventsCallbacks()
+      this.check()
+      this.configServer()
+      this.configDashboard()
+      this.configInternalApi()
+      this.configHotWatch()
+      if (this.autoOpenDashboard) this.openDashboard()
+      this.startServer()
+      this.executeCallbacks('start')
+    } catch (error) {
+      this.executeCallbacks('error', { error: error.message })
+    }
+  }
+
+  private configEventsCallbacks = ():void => {
+    this.onError(({ error }) => {
+      if (error === 'MISS:PORT') {
+        this.port += 1
+        this.restartServer()
+      }
+    })
   }
 
   private removeState = (route: string, method?: HttpVerb): void => {
     this.states = this.states.filter(state => {
       return state.route !== route && state.method !== method
     })
+  }
+
+  private createSingleEventStoreIfMissing = (eventName: RestapifyEventName): void => {
+    if (this.eventCallbacksStore[eventName] === undefined) {
+      this.eventCallbacksStore[eventName] = []
+    }
+  }
+
+  private addSingleEventCallbackToStore = (
+    event: RestapifyEventName,
+    callback: RestapifyEventCallback
+  ): void => {
+    this.createSingleEventStoreIfMissing(event)
+
+    // @ts-ignore
+    this.eventCallbacksStore[event].push(callback)
+  }
+
+  private addEventCallbackToStore = (
+    event: RestapifyEventName | RestapifyEventName[],
+    callback: RestapifyEventCallback
+  ):void => {
+    if (Array.isArray(event)) {
+      event.forEach(eventName => {
+        this.addSingleEventCallbackToStore(eventName, callback)
+      })
+    } else {
+      this.addSingleEventCallbackToStore(event, callback)
+    }
+  }
+
+  private executeCallbacksForSingleEvent = (
+    event: RestapifyEventName,
+    params?: RestapifyEventCallbackParam
+  ):void => {
+    const callbacks = this.eventCallbacksStore[event]
+    if (callbacks) {
+      callbacks.forEach(callback => {
+        if (params) {
+          callback(params)
+        } else {
+          callback()
+        }
+      })
+    }
+  }
+
+  private executeCallbacks = (
+    event: RestapifyEventName | RestapifyEventName[],
+    params?: RestapifyEventCallbackParam
+  ): void => {
+    if (Array.isArray(event)) {
+      event.forEach(eventName => {
+        this.executeCallbacksForSingleEvent(eventName, params)
+      })
+    } else {
+      this.executeCallbacksForSingleEvent(event, params)
+    }
   }
 
   public setState = (newState: RouteState): void => {
@@ -361,6 +449,17 @@ class Restapify {
 
   public close = (): void => {
     this.server.close()
+  }
+
+  public on = (
+    event: RestapifyEventName | RestapifyEventName[],
+    callback: RestapifyEventCallback
+  ): void => {
+    this.addEventCallbackToStore(event, callback)
+  }
+
+  public onError = (callback: (params: RestapifyErrorCallbackParam) => void): void => {
+    this.addSingleEventCallbackToStore('error', callback)
   }
 
   public kill = (): void => {
