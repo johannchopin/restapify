@@ -8,6 +8,7 @@ import * as chokidar from 'chokidar'
 
 import {
   HttpVerb,
+  RestapifyErrorCallbackParam,
   RestapifyErrorName,
   RestapifyEventCallback,
   RestapifyEventCallbackParam,
@@ -59,7 +60,7 @@ class Restapify {
   public routes: Routes = {
     GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
   }
-  public entryFolderPath: string
+  public rootDir: string
   public port: number
   public apiBaseUrl: string
   public states: PrivateRouteState[] = []
@@ -74,7 +75,7 @@ class Restapify {
     openDashboard = false,
     hotWatch = true
   }: RestapifyParams) {
-    this.entryFolderPath = rootDir
+    this.rootDir = rootDir
     this.port = port
     this.apiBaseUrl = baseURL
     this.hotWatch = hotWatch
@@ -86,7 +87,7 @@ class Restapify {
 
   private configHotWatch = (): void => {
     if (this.hotWatch) {
-      chokidar.watch(this.entryFolderPath, {
+      chokidar.watch(this.rootDir, {
         ignoreInitial: true
       }).on('all', () => {
         this.restartServer()
@@ -110,7 +111,7 @@ class Restapify {
     })
 
     this.handleHttpServerErrors()
-    this.configFolder(this.entryFolderPath)
+    this.configFolder(this.rootDir)
     this.serveRoutes()
   }
 
@@ -154,7 +155,7 @@ class Restapify {
   }
 
   private checkEntryFolder = (): void => {
-    const folderExists = fs.existsSync(this.entryFolderPath)
+    const folderExists = fs.existsSync(this.rootDir)
     if (!folderExists) {
       const error: RestapifyErrorName = 'MISS:ROOT_DIR'
       throw new Error(error)
@@ -239,7 +240,7 @@ class Restapify {
   }
 
   private configFile = (filePath: string): void => {
-    const routeData = getRoute(filePath, this.entryFolderPath)
+    const routeData = getRoute(filePath, this.rootDir)
     const {
       route,
       method,
@@ -433,7 +434,7 @@ class Restapify {
     this.addEventCallbackToStore(event, callback)
   }
 
-  public onError = (callback: RestapifyEventCallback): void => {
+  public onError = (callback: (params: RestapifyErrorCallbackParam) => void): void => {
     this.addSingleEventCallbackToStore('error', callback)
   }
 
