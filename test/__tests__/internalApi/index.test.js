@@ -24,34 +24,76 @@ describe('Internal API', () => {
     RestapifyInstance.close()
   })
 
-  /*
   it('should fetch /routes', async () => {
-    let expectedResponse = RestapifyInstance.routes
-    Object.keys(expectedResponse).forEach(route => {
-      Object.keys(expectedResponse[route]).forEach(method => {
-        let {getBody, header, ...rest} = expectedResponse[route][method]
-
-        if (header) {
-          rest = {...rest, header}
+    const expectedResponse = {
+      "/users/[userid]": {
+        "GET": {
+          "states": {
+            "ERR": {
+              "body": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
+              "fileContent": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
+              "isExtended": false,
+              "statusCode": 404
+            }
+          },
+          "route": "/users/[userid]",
+          "routeVars": [
+            "userid"
+          ],
+          "normalizedRoute": "/users/:userid",
+          "isExtended": false,
+          "filename": "[userid].json",
+          "fileContent": "{\n  \"testUserId\": \"n:[userid]\"\n}",
+          "stateVars": [],
+          "statusCode": 200,
+          "method": "GET",
+          "body": "{\n  \"testUserId\": \"n:[userid]\"\n}"
+        },
+        "DELETE": {
+          "states": {
+            "INV_CRED": {
+              "fileContent": "[null]",
+              "isExtended": false,
+              "statusCode": 401
+            },
+            "INV_TOKEN": {
+              "fileContent": "[null]",
+              "isExtended": false,
+              "statusCode": 401
+            },
+            "ERR": {
+              "body": "{\"success\":false}",
+              "fileContent": "{\n  \"__header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"__body\": {\n    \"success\": false\n  }\n}",
+              "header": {
+                "Content-Type": "text/html; charset=UTF-8"
+              },
+              "isExtended": true,
+              "statusCode": 404
+            }
+          },
+          "route": "/users/[userid]",
+          "routeVars": [
+            "userid"
+          ],
+          "normalizedRoute": "/users/:userid",
+          "isExtended": true,
+          "filename": "[userid].DELETE.json",
+          "fileContent": "{\n  \"__header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"__body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
+          "stateVars": [],
+          "statusCode": 200,
+          "method": "DELETE",
+          "body": "{\"success\":true,\"data\":{\"id\":67,\"name\":\"bob\"}}",
+          "header": {
+            "Content-Type": "text/html; charset=UTF-8"
+          }
         }
-
-        // remove getBody callback from response
-        if (rest.states) {
-          Object.keys(rest.states).forEach(state => {
-            const {getBody, ...stateRest} = rest.states[state]
-            rest.states[state] = stateRest
-          })
-        }
-
-        expectedResponse[route][method] = rest
-      })
-    })
+      }
+    }
 
     let response = await fetch(`${apiRoot}/routes`)
     let data = await response.json()
-    expect(data).toEqual(expectedResponse)
+    expect(data).toMatchObject(expectedResponse)
   })
-  */
 
   it('should fetch /states', async () => {
     const expectedResponse = RestapifyInstance.states
