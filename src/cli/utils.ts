@@ -53,7 +53,7 @@ export const onRestapifyInstanceError = (
   error: RestapifyErrorName,
   instanceData: Pick<Restapify, 'apiBaseUrl' | 'port' | 'rootDir'>
 ): void => {
-  const { rootDir, port } = instanceData
+  const { rootDir, port, apiBaseUrl } = instanceData
   let logMessage
   const errorPrepend = chalk.red.bold.underline('\n❌ERROR:')
   switch (error) {
@@ -63,6 +63,10 @@ export const onRestapifyInstanceError = (
 
   case 'MISS:PORT':
     logMessage = `${errorPrepend} port ${port} is already in use!`
+    break
+
+  case 'INV:API_BASEURL':
+    logMessage = `${errorPrepend} Impossible to use ${apiBaseUrl} as the API base URL since it's already needed for internal purposes!`
     break
 
   default:

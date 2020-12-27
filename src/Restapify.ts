@@ -14,6 +14,7 @@ import {
   RestapifyEventCallbackParam,
   RestapifyEventName
 } from './types'
+import { INTERNAL_BASEURL } from './CONST'
 
 import {
   getDirs,
@@ -116,7 +117,7 @@ class Restapify {
   }
 
   private configDashboard = (): void => {
-    this.app.use('/restapify', express.static(DASHBOARD_FOLDER_PATH))
+    this.app.use(INTERNAL_BASEURL, express.static(DASHBOARD_FOLDER_PATH))
   }
 
   private configInternalApi = (): void => {
@@ -130,6 +131,7 @@ class Restapify {
   }
 
   private check = (): void => {
+    this.checkApiBaseUrl()
     this.checkEntryFolder()
   }
 
@@ -151,6 +153,13 @@ class Restapify {
   private restartServer = (): void => {
     this.close()
     this.run()
+  }
+
+  private checkApiBaseUrl = (): void => {
+    if (this.apiBaseUrl.startsWith(INTERNAL_BASEURL)) {
+      const error: RestapifyErrorName = 'INV:API_BASEURL'
+      throw new Error(error)
+    }
   }
 
   private checkEntryFolder = (): void => {
