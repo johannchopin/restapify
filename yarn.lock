@@ -5423,10 +5423,10 @@ responselike@^1.0.2:
   dependencies:
     lowercase-keys "^1.0.0"
 
-restapify-dashboard@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.0.7.tgz#2415b023acadae180f54a7638ab775cc653742c4"
-  integrity sha512-Lo/8PLoOZ5JfIt5k5y85UnlgPe33shTyuc0k35Lw1/o7VpBBMO11+MbMGuq2Jeya+afIsmAfRtjMrk7LHYWOQQ==
+restapify-dashboard@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.0.9.tgz#db10e2cba8c4039f05a1c6e8ec410f9506d41711"
+  integrity sha512-6CmJc860g2s4MTdrz7IjcoAWoVjn6dKo/TAEhZwo2swLMLtMZkDHNIjw0z7QE7mUR+iwNfk3IVLMgnMypRPqTA==
   dependencies:
     axios "^0.21.0"
     bootstrap "^5.0.0-alpha3"

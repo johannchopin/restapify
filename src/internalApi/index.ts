@@ -3,6 +3,8 @@ import * as express from 'express'
 import { INTERNAL_API_BASEURL } from '../CONST'
 import { Routes, PrivateRouteState, RouteState } from '../Restapify'
 import { HTTP_VERBS } from '../CONST'
+import { Routes as GetRoutes } from '../types/internalApi'
+import { getRoutesByFileOrder } from '../utils'
 
 // I N T E R F A C E S
 export interface InternalApiParams {
@@ -27,6 +29,23 @@ export const getInitialisedInternalApi = (
     onClose
   } = params
 
+  const getSortedRoutes = () : GetRoutes => {
+    const finalRoutes: GetRoutes = {}
+    const sortedRoutes = getRoutesByFileOrder(routes)
+
+    sortedRoutes.forEach(sortedRoute => {
+      const { route, method } = sortedRoute
+      if (finalRoutes[route] === undefined) {
+        finalRoutes[route] = {} as GetRoutes['blas']
+      }
+      finalRoutes[route][method] = routes[method][route]
+    })
+
+    return finalRoutes
+  }
+
+  const sortedRoutes = getSortedRoutes()
+
   app.get(getRoute('/close'), (req, res): void => {
     res.status(204)
     res.send()
@@ -34,7 +53,7 @@ export const getInitialisedInternalApi = (
   })
 
   app.get(getRoute('/routes'), (req, res): void => {
-    res.json(routes)
+    res.json(sortedRoutes)
   })
 
   app.get(getRoute('/states'), (req, res): void => {
