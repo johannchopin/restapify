@@ -1,5 +1,6 @@
 import * as arg from 'arg'
 import * as path from 'path'
+import * as chalk from 'chalk'
 
 import Restapify from '../Restapify'
 import { getInstanceOverviewOutput, getMethodOutput, onRestapifyInstanceError } from './utils'
@@ -35,6 +36,7 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
   RestapifyInstance.on('server:start', () => {
     console.log(`\n🏗 Try to serve on port ${RestapifyInstance.port}`)
   })
+
   RestapifyInstance.onError(({ error }) => {
     onRestapifyInstanceError(error, {
       rootDir: RestapifyInstance.rootDir,
@@ -56,6 +58,10 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
       RestapifyInstance.port,
       RestapifyInstance.apiBaseUrl
     ))
+  })
+
+  RestapifyInstance.on('server:restart', () => {
+    console.log(chalk.green('✅ API updated!'))
   })
 
   RestapifyInstance.run()

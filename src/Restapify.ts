@@ -157,7 +157,7 @@ class Restapify {
 
   private restartServer = (): void => {
     this.close()
-    this.run()
+    this.run(true)
   }
 
   private checkApiBaseUrl = (): void => {
@@ -339,23 +339,32 @@ class Restapify {
 
   private startServer = (): void => {
     this.server.listen(this.port)
-    this.executeCallbacks('server:start')
   }
 
-  public run = ():void => {
+  public run = (restartedBecauseOfHotWatch = false):void => {
     try {
-      this.configEventsCallbacks()
-      this.checkApiBaseUrl()
-      this.checkRootDirectory()
+      if (!restartedBecauseOfHotWatch) {
+        this.configEventsCallbacks()
+        this.checkApiBaseUrl()
+        this.checkRootDirectory()
+      }
+
       this.listRouteFiles()
       this.checkJsonFiles()
       this.configServer()
-      this.configDashboard()
+
+      if (!restartedBecauseOfHotWatch) this.configDashboard()
+
       this.configInternalApi()
-      this.configHotWatch()
-      if (this.autoOpenDashboard) this.openDashboard()
+
+      if (!restartedBecauseOfHotWatch) this.configHotWatch()
+      if (!restartedBecauseOfHotWatch && this.autoOpenDashboard) this.openDashboard()
+      if (!restartedBecauseOfHotWatch) this.executeCallbacks('server:start')
+
       this.startServer()
-      this.executeCallbacks('start')
+
+      if (!restartedBecauseOfHotWatch) this.executeCallbacks('start')
+      else this.executeCallbacks('server:restart')
     } catch (error) {
       this.executeCallbacks('error', { error: error.message })
     }
