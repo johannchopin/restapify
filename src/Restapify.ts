@@ -6,7 +6,9 @@ import * as http from 'http'
 import * as open from 'open'
 import * as chokidar from 'chokidar'
 
-import { HttpVerb } from './types'
+import {
+  HttpVerb, RestapifyEventCallback, RestapifyEventCallbackParam, RestapifyEventName
+} from './types'
 
 import {
   getDirs,
@@ -42,10 +44,14 @@ export interface RestapifyParams {
 export type Routes = {
   [method in HttpVerb]: {[url: string]: RouteData}
 }
+type EventCallbackStore = {
+  [event in RestapifyEventName]?: RestapifyEventCallback[]
+}
 
 class Restapify {
-  protected app: express.Express
-  protected server: any
+  private eventCallbacksStore: EventCallbackStore = {}
+  private app: express.Express
+  private server: any
   public routes: Routes = {
     GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
   }
@@ -326,6 +332,60 @@ class Restapify {
     })
   }
 
+  private createSingleEventStoreIfMissing = (eventName: RestapifyEventName): void => {
+    if (this.eventCallbacksStore[eventName] === undefined) {
+      this.eventCallbacksStore[eventName] = []
+    }
+  }
+
+  private addSingleEventCallbackToStore = (
+    event: RestapifyEventName,
+    callback: RestapifyEventCallback
+  ): void => {
+    this.createSingleEventStoreIfMissing(event)
+
+    // @ts-ignore
+    this.eventCallbacksStore[event].push(callback)
+  }
+
+  private addEventCallbackToStore = (
+    event: RestapifyEventName | RestapifyEventName[],
+    callback: RestapifyEventCallback
+  ):void => {
+    if (Array.isArray(event)) {
+      event.forEach(eventName => {
+        this.addSingleEventCallbackToStore(eventName, callback)
+      })
+    } else {
+      this.addSingleEventCallbackToStore(event, callback)
+    }
+  }
+
+  private executeCallbacksForSingleEvent = (
+    event: RestapifyEventName,
+    params: RestapifyEventCallbackParam
+  ):void => {
+    const callbacks = this.eventCallbacksStore[event]
+    if (callbacks) {
+      callbacks.forEach(callback => {
+        callback(params)
+      })
+    }
+  }
+
+  private executeCallbacks = (
+    event: RestapifyEventName | RestapifyEventName[],
+    params: RestapifyEventCallbackParam
+  ): void => {
+    if (Array.isArray(event)) {
+      event.forEach(eventName => {
+        this.executeCallbacksForSingleEvent(eventName, params)
+      })
+    } else {
+      this.executeCallbacksForSingleEvent(event, params)
+    }
+  }
+
   public setState = (newState: RouteState): void => {
     if (newState.state) {
       const actualStateIndex = this.states.findIndex(state => {
@@ -361,6 +421,17 @@ class Restapify {
 
   public close = (): void => {
     this.server.close()
+  }
+
+  public on = (
+    event: RestapifyEventName | RestapifyEventName[],
+    callback: RestapifyEventCallback
+  ): void => {
+    this.addEventCallbackToStore(event, callback)
+  }
+
+  public onError = (callback: RestapifyEventCallback): void => {
+    this.addSingleEventCallbackToStore('error', callback)
   }
 
   public kill = (): void => {
