@@ -32,6 +32,9 @@ export const cli = ([nodePath, scriptPath, entryFolder, ...cliArgs]: string[]): 
     baseURL,
     openDashboard: !noOpen
   })
+  RestapifyInstance.on('server:start', () => {
+    console.log(`\n🏗 Try to serve on port ${RestapifyInstance.port}`)
+  })
   RestapifyInstance.onError(({ error }) => {
     onRestapifyInstanceError(error, {
       rootDir: RestapifyInstance.rootDir,

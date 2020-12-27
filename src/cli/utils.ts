@@ -53,12 +53,16 @@ export const onRestapifyInstanceError = (
   error: RestapifyErrorName,
   instanceData: Pick<Restapify, 'apiBaseUrl' | 'port' | 'rootDir'>
 ): void => {
-  const { rootDir } = instanceData
+  const { rootDir, port } = instanceData
   let logMessage
   const errorPrepend = chalk.red.bold.underline('\n❌ERROR:')
   switch (error) {
   case 'MISS:ROOT_DIR':
     logMessage = `${errorPrepend} The given folder ${rootDir} doesn't exist!`
+    break
+
+  case 'MISS:PORT':
+    logMessage = `${errorPrepend} port ${port} is already in use!`
     break
 
   default:
