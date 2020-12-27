@@ -6,4 +6,4 @@ export type RestapifyErrorCallbackParam = {
   error: RestapifyErrorName
 }
 export type RestapifyEventCallbackParam = RestapifyErrorCallbackParam
-export type RestapifyEventCallback = (params: RestapifyEventCallbackParam) => void
+export type RestapifyEventCallback = (params?: RestapifyEventCallbackParam) => void

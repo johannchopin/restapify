@@ -312,8 +312,9 @@ class Restapify {
     }
   }
 
-  private runServer = (): void => {
+  private startServer = (): void => {
     this.server.listen(this.port)
+    this.executeCallbacks('server:start')
   }
 
   public run = ():void => {
@@ -324,7 +325,7 @@ class Restapify {
       this.configInternalApi()
       this.configHotWatch()
       if (this.autoOpenDashboard) this.openDashboard()
-      this.runServer()
+      this.startServer()
     } catch (error) {
       this.executeCallbacks('error', { error: error.message })
     }
@@ -367,19 +368,23 @@ class Restapify {
 
   private executeCallbacksForSingleEvent = (
     event: RestapifyEventName,
-    params: RestapifyEventCallbackParam
+    params?: RestapifyEventCallbackParam
   ):void => {
     const callbacks = this.eventCallbacksStore[event]
     if (callbacks) {
       callbacks.forEach(callback => {
-        callback(params)
+        if (params) {
+          callback(params)
+        } else {
+          callback()
+        }
       })
     }
   }
 
   private executeCallbacks = (
     event: RestapifyEventName | RestapifyEventName[],
-    params: RestapifyEventCallbackParam
+    params?: RestapifyEventCallbackParam
   ): void => {
     if (Array.isArray(event)) {
       event.forEach(eventName => {
