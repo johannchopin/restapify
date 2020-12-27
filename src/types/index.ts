@@ -1,2 +1,2 @@
 export * from './internalApi'
-export * from './server'
+export * from './restapify'
