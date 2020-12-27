@@ -14,7 +14,7 @@ const RestapifyInstance = new Restapify({
 })
 
 RestapifyInstance.on('error', ({ error }) => {
-  console.log(error)
+  console.log(`Ouuups> ${error}`)
 })
 
 RestapifyInstance.run()
