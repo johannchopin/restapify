@@ -1,8 +1,10 @@
 {
   "name": "restapify",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "dist/src/Restapify.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "private": false,
   "scripts": {
