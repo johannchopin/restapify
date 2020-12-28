@@ -1,10 +1,10 @@
 {
   "name": "restapify",
-  "version": "0.0.7",
-  "main": "dist/server/index.js",
+  "version": "0.0.16",
+  "main": "dist/src/index.js",
   "files": [
     "dist",
-    "node_modules/restapify-dashboard"
+    "dist/node_modules/restapify-dashboard"
   ],
   "license": "MIT",
   "private": false,
@@ -16,23 +16,14 @@
     "postbuild": "yarn cpy ./node_modules/restapify-dashboard/public ./dist --parents",
     "lint": "yarn eslint . --ext .js,.ts"
   },
-  "bin": {
-    "@johannchopin/restapify": "bin/restapify",
-    "restapify": "bin/restapify"
-  },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "boxen": "^4.2.0",
-    "chalk": "^4.1.0",
     "chokidar": "^3.4.3",
-    "commander": "^6.2.1",
-    "eslint-config-airbnb-base": "^14.2.1",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "http": "^0.0.1-security",
-    "nodemon": "^2.0.5",
     "open": "^7.3.0",
     "restapify-dashboard": "^1.0.9"
   },
@@ -46,8 +37,10 @@
     "@typescript-eslint/parser": "^4.7.0",
     "cpy-cli": "^3.1.1",
     "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^26.6.3",
+    "nodemon": "^2.0.5",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
     "ts-node-dev": "^1.0.0",

@@ -13,7 +13,7 @@ export type Route = Pick<RouteData,
   | 'statusCode'
 >
 
-export type Routes = {
+export type GetRoutes = {
   [url: string]: {
     [method in HttpVerb]: RouteData
   }
