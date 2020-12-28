@@ -5,6 +5,6 @@ module.exports = {
     '^.+\\.ts?$': 'ts-jest'
   },
   moduleFileExtensions: ['js', 'ts'],
-  bail: false,
+  bail: true,
   verbose: true
 }
