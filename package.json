@@ -13,6 +13,7 @@
     "test:manual": "yarn ts-node-dev --files test/run.ts",
     "start": "yarn nodemon --watch test src/index.js",
     "build": "yarn tsc",
+    "postbuild": "yarn cpy ./node_modules/restapify-dashboard/public ./dist --parents",
     "lint": "yarn eslint . --ext .js,.ts"
   },
   "bin": {
@@ -43,6 +44,7 @@
     "@types/serve-static": "^1.13.8",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
+    "cpy-cli": "^3.1.1",
     "eslint": "^7.13.0",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^26.6.3",
