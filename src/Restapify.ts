@@ -14,7 +14,7 @@ import {
   RestapifyEventCallbackParam,
   RestapifyEventName
 } from './types'
-import { INTERNAL_BASEURL } from './CONST'
+import { INTERNAL_BASEURL, DASHBOARD_FOLDER_PATH } from './CONST'
 
 import {
   getRouteFiles,
@@ -27,8 +27,6 @@ import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
 
 const DEFAULT_PORT = 6767
-const DASHBOARD_FOLDER_PATH = path.resolve(__dirname,
-  '../node_modules/restapify-dashboard/public/')
 
 // I N T E R F A C E S
 export interface RouteState {
@@ -125,7 +123,8 @@ class Restapify {
   }
 
   private configDashboard = (): void => {
-    this.app.use(INTERNAL_BASEURL, express.static(DASHBOARD_FOLDER_PATH))
+    const dashboardFolderPath = path.resolve(__dirname, DASHBOARD_FOLDER_PATH)
+    this.app.use(INTERNAL_BASEURL, express.static(dashboardFolderPath))
   }
 
   private configInternalApi = (): void => {
