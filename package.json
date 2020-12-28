@@ -1,9 +1,10 @@
 {
   "name": "restapify",
-  "version": "0.0.10",
-  "main": "dist/index.js",
+  "version": "0.0.11",
+  "main": "dist/src/index.js",
   "files": [
-    "dist"
+    "dist",
+    "node_modules/restapify-dashboard"
   ],
   "license": "MIT",
   "private": false,
