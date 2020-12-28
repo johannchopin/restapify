@@ -1,7 +1,7 @@
 {
   "name": "restapify",
   "version": "0.0.8",
-  "main": "dist/src/Restapify.js",
+  "main": "dist/src/index.js",
   "files": [
     "dist"
   ],
@@ -20,11 +20,9 @@
   },
   "dependencies": {
     "chokidar": "^3.4.3",
-    "eslint-config-airbnb-base": "^14.2.1",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "http": "^0.0.1-security",
-    "nodemon": "^2.0.5",
     "open": "^7.3.0",
     "restapify-dashboard": "^1.0.9"
   },
@@ -38,8 +36,10 @@
     "@typescript-eslint/parser": "^4.7.0",
     "cpy-cli": "^3.1.1",
     "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^26.6.3",
+    "nodemon": "^2.0.5",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
     "ts-node-dev": "^1.0.0",
