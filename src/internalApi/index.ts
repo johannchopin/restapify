@@ -3,7 +3,7 @@ import * as express from 'express'
 import { INTERNAL_API_BASEURL } from '../CONST'
 import { Routes, PrivateRouteState, RouteState } from '../Restapify'
 import { HTTP_VERBS } from '../CONST'
-import { Routes as GetRoutes } from '../types/internalApi'
+import { GetRoutes } from '../types/internalApi'
 import { getRoutesByFileOrder } from '../utils'
 
 // I N T E R F A C E S

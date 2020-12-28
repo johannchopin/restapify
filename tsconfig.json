@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "dist/src",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
