@@ -48,6 +48,10 @@ export interface RestapifyParams {
 export type Routes = {
   [method in HttpVerb]: {[url: string]: RouteData}
 }
+export interface RunOptions {
+  hard?:boolean
+  startServer?:boolean
+}
 type EventCallbackStore = {
   [event in RestapifyEventName]?: RestapifyEventCallback[]
 }
@@ -154,7 +158,7 @@ class Restapify {
 
   private restartServer = (hardRestart = false): void => {
     this.close()
-    this.run(!hardRestart)
+    this.run({ hard: hardRestart })
   }
 
   private checkApiBaseUrl = (): void => {
@@ -331,30 +335,39 @@ class Restapify {
     this.server.listen(this.port)
   }
 
-  public run = (restartedBecauseOfHotWatch = false):void => {
+  public run = (options?: RunOptions):void => {
+    let hard = true
+    let startServer = true
+
+    if (options) {
+      hard = options.hard || true
+      startServer = options.startServer || true
+    }
+
     try {
-      if (!restartedBecauseOfHotWatch) {
+      if (hard) {
         this.configEventsCallbacks()
         this.checkApiBaseUrl()
         this.checkRootDirectory()
       }
 
       this.listRouteFiles()
+      this.configRoutesFromListedFiles()
       this.checkJsonFiles()
-      this.configServer()
+      if (startServer) this.configServer()
 
-      if (!restartedBecauseOfHotWatch) this.configDashboard()
+      if (hard && startServer) this.configDashboard()
 
-      this.configInternalApi()
+      if (startServer) this.configInternalApi()
 
-      if (!restartedBecauseOfHotWatch) this.configHotWatch()
-      if (!restartedBecauseOfHotWatch && this.autoOpenDashboard) this.openDashboard()
-      if (!restartedBecauseOfHotWatch) this.executeCallbacks('server:start')
+      if (hard) this.configHotWatch()
+      if (hard && this.autoOpenDashboard && startServer) this.openDashboard()
+      if (hard && startServer) this.executeCallbacks('server:start')
 
       this.startServer()
 
-      if (!restartedBecauseOfHotWatch) this.executeCallbacks('start')
-      else this.executeCallbacks('server:restart')
+      if (hard) this.executeCallbacks('start')
+      else if (startServer) this.executeCallbacks('server:restart')
     } catch (error) {
       this.executeCallbacks('error', { error: error.message })
     }
