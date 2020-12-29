@@ -10,7 +10,7 @@
   "private": false,
   "scripts": {
     "postinstall": "yarn move:dashboard",
-    "move:dashboard": "yarn cpy ./node_modules/restapify-dashboard/public ./src/dashboard-public",
+    "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
     "test": "jest --silent --no-cache",
     "test:manual": "yarn ts-node-dev --files test/run.ts",
     "start": "yarn nodemon --watch test src/index.js",
