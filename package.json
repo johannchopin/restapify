@@ -1,7 +1,7 @@
 {
   "name": "restapify",
   "version": "0.0.16",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "files": [
     "dist",
     "dist/node_modules/restapify-dashboard"
@@ -15,7 +15,7 @@
     "test:manual": "yarn ts-node-dev --files test/run.ts",
     "start": "yarn nodemon --watch test src/index.js",
     "build": "yarn tsc",
-    "postbuild": "yarn cpy ./node_modules/restapify-dashboard/public ./dist --parents",
+    "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",
     "lint": "yarn eslint . --ext .js,.ts"
   },
   "publishConfig": {
