@@ -63,6 +63,7 @@ class Restapify {
   private eventCallbacksStore: EventCallbackStore = {}
   private app: express.Express
   private server: any
+  private chokidarWatcher: chokidar.FSWatcher
   private listedRouteFiles: ListedFiles = {}
   public routes: Routes = {
     GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
@@ -98,7 +99,7 @@ class Restapify {
 
   private configHotWatch = (): void => {
     if (this.hotWatch) {
-      chokidar.watch(this.rootDir, {
+      this.chokidarWatcher = chokidar.watch(this.rootDir, {
         ignoreInitial: true
       }).on('all', () => {
         this.restartServer(true)
@@ -157,7 +158,7 @@ class Restapify {
   }
 
   private restartServer = (hardRestart = false): void => {
-    this.close()
+    this.closeServer()
     this.run({ hard: hardRestart })
   }
 
@@ -446,6 +447,14 @@ class Restapify {
     }
   }
 
+  private closeServer = (): void => {
+    this.server.close()
+  }
+
+  private closeChokidarWatcher = (): void => {
+    this.chokidarWatcher.close()
+  }
+
   public setState = (newState: RouteState): void => {
     if (newState.state) {
       const actualStateIndex = this.states.findIndex(state => {
@@ -480,7 +489,8 @@ class Restapify {
   }
 
   public close = (): void => {
-    this.server.close()
+    this.closeServer()
+    if (this.hotWatch) this.closeChokidarWatcher()
   }
 
   public on = (

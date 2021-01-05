@@ -16,8 +16,14 @@ const RestapifyInstance = new Restapify({
 RestapifyInstance.onError(({ error }) => {
   console.log(`Ouuups> ${error}`)
 })
+
 RestapifyInstance.on('server:start', () => {
   console.log('server start')
 })
 
 RestapifyInstance.run()
+
+setTimeout(() => {
+  console.log('server close')
+  RestapifyInstance.close()
+}, 2000)
