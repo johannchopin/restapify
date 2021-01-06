@@ -503,10 +503,6 @@ class Restapify {
   public onError = (callback: (params: RestapifyErrorCallbackParam) => void): void => {
     this.addSingleEventCallbackToStore('error', callback)
   }
-
-  public kill = (): void => {
-    process.exit(0)
-  }
 }
 
 export default Restapify
