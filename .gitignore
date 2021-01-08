@@ -6,6 +6,6 @@ src/dashboard-public/
 yarn-error.log
 
 # jest
-test/coverage/
+coverage/
 
 .vscode/
