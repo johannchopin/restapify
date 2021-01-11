@@ -1,8 +1,11 @@
 node_modules/
+dist/
+src/dashboard-public/
 
 # yarn
-yarn.lock
 yarn-error.log
 
 # jest
-test/coverage/
+coverage/
+
+.vscode/

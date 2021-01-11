@@ -1,6 +1,29 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as path from 'path'
-import Restapify from '../src/server/index'
+import Restapify from '../src/Restapify'
 
-const mockedApi = new Restapify({
-  rootDir: path.resolve(__dirname, './api')
+const RestapifyInstance = new Restapify({
+  rootDir: path.resolve(__dirname, './api'),
+  states: [
+    {
+      route: '/users/[userid]',
+      state: 'ERR',
+      method: 'DELETE'
+    }
+  ]
 })
+
+RestapifyInstance.onError(({ error }) => {
+  console.log(`Ouuups> ${error}`)
+})
+
+RestapifyInstance.on('server:start', () => {
+  console.log('server start')
+})
+
+RestapifyInstance.run()
+
+setTimeout(() => {
+  console.log('server close')
+  RestapifyInstance.close()
+}, 2000)

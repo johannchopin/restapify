@@ -1,4 +1,4 @@
 {
-  "post": "(number)[postid]",
-  "comment": "(number)[commentid]"
+  "post": "[postid]",
+  "comment": "n:[commentid]"
 }

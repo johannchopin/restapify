@@ -1,10 +1,17 @@
 module.exports = {
-  rootDir: 'test',
   transform: {
     '^.+\\.js?$': 'babel-jest',
     '^.+\\.ts?$': 'ts-jest'
   },
   moduleFileExtensions: ['js', 'ts'],
-  bail: false,
+  collectCoverageFrom: [
+    "!**/node_modules/**",
+    "src/**",
+    "!src/dashboard-public/**/*",
+    "!src/types/**",
+    "!src/index.ts"
+  ],
+  coverageReporters: ["html", "lcov"],
+  bail: true,
   verbose: true
 }

@@ -1,0 +1,12 @@
+{
+  "__header": {
+    "Content-Type": "text/html; charset=utf-8"
+  },
+  "__body": {
+    "success": true,
+    "data": {
+      "id": 67,
+      "name": "bob"
+    }
+  }
+}
