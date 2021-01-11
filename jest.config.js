@@ -10,7 +10,8 @@ module.exports = {
     "!src/dashboard-public/**/*",
     "!src/types/**",
     "!src/index.ts"
-],
+  ],
+  coverageReporters: ["html", "lcov"],
   bail: true,
   verbose: true
 }
