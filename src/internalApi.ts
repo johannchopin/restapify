@@ -46,12 +46,6 @@ export const getInitialisedInternalApi = (
 
   const sortedRoutes = getSortedRoutes()
 
-  app.get(getRoute('/close'), (req, res): void => {
-    res.status(204)
-    res.send()
-    onClose()
-  })
-
   app.get(getRoute('/routes'), (req, res): void => {
     res.json(sortedRoutes)
   })
