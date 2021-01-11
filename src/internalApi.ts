@@ -11,7 +11,6 @@ export interface InternalApiParams {
   setState: (newState: RouteState) => void
   states: PrivateRouteState[]
   routes: Routes
-  onClose: () => void
 }
 
 const getRoute = (route: string): string => {
@@ -25,8 +24,7 @@ export const getInitialisedInternalApi = (
   const {
     states,
     routes,
-    setState,
-    onClose
+    setState
   } = params
 
   const getSortedRoutes = () : GetRoutes => {

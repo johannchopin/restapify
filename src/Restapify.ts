@@ -137,8 +137,7 @@ class Restapify {
     this.app = getInitialisedInternalApi(this.app, {
       routes,
       states,
-      setState: this.setState,
-      onClose: this.close
+      setState: this.setState
     })
   }
 
