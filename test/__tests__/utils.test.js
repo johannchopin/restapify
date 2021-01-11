@@ -1,4 +1,4 @@
-import { getVarsInPath, routeResolve } from '../../src/utils'
+import { getVarsInPath, isJsonString, routeResolve } from '../../src/utils'
 
 describe('getVarsInPath', () => {
   it('find no vars in path', () => {
@@ -47,5 +47,11 @@ describe('routeResolve', () => {
     const expectedRoute = '/users/comments/tests'
 
     expect(routeResolve('/users/comments/', 'tests')).toBe(expectedRoute)
+  })
+
+  describe('isJsonString', () => {
+    expect(isJsonString('{"test": "its json"}')).toBeTruthy()
+    expect(isJsonString('{"test": "its json"')).toBeFalsy()
+    expect(isJsonString('test')).toBeFalsy()
   })
 })
