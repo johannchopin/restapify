@@ -20,4 +20,5 @@ jobs:
           yarn install
           yarn build
           yarn lint
-          yarn test
+          yarn test --coverage
+          bash <(curl -s https://codecov.io/bash) 
