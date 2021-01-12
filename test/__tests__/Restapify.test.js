@@ -309,4 +309,11 @@ describe('Restapify with state variables', () => {
       expect(RestapifyInstance.states).toStrictEqual(expectedStates)
     })
   })
+
+  it('should open dashboard', async () => {
+    const expectedPageTitle = '<title>Restapify - Dashboard</title>'
+    let response = await fetch(`${baseUrl}/restapify`)
+    const text = await response.text()
+    expect(text).toContain(expectedPageTitle)
+  })
 })
