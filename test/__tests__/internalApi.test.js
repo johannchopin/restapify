@@ -1,10 +1,10 @@
 /* eslint-disable no-shadow */
 import * as path from 'path'
 import 'isomorphic-fetch'
-import Restapify from '../../../src/Restapify'
+import Restapify from '../../src/Restapify'
 
 const restapifyParams = {
-  rootDir: path.resolve(__dirname, '../../api'),
+  rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
   baseURL: '/api',
   hotWatch: false
