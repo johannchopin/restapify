@@ -1,7 +1,7 @@
 import { HttpVerb } from './types'
 
 import { replaceAll } from './utils'
-import { CURRENT_LOCATION_ROUTE_SELECTOR, NUMBER_CAST_INDICATOR } from './CONST_'
+import { CURRENT_LOCATION_ROUTE_SELECTOR, NUMBER_CAST_INDICATOR } from './const'
 import {
   getVarsInPath,
   isHttpVerb,

@@ -18,7 +18,7 @@ import {
   INTERNAL_BASEURL,
   DASHBOARD_FOLDER_PATH,
   OPEN_DASHBOARD_TIMEOUT
-} from './CONST_'
+} from './const'
 
 import {
   getRouteFiles,
