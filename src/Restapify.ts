@@ -14,7 +14,11 @@ import {
   RestapifyEventCallbackParam,
   RestapifyEventName
 } from './types'
-import { INTERNAL_BASEURL, DASHBOARD_FOLDER_PATH } from './CONST'
+import {
+  INTERNAL_BASEURL,
+  DASHBOARD_FOLDER_PATH,
+  OPEN_DASHBOARD_TIMEOUT
+} from './CONST'
 
 import {
   getRouteFiles,
@@ -479,7 +483,8 @@ class Restapify {
     // open with delay so user has time to see the console output
     setTimeout(() => {
       open(`http://localhost:${this.port}/restapify`)
-    }, 1000)
+      this.executeCallbacksForSingleEvent('dashboard:open')
+    }, OPEN_DASHBOARD_TIMEOUT)
   }
 
   public close = (): void => {
