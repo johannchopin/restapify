@@ -48,9 +48,10 @@ export interface RestapifyParams {
 export type Routes = {
   [method in HttpVerb]: {[url: string]: RouteData}
 }
-export interface RunOptions {
+interface RunOptions {
   hard?:boolean
   startServer?:boolean
+  openDashboard?: boolean
 }
 type EventCallbackStore = {
   [event in RestapifyEventName]?: RestapifyEventCallback[]
@@ -102,7 +103,7 @@ class Restapify {
       this.chokidarWatcher = chokidar.watch(this.rootDir, {
         ignoreInitial: true
       }).on('all', () => {
-        this.restartServer(true)
+        this.restartServer({ hard: true })
       })
     }
   }
@@ -156,9 +157,9 @@ class Restapify {
     })
   }
 
-  private restartServer = (hardRestart = false): void => {
+  private restartServer = (options?: RunOptions): void => {
     this.closeServer()
-    this.run({ hard: hardRestart })
+    this.customRun({ ...options, openDashboard: false })
   }
 
   private checkApiBaseUrl = (): void => {
@@ -335,14 +336,10 @@ class Restapify {
     this.server.listen(this.port)
   }
 
-  public run = (options?: RunOptions):void => {
-    let hard = true
-    let startServer = true
+  private customRun = (options: RunOptions = {}):void => {
+    const { hard = true, startServer = true, openDashboard = true } = options
 
-    if (options) {
-      hard = options.hard || true
-      startServer = options.startServer || true
-    }
+    console.log(openDashboard)
 
     try {
       if (hard) {
@@ -361,7 +358,7 @@ class Restapify {
       if (startServer) this.configInternalApi()
 
       if (hard) this.configHotWatch()
-      if (hard && this.autoOpenDashboard && startServer) this.openDashboard()
+      if (hard && this.autoOpenDashboard && startServer && openDashboard) this.openDashboard()
       if (hard && startServer) this.executeCallbacks('server:start')
 
       this.startServer()
@@ -377,7 +374,7 @@ class Restapify {
     this.onError(({ error }) => {
       if (error === 'MISS:PORT') {
         this.port += 1
-        this.restartServer(true)
+        this.restartServer({ hard: true })
       }
     })
   }
@@ -501,6 +498,10 @@ class Restapify {
 
   public onError = (callback: (params: RestapifyErrorCallbackParam) => void): void => {
     this.addSingleEventCallbackToStore('error', callback)
+  }
+
+  public run = ():void => {
+    this.customRun()
   }
 }
 
