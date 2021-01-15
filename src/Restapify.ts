@@ -158,6 +158,7 @@ class Restapify {
   }
 
   private restartServer = (options?: RunOptions): void => {
+    this.executeCallbacks('server:restart')
     this.closeServer()
     this.customRun({ ...options, openDashboard: false })
   }
@@ -339,8 +340,6 @@ class Restapify {
   private customRun = (options: RunOptions = {}):void => {
     const { hard = true, startServer = true, openDashboard = true } = options
 
-    console.log(openDashboard)
-
     try {
       if (hard) {
         this.configEventsCallbacks()
@@ -364,7 +363,6 @@ class Restapify {
       this.startServer()
 
       if (hard) this.executeCallbacks('start')
-      else if (startServer) this.executeCallbacks('server:restart')
     } catch (error) {
       this.executeCallbacks('error', { error: error.message })
     }
