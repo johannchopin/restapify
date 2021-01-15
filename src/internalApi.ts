@@ -1,8 +1,8 @@
 import * as express from 'express'
 
-import { INTERNAL_API_BASEURL } from './CONST'
+import { INTERNAL_API_BASEURL } from './const'
 import { Routes, PrivateRouteState, RouteState } from './Restapify'
-import { HTTP_VERBS } from './CONST'
+import { HTTP_VERBS } from './const'
 import { GetRoutes } from './types/internalApi'
 import { getRoutesByFileOrder } from './utils'
 
@@ -11,7 +11,6 @@ export interface InternalApiParams {
   setState: (newState: RouteState) => void
   states: PrivateRouteState[]
   routes: Routes
-  onClose: () => void
 }
 
 const getRoute = (route: string): string => {
@@ -25,8 +24,7 @@ export const getInitialisedInternalApi = (
   const {
     states,
     routes,
-    setState,
-    onClose
+    setState
   } = params
 
   const getSortedRoutes = () : GetRoutes => {
@@ -45,12 +43,6 @@ export const getInitialisedInternalApi = (
   }
 
   const sortedRoutes = getSortedRoutes()
-
-  app.get(getRoute('/close'), (req, res): void => {
-    res.status(204)
-    res.send()
-    onClose()
-  })
 
   app.get(getRoute('/routes'), (req, res): void => {
     res.json(sortedRoutes)

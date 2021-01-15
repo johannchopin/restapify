@@ -18,6 +18,7 @@ jobs:
       - name: Run tests
         run: |
           yarn install
+          yarn restapify:init
           yarn build
           yarn lint
           yarn test --coverage

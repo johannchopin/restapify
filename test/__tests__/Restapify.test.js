@@ -64,6 +64,15 @@ describe('Restapify', () => {
         expect(data).toStrictEqual(getComments)
       })
     })
+
+    describe('PATCH', () => {
+      it('should respond to patch', async () => {
+        let response = await fetch(`${apiRoot}/users/123`, {
+          method: 'PATCH'
+        })
+        expect(response.status).toBe(204)
+      })
+    })
   })
 
   describe('Star notation', () => {
@@ -299,5 +308,12 @@ describe('Restapify with state variables', () => {
 
       expect(RestapifyInstance.states).toStrictEqual(expectedStates)
     })
+  })
+
+  it('should open dashboard', async () => {
+    const expectedPageTitle = '<title>Restapify - Dashboard</title>'
+    let response = await fetch(`${baseUrl}/restapify`)
+    const text = await response.text()
+    expect(text).toContain(expectedPageTitle)
   })
 })
