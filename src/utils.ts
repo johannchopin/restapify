@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { HTTP_VERBS } from './CONST'
+import { HTTP_VERBS } from './CONST_'
 import { HttpVerb } from './types'
 import { Routes } from './Restapify'
 

@@ -1,8 +1,8 @@
 import * as express from 'express'
 
-import { INTERNAL_API_BASEURL } from './CONST'
+import { INTERNAL_API_BASEURL } from './CONST_'
 import { Routes, PrivateRouteState, RouteState } from './Restapify'
-import { HTTP_VERBS } from './CONST'
+import { HTTP_VERBS } from './CONST_'
 import { GetRoutes } from './types/internalApi'
 import { getRoutesByFileOrder } from './utils'
 
