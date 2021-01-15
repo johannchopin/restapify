@@ -21,4 +21,8 @@ RestapifyInstance.on('server:start', () => {
   console.log('server start')
 })
 
+RestapifyInstance.on('server:restart', () => {
+  console.log('server restart')
+})
+
 RestapifyInstance.run()
