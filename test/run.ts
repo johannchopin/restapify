@@ -21,9 +21,8 @@ RestapifyInstance.on('server:start', () => {
   console.log('server start')
 })
 
-RestapifyInstance.run()
+RestapifyInstance.on('server:restart', () => {
+  console.log('server restart')
+})
 
-setTimeout(() => {
-  console.log('server close')
-  RestapifyInstance.close()
-}, 2000)
+RestapifyInstance.run()
