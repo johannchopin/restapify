@@ -483,8 +483,8 @@ class Restapify {
   }
 
   public close = (): void => {
-    this.closeServer()
-    if (this.hotWatch) this.closeChokidarWatcher()
+    if (this.server) this.closeServer()
+    if (this.hotWatch && this.chokidarWatcher) this.closeChokidarWatcher()
   }
 
   public on = (
