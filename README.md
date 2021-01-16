@@ -73,3 +73,27 @@ GET    /posts
 GET    /posts/:postsid
 PUT    /posts/:postsid
 ```
+
+### File content
+
+The content of the `json` file will correspond to the body of the response. For example if the file `/api/users/*.json` contains this content:
+```json
+[
+  {
+    "id": 1,
+    "name": "bob"
+  },
+  {
+    "id": 2,
+    "name": "alice"
+  }
+]
+```
+
+...you will get it as the request's body:
+
+```js
+let response = await fetch('/api/users')
+let body = await response.json()
+console.log(body) // [{"id":1,"name":"bob"},{"id":2,"name":"alice"}]
+```
