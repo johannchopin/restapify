@@ -44,3 +44,32 @@ const rpfy = new Restapify({
 })
 rpfy.run()
 ```
+
+## Documentation
+
+### Introduction
+Todo
+
+### File structure
+Restapify allow you to easily create REST API routes using a specific file structure. Take the following folder `api/` for example:
+```
+📂 api
+ ┣ 📂 users
+ ┃ ┗ 📜 *.json
+ ┃ ┗ 📜 [userid].json
+ ┃ ┗ 📜 [userid].DELETE.204.json
+ ┣ 📂 posts
+ ┃ ┗ 📜 [postid].json
+ ┃ ┗ 📜 [postid].PUT.json
+ ┣ 📜 posts.json
+```
+
+It will serve the following routes:
+```
+GET /users
+GET /users/:userid
+DELETE /users/:userid
+GET /posts
+GET /posts/:postsid
+PUT /posts/:postsid
+```
