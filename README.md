@@ -66,9 +66,9 @@ Restapify allow you to easily create REST API routes using a specific file struc
 
 It will serve the following routes:
 ```
-GET    /users
+GET    /users          -> respond with status code 200
 GET    /users/:userid
-DELETE /users/:userid
+DELETE /users/:userid  -> respond with status code 204
 GET    /posts
 GET    /posts/:postsid
 PUT    /posts/:postsid
