@@ -6,7 +6,7 @@
 </a>
 
 ## Overview
-Restapify is a tool that allows you to easily and quickly deploy a mocked REST API using an intuitive json files structure.
+Restapify is a tool that allows you to easily and quickly deploy a local REST API using an intuitive and developer friendly JSON file structure.
 
 ## Getting Started
 ### Using the cli
