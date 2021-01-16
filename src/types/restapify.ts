@@ -11,6 +11,7 @@ export type RestapifyErrorName = 'INV:JSON_FILE' // json file can't be parsed
   | 'INV:API_BASEURL' // given api base url is needed for internal purposes (ex: `/restapify`)
 export type RestapifyErrorCallbackParam = {
   error: RestapifyErrorName
+  message?: string
 }
 export type RestapifyEventCallbackParam = RestapifyErrorCallbackParam
 export type RestapifyEventCallback = (params?: RestapifyEventCallbackParam) => void

@@ -120,11 +120,11 @@ export const getRouteFiles = (
   return files
 }
 
-export const isJsonString = (str: string): boolean => {
+export const isJsonString = (str: string): true | string => {
   try {
     JSON.parse(str)
   } catch (e) {
-    return false
+    return e.message
   }
 
   return true

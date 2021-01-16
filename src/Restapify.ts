@@ -170,7 +170,8 @@ class Restapify {
   private checkApiBaseUrl = (): void => {
     if (this.apiBaseUrl.startsWith(INTERNAL_BASEURL)) {
       const error: RestapifyErrorName = 'INV:API_BASEURL'
-      throw new Error(error)
+      const errorObject = { error }
+      throw new Error(JSON.stringify(errorObject))
     }
   }
 
@@ -178,18 +179,23 @@ class Restapify {
     const folderExists = fs.existsSync(this.rootDir)
     if (!folderExists) {
       const error: RestapifyErrorName = 'MISS:ROOT_DIR'
-      throw new Error(error)
+      const errorObject = { error }
+      throw new Error(JSON.stringify(errorObject))
     }
   }
 
   private checkJsonFiles = (): void => {
     Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
       const routeFileContent = this.listedRouteFiles[routeFilePath]
-      const isJsonValid = isJsonString(routeFileContent)
+      const isJsonValidResponse = isJsonString(routeFileContent)
 
-      if (!isJsonValid) {
+      if (isJsonValidResponse !== true) {
         const error: RestapifyErrorName = 'INV:JSON_FILE'
-        throw new Error(`${error} ${routeFilePath}`)
+        const errorObject = {
+          error,
+          message: `Invalid json file ${routeFilePath}: ${isJsonValidResponse}`
+        }
+        throw new Error(JSON.stringify(errorObject))
       }
     })
   }
@@ -352,8 +358,8 @@ class Restapify {
       }
 
       this.listRouteFiles()
-      this.configRoutesFromListedFiles()
       this.checkJsonFiles()
+      this.configRoutesFromListedFiles()
       if (startServer) this.configServer()
 
       if (hard && startServer) this.configDashboard()
@@ -368,7 +374,8 @@ class Restapify {
 
       if (hard) this.executeCallbacks('start')
     } catch (error) {
-      this.executeCallbacks('error', { error: error.message })
+      const { error: errorId, message } = JSON.parse(error.message)
+      this.executeCallbacks('error', { error: errorId, message })
     }
   }
 
@@ -503,7 +510,7 @@ class Restapify {
     this.addSingleEventCallbackToStore('error', callback)
   }
 
-  public run = ():void => {
+  public run = (): void => {
     this.customRun()
   }
 }
