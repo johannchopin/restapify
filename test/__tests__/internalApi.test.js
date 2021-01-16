@@ -14,15 +14,15 @@ const baseUrl = `http://localhost:${restapifyParams.port}`
 const apiRoot = `${baseUrl}/restapify/api`
 
 describe('Internal API', () => {
-  let RestapifyInstance
+  let rpfy
 
   beforeEach(() => {
-    RestapifyInstance = new Restapify(restapifyParams)
-    RestapifyInstance.run()
+    rpfy = new Restapify(restapifyParams)
+    rpfy.run()
   })
 
   afterEach(() => {
-    RestapifyInstance.close()
+    rpfy.close()
   })
 
   it('should fetch /routes', async () => {
@@ -97,7 +97,7 @@ describe('Internal API', () => {
   })
 
   it('should fetch /states', async () => {
-    const expectedResponse = RestapifyInstance.states
+    const expectedResponse = rpfy.states
     let response = await fetch(`${apiRoot}/states`)
     let data = await response.json()
     expect(data).toStrictEqual(expectedResponse)
@@ -120,7 +120,7 @@ describe('Internal API', () => {
       })
 
       expect(response.status).toBe(expectedResponseStatus)
-      expect(RestapifyInstance.states).toContainEqual(updatedStateObject)
+      expect(rpfy.states).toContainEqual(updatedStateObject)
     })
 
     it('should response with error on invalid body', async () => {

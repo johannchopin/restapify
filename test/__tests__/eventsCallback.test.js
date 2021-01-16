@@ -33,15 +33,15 @@ describe('Restapify\'s events', () => {
 
   describe('start', () => {
     it('should execute callback', () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('start', onStartSpy)
+      rpfy.on('start', onStartSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onStartSpy).toHaveBeenCalledTimes(1)
     })
@@ -49,15 +49,15 @@ describe('Restapify\'s events', () => {
 
   describe('server:start', () => {
     it('should execute callback', () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('server:start', onServerStartSpy)
+      rpfy.on('server:start', onServerStartSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onServerStartSpy).toHaveBeenCalledTimes(1)
     })
@@ -65,15 +65,15 @@ describe('Restapify\'s events', () => {
 
   describe('dashboard:open', () => {
     it('should execute callback', async () => {
-      const RestapifyInstance = new Restapify({...restapifyParams, openDashboard: true})
+      const rpfy = new Restapify({...restapifyParams, openDashboard: true})
 
-      RestapifyInstance.on('dashboard:open', onDashboardOpenSpy)
+      rpfy.on('dashboard:open', onDashboardOpenSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       await sleep(OPEN_DASHBOARD_TIMEOUT)
 
@@ -81,15 +81,15 @@ describe('Restapify\'s events', () => {
     })
 
     it('shouldn\'t execute callback', async () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('dashboard:open', onDashboardOpenSpy)
+      rpfy.on('dashboard:open', onDashboardOpenSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       await sleep(OPEN_DASHBOARD_TIMEOUT)
 
@@ -99,15 +99,15 @@ describe('Restapify\'s events', () => {
 
   describe('error', () => {
     it('shouldn\'t execute callback if no error', () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('error', onErrorSpy)
+      rpfy.on('error', onErrorSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onErrorSpy).not.toHaveBeenCalled()
     })
@@ -118,11 +118,11 @@ describe('Restapify\'s events', () => {
 
       fs.writeFileSync(filePath, 'invalid json')
 
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('error', onErrorSpy)
+      rpfy.on('error', onErrorSpy)
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       fs.unlinkSync(filePath)
 
@@ -134,15 +134,15 @@ describe('Restapify\'s events', () => {
     })
 
     it('should execute callback for invalid base URL', () => {
-      const RestapifyInstance = new Restapify({...restapifyParams, baseUrl: '/restapify'})
+      const rpfy = new Restapify({...restapifyParams, baseUrl: '/restapify'})
 
-      RestapifyInstance.on('error', onErrorSpy)
+      rpfy.on('error', onErrorSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onErrorSpy).toHaveBeenCalledTimes(1)
       expect(onErrorSpy).toHaveBeenCalledWith({
@@ -151,15 +151,15 @@ describe('Restapify\'s events', () => {
     })
 
     it('should execute callback for missing root directory', () => {
-      const RestapifyInstance = new Restapify({ rootDir: 'missingDirectory'})
+      const rpfy = new Restapify({ rootDir: 'missingDirectory'})
 
-      RestapifyInstance.on('error', onErrorSpy)
+      rpfy.on('error', onErrorSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onErrorSpy).toHaveBeenCalledTimes(1)
       expect(onErrorSpy).toHaveBeenCalledWith({
@@ -169,15 +169,15 @@ describe('Restapify\'s events', () => {
   })
 
   it('should execute callback for multiple events', () => {
-    const RestapifyInstance = new Restapify({...restapifyParams})
+    const rpfy = new Restapify({...restapifyParams})
 
-    RestapifyInstance.on(['server:start', 'start'], onMultipleEventsSpy)
+    rpfy.on(['server:start', 'start'], onMultipleEventsSpy)
 
-    RestapifyInstance.on('start', () => {
-      RestapifyInstance.close()
+    rpfy.on('start', () => {
+      rpfy.close()
     })
 
-    RestapifyInstance.run()
+    rpfy.run()
 
     expect(onMultipleEventsSpy).toHaveBeenCalledTimes(2)
   })

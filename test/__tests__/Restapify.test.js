@@ -27,15 +27,15 @@ const baseUrl = `http://localhost:${restapifyParams.port}`
 const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
 
 describe('Restapify', () => {
-  let RestapifyInstance
+  let rpfy
 
   beforeEach(() => {
-    RestapifyInstance = new Restapify(restapifyParams)
-    RestapifyInstance.run()
+    rpfy = new Restapify(restapifyParams)
+    rpfy.run()
   })
 
   afterEach(() => {
-    RestapifyInstance.close()
+    rpfy.close()
   })
 
   describe('HTTP verbs', () => {
@@ -169,7 +169,7 @@ describe('Restapify', () => {
 })
 
 describe('Restapify with state variables', () => {
-  let RestapifyInstance
+  let rpfy
   const states = [
     {
       route: '/users/[userid]',
@@ -183,16 +183,16 @@ describe('Restapify with state variables', () => {
   ]
 
   beforeEach(() => {
-    RestapifyInstance = new Restapify({
+    rpfy = new Restapify({
       ...restapifyParams,
       states
     })
 
-    RestapifyInstance.run()
+    rpfy.run()
   })
 
   afterEach(() => {
-    RestapifyInstance.close()
+    rpfy.close()
   })
 
   it('should respond according to state variable', async () => {
@@ -218,7 +218,7 @@ describe('Restapify with state variables', () => {
   })
 
   it('should update state variable and respond with new data', async () => {
-    RestapifyInstance.setState({
+    rpfy.setState({
       route: '/users/[userid]',
       method: 'DELETE'
     })
@@ -236,12 +236,12 @@ describe('Restapify with state variables', () => {
 
   describe('define routes states', () => {
     it('should not set states in route that don\'t have any', () => {
-      const getUsersRoute = RestapifyInstance.routes.GET['/users']
+      const getUsersRoute = rpfy.routes.GET['/users']
       expect(getUsersRoute.states).toBe(undefined)
     })
 
     it('should set correct state to route', () => {
-      const deleteUserRoute = RestapifyInstance.routes.DELETE['/users/[userid]'].states
+      const deleteUserRoute = rpfy.routes.DELETE['/users/[userid]'].states
 
       const expectedState = {
         'INV_CRED': {
@@ -281,9 +281,9 @@ describe('Restapify with state variables', () => {
         route: '/users/[userid]',
         state: 'ERR'
       }]
-      RestapifyInstance.setState(updatedState)
+      rpfy.setState(updatedState)
 
-      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
+      expect(rpfy.states).toStrictEqual(expectedStates)
     })
 
     it('should add state variable', async () => {
@@ -293,9 +293,9 @@ describe('Restapify with state variables', () => {
         method: 'POST'
       }
       const expectedStates = [...states, newState]
-      RestapifyInstance.setState(newState)
+      rpfy.setState(newState)
 
-      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
+      expect(rpfy.states).toStrictEqual(expectedStates)
     })
 
     it('should remove state variable', async () => {
@@ -304,9 +304,9 @@ describe('Restapify with state variables', () => {
         method: 'DELETE'
       }
       const expectedStates = []
-      RestapifyInstance.setState(updatedState)
+      rpfy.setState(updatedState)
 
-      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
+      expect(rpfy.states).toStrictEqual(expectedStates)
     })
   })
 
