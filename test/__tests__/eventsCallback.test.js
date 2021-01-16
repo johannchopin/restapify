@@ -18,6 +18,7 @@ const onServerRestartSpy = jest.fn()
 const onServerStartSpy = jest.fn()
 const onDashboardOpenSpy = jest.fn()
 const onErrorSpy = jest.fn()
+const onMultipleEventsSpy = jest.fn()
 
 const sleep = m => new Promise(r => setTimeout(r, m))
 
@@ -97,7 +98,7 @@ describe('Restapify\'s events', () => {
   })
 
   describe('error', () => {
-    it('shouldn\'t execute callback', () => {
+    it('shouldn\'t execute callback if no error', () => {
       const RestapifyInstance = new Restapify({...restapifyParams})
 
       RestapifyInstance.on('error', onErrorSpy)
@@ -109,9 +110,9 @@ describe('Restapify\'s events', () => {
       RestapifyInstance.run()
 
       expect(onErrorSpy).not.toHaveBeenCalled()
-    })    
+    })
     
-    it('should execute callback', () => {
+    it('should execute callback for invalid JSON', () => {
       const filename = 'foobar.json'
       const filePath = path.resolve(apiRootDir, filename)
 
@@ -126,6 +127,58 @@ describe('Restapify\'s events', () => {
       fs.unlinkSync(filePath)
 
       expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'INV:JSON_FILE',
+        message: `Invalid json file ${filePath}: Unexpected token i in JSON at position 0`
+      })
     })
+
+    it('should execute callback for invalid base URL', () => {
+      const RestapifyInstance = new Restapify({...restapifyParams, baseUrl: '/restapify'})
+
+      RestapifyInstance.on('error', onErrorSpy)
+
+      RestapifyInstance.on('start', () => {
+        RestapifyInstance.close()
+      })
+
+      RestapifyInstance.run()
+
+      expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'INV:API_BASEURL'
+      })
+    })
+
+    it('should execute callback for missing root directory', () => {
+      const RestapifyInstance = new Restapify({ rootDir: 'missingDirectory'})
+
+      RestapifyInstance.on('error', onErrorSpy)
+
+      RestapifyInstance.on('start', () => {
+        RestapifyInstance.close()
+      })
+
+      RestapifyInstance.run()
+
+      expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'MISS:ROOT_DIR'
+      })
+    })
+  })
+
+  it('should execute callback for multiple events', () => {
+    const RestapifyInstance = new Restapify({...restapifyParams})
+
+    RestapifyInstance.on(['server:start', 'start'], onMultipleEventsSpy)
+
+    RestapifyInstance.on('start', () => {
+      RestapifyInstance.close()
+    })
+
+    RestapifyInstance.run()
+
+    expect(onMultipleEventsSpy).toHaveBeenCalledTimes(2)
   })
 })

@@ -51,7 +51,7 @@ describe('routeResolve', () => {
 
   describe('isJsonString', () => {
     expect(isJsonString('{"test": "its json"}')).toBeTruthy()
-    expect(isJsonString('{"test": "its json"')).toBeFalsy()
-    expect(isJsonString('test')).toBeFalsy()
+    expect(isJsonString('{"test": "its json"')).toBe('Unexpected end of JSON input')
+    expect(isJsonString('test')).toBe('Unexpected token e in JSON at position 1')
   })
 })
