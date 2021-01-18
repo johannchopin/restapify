@@ -60,7 +60,7 @@ Restapify allow you to easily create REST API routes using a specific file struc
  ┃ ┗ 📜 [userid].DELETE.204.json
  ┣ 📂 posts
  ┃ ┗ 📜 [postid].json
- ┃ ┗ 📜 [postid].PUT.json
+ ┃ ┗ 📜 my-post.PUT.json
  ┣ 📜 posts.json
 ```
 
@@ -70,9 +70,25 @@ GET    /users          -> respond with status code 200
 GET    /users/:userid
 DELETE /users/:userid  -> respond with status code 204
 GET    /posts
-GET    /posts/:postsid
-PUT    /posts/:postsid
+GET    /posts/:postid
+PUT    /posts/my-post
 ```
+
+### File name
+
+```
+{scope}.{method}.{statusCode}.{state}.json
+```
+
+#### `scope`:
+
+#### Fixed value
+
+
+#### Star selector
+Example: The file `/api/users/*.json` will match the route `/api/users`
+
+#### Variable
 
 ### File content
 
