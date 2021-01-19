@@ -66,9 +66,9 @@ Restapify allow you to easily create REST API routes using a specific file struc
 
 It will serve the following routes:
 ```
-GET    /users          -> respond with status code 200
+GET    /users
 GET    /users/:userid
-DELETE /users/:userid  -> respond with status code 204
+DELETE /users/:userid
 GET    /posts
 GET    /posts/:postid
 PUT    /posts/my-post
@@ -81,12 +81,35 @@ PUT    /posts/my-post
 ```
 
 #### `scope`:
-
 #### Fixed value
+The following file structure...
+```
+📂 api
+ ┣ 📂 posts
+ ┃ ┗ 📜 my-post.json
+ ┣ 📜 posts.json
+```
 
+...will serve the following routes:
+```
+GET /posts
+GET /posts/my-post
+```
 
 #### Star selector
-Example: The file `/api/users/*.json` will match the route `/api/users`
+The following file structure...
+```
+📂 api
+ ┣ 📂 posts
+ ┃ ┗ 📜 *.json
+ ┣ 📜 *.json
+```
+
+...will serve the following routes:
+```
+GET /
+GET /posts
+```
 
 #### Variable
 
