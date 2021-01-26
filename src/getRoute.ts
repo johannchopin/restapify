@@ -1,7 +1,14 @@
+import * as faker from 'faker'
 import { HttpVerb } from './types'
 
 import { replaceAll } from './utils'
-import { CURRENT_LOCATION_ROUTE_SELECTOR, NUMBER_CAST_INDICATOR } from './const'
+import {
+  CURRENT_LOCATION_ROUTE_SELECTOR,
+  FAKER_SYNTAX_MATCHER,
+  FAKER_SYNTAX_PREFIX,
+  FAKER_SYNTAX_SUFIX,
+  NUMBER_CAST_INDICATOR
+} from './const'
 import {
   getVarsInPath,
   isHttpVerb,
@@ -93,6 +100,24 @@ export const getStateVarsInFilename = (filename: string): string[] => {
   })
 
   return stateVars
+}
+
+export const getFakerVarsInContent = (content: string): string[] => {
+  return Array.from(content.matchAll(FAKER_SYNTAX_MATCHER), m => m[1])
+}
+
+export const getContentWithReplacedFakerVars = (content: string): string => {
+  const fakerVars = getFakerVarsInContent(content)
+
+  fakerVars.forEach((fakerVar) => {
+    const fakerVarSyntax = `${FAKER_SYNTAX_PREFIX}${fakerVar}${FAKER_SYNTAX_SUFIX}`
+    const [fakerNamespace, fakerMethod] = fakerVar.split(':')
+    // @ts-ignore
+    const fakedData = faker[fakerNamespace][fakerMethod]()
+    content = content.replace(fakerVarSyntax, fakedData)
+  })
+
+  return content
 }
 
 export const getHttpMethodInFilename = (filename: string): HttpVerb => {
@@ -200,8 +225,13 @@ export const getRoute = (
   const body = getBodyValue()
 
   const getBody = (varsToReplace?: {[key: string]: string}): string => {
-    if (varsToReplace && body) {
-      return getContentWithReplacedVars(body, varsToReplace)
+    if (body) {
+      let bodyClone = body
+
+      bodyClone = getContentWithReplacedFakerVars(bodyClone)
+      if (varsToReplace) bodyClone = getContentWithReplacedVars(bodyClone, varsToReplace)
+
+      return bodyClone
     }
 
     return fileContent
