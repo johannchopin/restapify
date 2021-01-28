@@ -31,8 +31,8 @@ describe('Internal API', () => {
         "GET": {
           "states": {
             "ERR": {
-              "body": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
               "fileContent": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
+              "body": "{\"success\":false,\"test\":\"error\"}",
               "isExtended": false,
               "statusCode": 404
             }
@@ -48,7 +48,7 @@ describe('Internal API', () => {
           "stateVars": [],
           "statusCode": 200,
           "method": "GET",
-          "body": "{\n  \"testUserId\": \"n:[userid]\"\n}"
+          "body": "{\"testUserId\":\"n:[userid]\"}"
         },
         "DELETE": {
           "states": {
