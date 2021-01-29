@@ -135,24 +135,24 @@ describe('Restapify', () => {
   })
 
   describe('Extended structure', () => {
-    it('should respond with __body', async () => {
+    it('should respond with #body', async () => {
       let response = await fetch(`${apiRoot}/users/`, {
         method: 'POST'
       })
       let data = await response.json()
-      expect(data).toStrictEqual(postUsers.__body)
+      expect(data).toStrictEqual(postUsers['#body'])
     })
   })
 
-  it('should respond with custom __header', async () => {
+  it('should respond with custom #header', async () => {
     let response = await fetch(`${apiRoot}/users/`, {
       method: 'POST'
     })
 
     let headers = response.headers
 
-    Object.keys(postUsers.__header).forEach(headerProperty => {
-      expect(headers.get(headerProperty)).toBe(postUsers.__header[headerProperty])
+    Object.keys(postUsers['#header']).forEach(headerProperty => {
+      expect(headers.get(headerProperty)).toBe(postUsers['#header'][headerProperty])
     })
   })
 
@@ -203,7 +203,7 @@ describe('Restapify with state variables', () => {
     let statusCode = response.status
     let data = await response.json()
 
-    expect(data).toStrictEqual(deleteUserErr.__body)
+    expect(data).toStrictEqual(deleteUserErr['#body'])
     expect(statusCode).toBe(404)
   })
 
@@ -230,7 +230,7 @@ describe('Restapify with state variables', () => {
     let statusCode = response.status
     let data = await response.json()
 
-    expect(data).toStrictEqual(deleteUser.__body)
+    expect(data).toStrictEqual(deleteUser['#body'])
     expect(statusCode).toBe(200)
   })
 
@@ -259,8 +259,8 @@ describe('Restapify with state variables', () => {
         'ERR': {
           fileContent: JSON.stringify(deleteUserErr, null, '  '),
           statusCode: 404,
-          header: deleteUserErr.__header,
-          body: JSON.stringify(deleteUserErr.__body),
+          header: deleteUserErr['#header'],
+          body: JSON.stringify(deleteUserErr['#body']),
           isExtended: true,
           getBody: expect.any(Function)
         }

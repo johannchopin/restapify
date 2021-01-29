@@ -64,7 +64,7 @@ describe('Internal API', () => {
             },
             "ERR": {
               "body": "{\"success\":false}",
-              "fileContent": "{\n  \"__header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"__body\": {\n    \"success\": false\n  }\n}",
+              "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": false\n  }\n}",
               "header": {
                 "Content-Type": "text/html; charset=UTF-8"
               },
@@ -79,7 +79,7 @@ describe('Internal API', () => {
           "normalizedRoute": "/users/:userid",
           "isExtended": true,
           "filename": "[userid].DELETE.json",
-          "fileContent": "{\n  \"__header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"__body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
+          "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
           "stateVars": [],
           "statusCode": 200,
           "method": "DELETE",
