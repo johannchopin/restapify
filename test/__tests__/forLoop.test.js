@@ -66,4 +66,12 @@ describe('Helper\'s functions to process for loops', () => {
     
     expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
   })
+
+  it('should return proceed for loop with cast x to number notation', () => {
+    const content = '["#for i in [1, 2]",{"id": "n:[i]"},"#endfor"]'
+    const expectedResult = 
+      '[{"id": 1},{"id": 2}]'
+    
+    expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
+  })
 })
