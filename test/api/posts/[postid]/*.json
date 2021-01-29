@@ -1,5 +1,5 @@
 {
   "postId": "[postid]",
-  "post": "[faker:lorem:text]",
-  "email": "[faker:internet:email]" 
+  "post": "[#faker:lorem:text]",
+  "email": "[#faker:internet:email]" 
 }
