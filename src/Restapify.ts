@@ -1,9 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 // @ts-ignore
-import * as express from 'express'
+import express from 'express'
 import * as http from 'http'
-import * as open from 'open'
+import open from 'open'
 import * as chokidar from 'chokidar'
 
 import {
