@@ -6,7 +6,9 @@ import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
   FAKER_SYNTAX_MATCHER,
   FAKER_SYNTAX_PREFIX,
-  FAKER_SYNTAX_SUFIX
+  FAKER_SYNTAX_SUFIX,
+  HEADER_SYNTAX,
+  BODY_SYNTAX
 } from './const'
 import {
   getVarsInPath,
@@ -191,7 +193,7 @@ export const getContentWithReplacedVars = (
 }
 
 export const isStructureExtended = (jsonContent: {[key: string]: any}): boolean => {
-  return jsonContent.__header !== undefined || jsonContent.__body !== undefined
+  return jsonContent[HEADER_SYNTAX] !== undefined || jsonContent[BODY_SYNTAX] !== undefined
 }
 
 export const getRoute = (
@@ -212,7 +214,7 @@ export const getRoute = (
 
   const isExtended = isStructureExtended(jsonContent)
 
-  const header = jsonContent.__header
+  const header = jsonContent[HEADER_SYNTAX]
 
   const getBodyValue = (): string | undefined => {
     if (fileContent === '[null]') {
@@ -220,7 +222,7 @@ export const getRoute = (
     }
 
     return isExtended
-      ? JSON.stringify(jsonContent.__body)
+      ? JSON.stringify(jsonContent[BODY_SYNTAX])
       : JSON.stringify(JSON.parse(fileContent)) // use stringify after parse to remove empty spaces
   }
 
