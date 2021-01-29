@@ -116,7 +116,11 @@ export const getContentWithReplacedFakerVars = (content: string): string => {
     const [fakerNamespace, fakerMethod] = fakerVar.split(':')
     // @ts-ignore
     const fakedData = faker[fakerNamespace][fakerMethod]()
-    content = content.replace(fakerVarSyntax, fakedData)
+    const sanitizedFakedData = JSON.stringify(fakedData)
+    content = content.replace(
+      fakerVarSyntax,
+      sanitizedFakedData.substring(1, sanitizedFakedData.length - 1)
+    )
   })
 
   return content
