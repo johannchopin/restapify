@@ -1,7 +1,7 @@
 import faker from 'faker'
 import { HttpVerb } from './types'
 
-import { replaceAll } from './utils'
+import { replaceAll, getCastVarToNumberSyntax } from './utils'
 import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
   FAKER_SYNTAX_MATCHER,
@@ -180,7 +180,7 @@ export const getContentWithReplacedVars = (
 
   Object.keys(vars).forEach((variable) => {
     // replace number casted variables
-    content = replaceAll(content, `"${NUMBER_CAST_INDICATOR}[${variable}]"`, vars[variable])
+    content = replaceAll(content, getCastVarToNumberSyntax(variable), vars[variable])
     // replace simple variables
     content = replaceAll(content, `[${variable}]`, vars[variable])
   })

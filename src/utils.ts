@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { HTTP_VERBS } from './const'
+import { HTTP_VERBS, NUMBER_CAST_INDICATOR } from './const'
 import { HttpVerb } from './types'
 import { Routes } from './Restapify'
 
@@ -128,4 +128,8 @@ export const isJsonString = (str: string): true | string => {
   }
 
   return true
+}
+
+export const getCastVarToNumberSyntax = (variable: string):string => {
+  return `"${NUMBER_CAST_INDICATOR}[${variable}]"`
 }
