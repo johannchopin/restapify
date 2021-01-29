@@ -15,6 +15,7 @@ import {
   isNumeric,
   isStateVariable
 } from './utils'
+import { getContentWithReplacedForLoopsSyntax } from './forLoopHelpers'
 
 // I N T E R F A C E S
 export interface Route {
@@ -219,7 +220,9 @@ export const getRoute = (
       return undefined
     }
 
-    return isExtended ? JSON.stringify(jsonContent.__body) : fileContent
+    return isExtended
+      ? JSON.stringify(jsonContent.__body)
+      : JSON.stringify(JSON.parse(fileContent)) // use stringify after parse to remove empty spaces
   }
 
   const body = getBodyValue()
@@ -230,6 +233,7 @@ export const getRoute = (
 
       bodyClone = getContentWithReplacedFakerVars(bodyClone)
       if (varsToReplace) bodyClone = getContentWithReplacedVars(bodyClone, varsToReplace)
+      bodyClone = getContentWithReplacedForLoopsSyntax(bodyClone)
 
       return bodyClone
     }
