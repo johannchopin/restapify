@@ -164,7 +164,7 @@ class Restapify {
   private restartServer = (options?: RunOptions): void => {
     this.executeCallbacks('server:restart')
     this.closeServer()
-    this.customRun({ ...options, openDashboard: false })
+    this.customRun({ ...options, hard: false, openDashboard: false })
   }
 
   private checkApiBaseUrl = (): void => {
