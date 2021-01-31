@@ -7,7 +7,7 @@ import getPostsById from '../api/posts/[postid]/*.json'
 
 describe('Faker\'s integration', () => {
   it('should find faker\'s syntax in content', () => {
-    const content = '{"description": [#faker:lorem:sentences], "name": [#faker:name:findName]}'
+    const content = '{"description": "[#faker:lorem:sentences]", "name": "[#faker:name:findName]"}'
     const expectedResult = ['lorem:sentences', 'name:findName']
 
     expect(getFakerVarsInContent(content)).toStrictEqual(expectedResult)
@@ -24,5 +24,13 @@ describe('Faker\'s integration', () => {
     const bodyResponse = JSON.parse(route.getBody({postid: 'my-post'}))
 
     expect(bodyResponse.email).toMatch(EMAIL_MATCHER)
+  })
+
+  it('should replace faker syntax with number cast syntax', () => {
+    const content = '{"timestamp": "n:[#faker:time:recent]"}'
+    const result = getFakerVarsInContent(content)
+    const isFakerValueNumber = !isNaN(result.timestamp)
+
+    expect(isFakerValueNumber).toBeTruthy()
   })
 })
