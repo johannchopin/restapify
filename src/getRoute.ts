@@ -1,12 +1,8 @@
-import faker from 'faker'
 import { HttpVerb } from './types'
 
 import { replaceAll, getCastVarToNumberSyntax } from './utils'
 import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
-  FAKER_SYNTAX_MATCHER,
-  FAKER_SYNTAX_PREFIX,
-  FAKER_SYNTAX_SUFIX,
   HEADER_SYNTAX,
   BODY_SYNTAX
 } from './const'
@@ -17,6 +13,7 @@ import {
   isStateVariable
 } from './utils'
 import { getContentWithReplacedForLoopsSyntax } from './forLoopHelpers'
+import { getContentWithReplacedFakerVars } from './fakerHelpers'
 
 // I N T E R F A C E S
 export interface Route {
@@ -102,28 +99,6 @@ export const getStateVarsInFilename = (filename: string): string[] => {
   })
 
   return stateVars
-}
-
-export const getFakerVarsInContent = (content: string): string[] => {
-  return Array.from(content.matchAll(FAKER_SYNTAX_MATCHER), m => m[1])
-}
-
-export const getContentWithReplacedFakerVars = (content: string): string => {
-  const fakerVars = getFakerVarsInContent(content)
-
-  fakerVars.forEach((fakerVar) => {
-    const fakerVarSyntax = `${FAKER_SYNTAX_PREFIX}${fakerVar}${FAKER_SYNTAX_SUFIX}`
-    const [fakerNamespace, fakerMethod] = fakerVar.split(':')
-    // @ts-ignore
-    const fakedData = faker[fakerNamespace][fakerMethod]()
-    const sanitizedFakedData = JSON.stringify(fakedData)
-    content = content.replace(
-      fakerVarSyntax,
-      sanitizedFakedData.substring(1, sanitizedFakedData.length - 1)
-    )
-  })
-
-  return content
 }
 
 export const getHttpMethodInFilename = (filename: string): HttpVerb => {

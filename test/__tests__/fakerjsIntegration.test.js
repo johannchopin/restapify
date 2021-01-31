@@ -1,6 +1,7 @@
 import * as path from 'path'
 
-import {getRoute, getFakerVarsInContent } from '../../src/getRoute'
+import { getRoute } from '../../src/getRoute'
+import { getFakerVarsInContent, getContentWithReplacedFakerVars } from '../../src/fakerHelpers'
 
 // D A T A
 import getPostsById from '../api/posts/[postid]/*.json'
