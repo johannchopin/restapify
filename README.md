@@ -74,14 +74,14 @@ Wants to collaborate? Please read the [contributing guidelines](./CONTRIBUTING.m
 Restapify allow you to easily create REST API routes using a specific file structure. Take the following folder `api/` for example:
 ```
 📂 api
- ┣ 📂 users
- ┃ ┗ 📜 *.json
- ┃ ┗ 📜 [userid].json
- ┃ ┗ 📜 [userid].DELETE.204.json
- ┣ 📂 posts
- ┃ ┗ 📜 [postid].json
- ┃ ┗ 📜 my-post.PUT.json
- ┣ 📜 posts.json
+┣ 📂 users
+┃ ┗ 📜 *.json
+┃ ┗ 📜 [userid].json
+┃ ┗ 📜 [userid].DELETE.204.json
+┣ 📂 posts
+┃ ┗ 📜 [postid].json
+┃ ┗ 📜 my-post.PUT.json
+┣ 📜 posts.json
 ```
 
 It will serve the following routes:
@@ -105,9 +105,9 @@ PUT    /posts/my-post
 The following file structure...
 ```
 📂 api
- ┣ 📂 posts
- ┃ ┗ 📜 my-post.json
- ┣ 📜 posts.json
+┣ 📂 posts
+┃ ┗ 📜 my-post.json
+┣ 📜 posts.json
 ```
 
 ...will serve the following routes:
@@ -120,9 +120,9 @@ GET /posts/my-post
 The following file structure...
 ```
 📂 api
- ┣ 📂 posts
- ┃ ┗ 📜 *.json
- ┣ 📜 *.json
+┣ 📂 posts
+┃ ┗ 📜 *.json
+┣ 📜 *.json
 ```
 
 ...will serve the following routes:
