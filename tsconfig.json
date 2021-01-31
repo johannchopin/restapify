@@ -2,9 +2,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "noImplicitAny": true,
-    "strictNullChecks": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
     "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",

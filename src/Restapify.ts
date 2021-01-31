@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 // @ts-ignore
-import express from 'express'
+import express, { Application } from 'express'
 import * as http from 'http'
 import open from 'open'
 import * as chokidar from 'chokidar'
@@ -66,7 +66,7 @@ type ListedFiles = {
 
 class Restapify {
   private eventCallbacksStore: EventCallbackStore = {}
-  private app: express.Express
+  private app: Application
   private server: any
   private chokidarWatcher: chokidar.FSWatcher
   private listedRouteFiles: ListedFiles = {}
