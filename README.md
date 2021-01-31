@@ -5,8 +5,15 @@
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
 </a>
 
-## Overview
 Restapify is a tool that allows you to easily and quickly deploy a local REST API using an intuitive and developer friendly JSON file structure.
+
+## Summary
+- [**Why Restapify**](#why-restapify)
+- [**Getting Started**](#getting-started)
+- [**Features**](#features)
+- [**Contributing**](#contributing)
+
+## Why Restapify
 
 ## Getting Started
 ### Using the cli
@@ -45,10 +52,20 @@ const rpfy = new Restapify({
 rpfy.run()
 ```
 
-## Documentation
+## Features
 
-### Introduction
-Todo
+- 💻 **Incredible DX** - Intuitive files structure and JSON syntax to easily mock your API
+- 🔥 **Built in hot watcher** - Directly see your changes after a file update
+- 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuive syntax to use this library in your mocked API creation
+- 🏷️ **TypeScript support**
+
+## Contributing
+
+All remarks are welcome so feel free to [open an issue](https://github.com/johannchopin/restapify/issues).
+Wants to collaborate? Please read the [contributing guidelines](./CONTRIBUTING.md).
+
+
+## Documentation
 
 ### File structure
 Restapify allow you to easily create REST API routes using a specific file structure. Take the following folder `api/` for example:
