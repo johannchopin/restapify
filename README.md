@@ -15,6 +15,13 @@ Restapify is a tool that allows you to easily and quickly deploy a local REST AP
 
 ## Why Restapify
 
+## Features
+
+- 💻 **Incredible DX** - Intuitive files structure and JSON syntax to easily mock your API
+- 🔥 **Built in hot watcher** - Directly see your changes after a file update
+- 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuive syntax to use this library in your mocked API creation
+- 🏷️ **TypeScript support**
+
 ## Getting Started
 ### Using the cli
 The simplest way to use Restapify is to use his [cli](https://github.com/johannchopin/restapify-cli):
@@ -51,13 +58,6 @@ const rpfy = new Restapify({
 })
 rpfy.run()
 ```
-
-## Features
-
-- 💻 **Incredible DX** - Intuitive files structure and JSON syntax to easily mock your API
-- 🔥 **Built in hot watcher** - Directly see your changes after a file update
-- 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuive syntax to use this library in your mocked API creation
-- 🏷️ **TypeScript support**
 
 ## Contributing
 
