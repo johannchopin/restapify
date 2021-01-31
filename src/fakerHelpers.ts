@@ -21,6 +21,11 @@ export const getContentWithReplacedFakerVars = (content: string): string => {
     const sanitizedFakedData = JSON.stringify(fakedData)
     const fakedDataValue = sanitizedFakedData.substring(1, sanitizedFakedData.length - 1)
 
+    content = replaceAll(
+      content,
+      getCastVarToNumberSyntax(fakerVarSyntax.substring(1, fakerVarSyntax.length - 1)),
+      fakedDataValue
+    )
     content = content.replace(
       fakerVarSyntax,
       fakedDataValue

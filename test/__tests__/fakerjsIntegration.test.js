@@ -29,7 +29,7 @@ describe('Faker\'s integration', () => {
 
   it('should replace faker syntax with number cast syntax', () => {
     const content = '{"timestamp": "n:[#faker:time:recent]"}'
-    const result = getFakerVarsInContent(content)
+    const result = JSON.parse(getContentWithReplacedFakerVars(content))
     const isFakerValueNumber = !isNaN(result.timestamp)
 
     expect(isFakerValueNumber).toBeTruthy()
