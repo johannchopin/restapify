@@ -1,6 +1,8 @@
 # Restapify
 
-![Codecov](https://img.shields.io/codecov/c/github/johannchopin/restapify)
+<a href="https://codecov.io/gh/johannchopin/restapify">
+  <img src="https://img.shields.io/codecov/c/github/johannchopin/restapify" alt="codecov">
+</a>
 <a href="https://gitmoji.dev">
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
 </a>
