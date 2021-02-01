@@ -19,8 +19,8 @@ Restapify is a tool that allows you to easily and quickly deploy a local REST AP
 
 ## Features
 
-- 💻 **Incredible DX** - Intuitive files structure and JSON syntax to easily mock your API
-- ✅ **JSON valid** - You will only use `.json` files that follows the standard [ECMA-404](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/) syntax
+- 💻 **Incredible DX** - Intuitive files structure and JSON syntax
+- ✅ **JSON valid** - You will only use `.json` files that follows the [ECMA-404](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/) standard
 - 🎛 **Dashboard** - Out of the box SPA to get an overview of your API and manage the routes states
 - 🔥 **Built in hot watcher** - Directly see your changes after a file update
 - 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuive syntax to use to easily populate your API responses
