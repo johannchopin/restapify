@@ -35,7 +35,7 @@ The problem of most of this libraries is the way you have to define your API end
 - 🎛 **Dashboard** - Out of the box SPA to explore and manage your mocked API
 - 💻 **CLI** - Use the CLI for an instant deployment
 - 🔥 **Built in hot watcher** - Directly see your changes after a file update
-- 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuive syntax to use to easily populate your API responses
+- 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuitive syntax to use to easily populate your API responses
 - 🚨 **Events handler** - Execute callbacks on specific events 
 - 🏷️ **TypeScript support**
 
@@ -63,7 +63,7 @@ You can install restapify's class using `npm` (note that this package should be 
 npm i -D restapify
 ```
 
-You can then import the class and instanciate it to serve the api folder:
+You can then import the class and instantiate it to serve the api folder:
 
 ```javascript
 import Restapify from 'restapify'
@@ -143,42 +143,50 @@ GET /animals    # <-- served from the file /animals/*.json
 GET /animals/rabbits
 ```
 
-```
-{scope}.{method}.{statusCode}.{state}.json
-```
+#### Route's variables
+You can define some variables in your routes by using squared brackets. It works on a filename but also on directories name:
 
-#### `scope`:
-#### Fixed value
-The following file structure...
 ```
 📂 api
 ┣ 📂 posts
-┃ ┗ 📜 my-post.json
-┣ 📜 posts.json
+┃ ┗ 📜 [postid].json
+┃ ┣ 📂 [postid]
+┃ ┃ ┗ 📜 comments.json
 ```
 
-...will serve the following routes:
+This will serve:
+
 ```
-GET /posts
-GET /posts/my-post
+GET /posts/:postid
+GET /posts/:postid/comments
 ```
 
-#### Star selector
-The following file structure...
+You will be then able to use theses variables in the json files (see the [blabla]() section) <!-- TODO: Give correct link -->
+
+> ⚠️ In case your want to use severals variables inside a route like `/posts/:var1/comments/:var2`, make sure that they have unique names
+
+#### HTTP's methods
+
+Define your routes method (`GET`, `POST`, `PUT`, `DELETE` or `PATCH`) by adding it in the filename. By default the method is `GET`:
+
 ```
 📂 api
 ┣ 📂 posts
-┃ ┗ 📜 *.json
-┣ 📜 *.json
+┃ ┗ 📜 *.GET.json
+┃ ┣ 📂 [postid]
+┃ ┃ ┗ 📜 *.json
+┃ ┃ ┗ 📜 *.POST.json
+┃ ┃ ┗ 📜 *.DELETE.json
 ```
 
-...will serve the following routes:
-```
-GET /
-GET /posts
-```
+This will serve:
 
-#### Variable
+```
+GET    /posts
+GET    /posts/:postid
+POST   /posts/:postid
+DELETE /posts/:postid
+```
 
 ### File content
 
