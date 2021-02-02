@@ -21,6 +21,7 @@
 - [**Getting Started**](#getting-started)
 - [**Features**](#features)
 - [**Contributing**](#contributing)
+- [**Documentation**](#documentation)
 
 ## Why Restapify
 When you start a new frontend project when the backend is not yet ready, you quickly come to the question of how to retrieve the data to be displayed. There are then many solutions that come with advantages but also some inconveniences. It's possible to use a tool like [postman](https://www.postman.com/) but it's not 100% free and require an account, to simply fetch local JSON data but it only supports a `GET` request or use a mocker library like this one ([json-server](https://github.com/typicode/json-server), [mocker-api](https://github.com/jaywcjlove/mocker-api) or [http-fake-backend](https://github.com/micromata/http-fake-backend)). 
@@ -90,7 +91,7 @@ Restapify allow you to easily create REST API routes using a specific file struc
 ┣ 📂 users
 ┃ ┗ 📜 *.json
 ┃ ┗ 📜 [userid].json
-┃ ┗ 📜 [userid].DELETE.204.json
+┃ ┗ 📜 [userid].DELETE.json
 ┣ 📂 posts
 ┃ ┗ 📜 [postid].json
 ┃ ┗ 📜 my-post.PUT.json
@@ -108,6 +109,39 @@ PUT    /posts/my-post
 ```
 
 ### File name
+The mocked API creation start directly with the filename.
+
+#### Simple route
+You can create a simple route with the filename of a `json` file:
+```
+📂 api
+┣ 📂 animals
+┃ ┗ 📜 rabbits.json
+┣ 📜 posts.json
+```
+
+It will serve the routes:
+```
+GET /animals/rabbits
+GET /posts
+```
+
+#### Star notation
+To easily manage your different routes `json` files you can use the star notation:
+
+```
+📂 api
+┣ 📂 animals
+┃ ┗ 📜 *.json
+┃ ┗ 📜 rabbits.json
+```
+
+It will serve the routes:
+
+```bash
+GET /animals    # <-- served from the file /animals/*.json
+GET /animals/rabbits
+```
 
 ```
 {scope}.{method}.{statusCode}.{state}.json
