@@ -163,7 +163,7 @@ GET /posts/:postid/comments
 
 You will be then able to use theses variables in the json files (see the [blabla]() section) <!-- TODO: Give correct link -->
 
-> ⚠️ In case your want to use severals variables inside a route like `/posts/:var1/comments/:var2`, make sure that they have unique names
+> ⚠️ In case your want to use severals variables inside a route like `/posts/:var1/comments/:var2`, make sure that they have an unique name
 
 #### HTTP's methods
 
