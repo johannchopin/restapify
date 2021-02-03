@@ -35,7 +35,7 @@ The problem of most of this libraries is the way you have to define your API end
 - 🎛 **Dashboard** - Out of the box SPA to explore and manage your mocked API
 - 💻 **CLI** - Use the CLI for an instant deployment
 - 🔥 **Built in hot watcher** - Directly see your changes after a file update
-- 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuitive syntax to use to easily populate your API responses
+- 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuitive syntax to quickly populate your API responses
 - 🚨 **Events handler** - Execute callbacks on specific events 
 - 🏷️ **TypeScript support**
 
@@ -108,7 +108,7 @@ GET    /posts/:postid
 PUT    /posts/my-post
 ```
 
-### File name
+### Route's filename
 The mocked API creation start directly with the filename.
 
 #### Simple route
@@ -167,7 +167,7 @@ You will be then able to use theses variables in the json files (see the [blabla
 
 #### HTTP's methods
 
-Define your routes method (`GET`, `POST`, `PUT`, `DELETE` or `PATCH`) by adding it in the filename. By default the method is `GET`:
+Define your routes method (`GET`, `POST`, `PUT`, `DELETE` or `PATCH`) by adding it in the filename separated by a `.`. The default method is `GET`:
 
 ```
 📂 api
@@ -188,7 +188,35 @@ POST   /posts/:postid
 DELETE /posts/:postid
 ```
 
-### File content
+#### HTTP's status code
+
+Define what status code your route should respond by adding it in the filename after the HTTP method (if there is one) separated by a `.`. The default status code is `200`
+
+```
+📂 api
+┣ 📂 posts
+┃ ┗ 📜 *.GET.json
+┃ ┣ 📂 [postid]
+┃ ┃ ┗ 📜 *.200.json
+┃ ┃ ┗ 📜 *.POST.201.json
+┃ ┃ ┗ 📜 *.DELETE.204.json
+```
+
+This will serve:
+
+```bash
+GET    /posts          # 200
+GET    /posts/:postid  # 200
+POST   /posts/:postid  # 201
+DELETE /posts/:postid  # 204
+```
+
+#### Route's state
+
+// TODO: continue
+
+### Route's file content
+The structure of the files allows to define the API endpoints, now it is necessary to define what they return.
 
 The content of the `json` file will correspond to the body of the response. For example if the file `/api/users/*.json` contains this content:
 ```json
