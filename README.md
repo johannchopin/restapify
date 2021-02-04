@@ -326,3 +326,21 @@ and then call the route `GET /posts/42`, you will get the response:
 ```
 
 > ⚠️ Don't cast your number route's variable that are present in a string. Just use them like `"content": "The post [postid] is nice …"`
+
+#### Fakerjs integration
+
+To easily create mocked data, restapify integrate the [fakerjs](https://github.com/Marak/faker.js) library with an easy to use syntax.
+
+To get for example a faked text content with the regular library you will call `faker.lorem.paragraphs()`. In your route's response you can use it following the syntax `[#faker:<namespace>:<method>]`:
+
+
+```json
+{
+  "id": "n:[postid]",
+  "content": "[#faker:lorem:paragraphs]"
+}
+```
+
+Checkout [here](https://github.com/Marak/faker.js#api-methods) all the methods that you can use.
+
+#### For-loops
