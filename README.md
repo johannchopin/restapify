@@ -202,7 +202,7 @@ Define what status code your route should respond by adding it in the filename a
 ┃ ┃ ┗ 📜 *.DELETE.204.json
 ```
 
-This will serve:
+It will serve:
 
 ```bash
 GET    /posts          # 200
@@ -213,12 +213,39 @@ DELETE /posts/:postid  # 204
 
 #### Route's state
 
-// TODO: continue
+In an API, the same route may return different responses depending on certain factors. A simple example is a request called with a wrong parameter, the response will probably contain an error message instead of the expected result.
+
+So you can create an endpoint with several different states. To do this you just have to create a new file for each different state by adding at the end of the file the syntax `{STATE_NAME}` separated by a dot.
+
+Here is an example of how to define an endpoint with several states:
+
+```
+📂 api
+┣ 📂 posts
+┃ ┗ 📜 *.json
+┃ ┣ 📂 [postid]
+┃ ┃ ┗ 📜 *.json
+┃ ┃ ┗ 📜 *.404.{INV_ID}.json
+┃ ┃ ┗ 📜 *.POST.201.json
+┃ ┃ ┗ 📜 *.POST.401.{INV_CRED}.json
+┃ ┃ ┗ 📜 *.POST.400.{INV_PARAMS}.json
+```
+
+It will serve:
+
+```bash
+GET    /posts
+GET    /posts/:postid  # 200
+POST   /posts/:postid  # 201
+```
+
+You will then in the [dashboard](todo) be able to select which state you want to use for a specific route. So for example if you select the state `INV_PARAMS` for the route `POST /posts/[postid]`, the server will respond with the status code `400`.
 
 ### Route's file content
-The structure of the files allows to define the API endpoints, now it is necessary to define what they return.
+The structure of the files allows to define the API endpoints, now it is necessary to define what they respond.
 
-The content of the `json` file will correspond to the body of the response. For example if the file `/api/users/*.json` contains this content:
+#### Response's body
+The content of a route file will correspond to the body of the request's response. For example if the file `/api/users/*.json` contains this content:
 ```json
 [
   {
@@ -232,10 +259,29 @@ The content of the `json` file will correspond to the body of the response. For 
 ]
 ```
 
-...you will get it as the request's body:
+The response's body of `GET /users` will be this array of 2 users.
 
-```js
-let response = await fetch('/api/users')
-let body = await response.json()
-console.log(body) // [{"id":1,"name":"bob"},{"id":2,"name":"alice"}]
+#### Extended syntax
+A route file can also contain an 'extended' syntax that allow you to specify a custom response's header (see the [Response's header](#responses-header) section). The syntax is the following:
+
+```typescript
+{
+  "#header": Object,
+  "#body": Array or Object 
+}
 ```
+
+Example:
+```json
+{
+  "#header": {
+    "Content-Type": "text/html; charset=UTF-8"
+  },
+  "#body": {
+    "success": false
+  }
+}
+```
+
+#### Response's header
+// TODO: continue
