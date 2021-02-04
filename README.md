@@ -262,7 +262,7 @@ The content of a route file will correspond to the body of the request's respons
 The response's body of `GET /users` will be this array of 2 users.
 
 #### Extended syntax
-A route file can also contain an 'extended' syntax that allow you to specify a custom response's header (see the [Response's header](#responses-header) section). The syntax is the following:
+A route file can also contain an 'extended' syntax that allow you to specify a custom response's header. The syntax is the following:
 
 ```typescript
 {
@@ -283,5 +283,46 @@ Example:
 }
 ```
 
-#### Response's header
-// TODO: continue
+#### Consume route's variables
+
+You can define some route's variables in your route's filename (see [route's variables](#routes-variable) section). You can then consume them in your response's body.
+
+For example the file `/api/posts/[postid].json` contains the route variable `postid` that you can use in the file content:
+
+```json
+{
+  "id": "[postid]",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipisici elit, …"
+}
+```
+
+As a result, if you request `GET /posts/my-post` you will get the response:
+
+```json
+{
+  "id": "my-post",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipisici elit, …"
+}
+```
+
+##### Route's variable casting
+
+By default, all route's variables are interpreted as a string. You can cast a variable to a number by using the following syntax `"n:[myroutevar]"`. So if you use the previous example and replace the file content to:
+
+```json
+{
+  "id": "n:[postid]",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipisici elit, …"
+}
+```
+
+and then call the route `GET /posts/42`, you will get the response:
+
+```json
+{
+  "id": 42,
+  "content": "Lorem ipsum dolor sit amet, consectetur adipisici elit, …"
+}
+```
+
+> ⚠️ Don't cast your number route's variable that are present in a string. Just use them like `"content": "The post [postid] is nice …"`
