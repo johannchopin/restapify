@@ -84,6 +84,35 @@ Wants to collaborate? Please read the [contributing guidelines](./CONTRIBUTING.m
 
 ## Documentation
 
+<!-- Generate table of content by running `yarn readme:generate-doc-table` -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [File structure](#file-structure)
+- [Route's filename](#routes-filename)
+  - [Simple route](#simple-route)
+  - [Star notation](#star-notation)
+  - [Route's variables](#routes-variables)
+  - [HTTP's methods](#https-methods)
+  - [HTTP's status code](#https-status-code)
+  - [Route's state](#routes-state)
+- [Route's file content](#routes-file-content)
+  - [Response's body](#responses-body)
+  - [Extended syntax](#extended-syntax)
+  - [Consume route's variables](#consume-routes-variables)
+    - [Route's variable casting](#routes-variable-casting)
+  - [Fakerjs integration](#fakerjs-integration)
+  - [For-loops](#for-loops)
+    - [For-loop's array sequence](#for-loops-array-sequence)
+    - [For-loop's range sequence](#for-loops-range-sequence)
+- [CLI](#cli)
+  - [`restapify serve`](#restapify-serve)
+  - [`restapify list`](#restapify-list)
+  - [🚧 Serve from configuration file](#-serve-from-configuration-file)
+  - [Flags](#flags)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ### File structure
 Restapify allow you to easily create REST API routes using a specific file structure. Take the following folder `api/` for example:
 ```
@@ -401,3 +430,67 @@ This example will produce:
   { "id": 9, "type": "user" },
 ]
 ```
+
+### CLI
+Restapify comes with a cli to easily serve your mocked API.
+
+#### `restapify serve`
+Serve the mocked API from a specific directory:
+
+```
+restapify serve <rootDir>
+```
+
+#### `restapify list`
+List all the routes detected by restapify from a specific directory:
+
+```
+restapify list <rootDir>
+```
+
+#### 🚧 Serve from configuration file
+Serve the mocked API from a configuration file. The default path is `./restapify.config.json`:
+
+```
+restapify [path]
+```
+
+The configuration file has to follow the structure of the type `ConfigFile`:
+
+```typescript
+interface ConfigFileState  {
+  "route": string,
+  "method": 'GET' | 'POST' | 'DELETE' | 'PUT' |'PATCH',
+  "state": string
+}
+interface ConfigFile {
+  "rootDir": string, // relative path to the API root directory (REQUIRED)
+  "apiBaseUrl": string, // By default: `api/`
+  "port": number, // By default: `6767`
+  "states": ConfigFileState[] // By default `undefined`
+}
+```
+
+Example:
+```json
+{
+  "rootDir": "./api",
+  "apiBaseUrl": "my-api/",
+  "port": 6768,
+  "states": [
+    {
+      "route": "/users/[userid]",
+      "method": "DELETE",
+      "state": "ERR"
+    }
+  ]
+}
+```
+
+#### Flags
+| short         | long                 | description                          | default  |
+|---------------|----------------------|--------------------------------------|----------|
+| `-v`          | `--version`          | output the current version           |          |
+| `-p <number>` | `--port <number>`    | port to serve the API                | `6767`   |
+| `-b <string>` | `--baseUrl <string>` | base url to serve the API            | `'/api'` |
+|               | `--no-open`          | don't open dashboard on server start | `false`  |
