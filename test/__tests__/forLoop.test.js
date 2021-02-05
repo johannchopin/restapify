@@ -67,6 +67,14 @@ describe('Helper\'s functions to process for loops', () => {
     expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
   })
 
+  it('should return proceed for loops with string and number values in array', () => {
+    const content = `["#for animal in ['rabbit', 'mouse', 42]",{"type": "[animal]"},"#endfor"]`
+    const expectedResult = 
+      '[{"type": "rabbit"},{"type": "mouse"},{"type": "42"}]'
+    
+    expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
+  })
+
   it('should return proceed for loop with cast x to number notation', () => {
     const content = '["#for i in [1, 2]",{"id": "n:[i]"},"#endfor"]'
     const expectedResult = 

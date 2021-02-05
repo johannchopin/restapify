@@ -70,11 +70,12 @@ export const getArrayFromRangeString = (stringifiedRange: string): number[] => {
   return []
 }
 
-export const getSequenceArray = (sequence: string): number[] => {
+export const getSequenceArray = (sequence: string): (number | string)[] => {
   const isSequenceAnArray = sequence.startsWith('[') && sequence.endsWith(']')
   const isSequenceRange = sequence.startsWith('range(') && sequence.endsWith(')')
 
   if (isSequenceAnArray) {
+    sequence = replaceAll(sequence, '\'', '"')
     return JSON.parse(sequence)
   } if (isSequenceRange) {
     return getArrayFromRangeString(sequence)
