@@ -344,3 +344,60 @@ To get for example a faked text content with the regular library you will call `
 Checkout [here](https://github.com/Marak/faker.js#api-methods) all the methods that you can use.
 
 #### For-loops
+
+To easily create a big amount of data in an array, Restapify provides a for-loop syntax. Its structure is the following:
+
+```js
+[
+  "#for <x> in <sequence>",
+  "<statement>",
+  "#endfor"
+]
+```
+
+There is 2 options to create a `sequence`: using an [array](#for-loops-array-sequence) or the [range](#for-loops-range-sequence) function.
+
+##### For-loop's array sequence
+
+You can easily create multiple data by iterate over an array:
+
+```json
+[
+  "#for animal in ['rabbit', 'mouse', 'lion']",
+  { "type": "[animal]" },
+  "#endfor"
+]
+```
+
+Here the `<sequence>` is `['rabbit', 'mouse', 'lion']`, the iterator variable `<x>` is `animal` and the statement is `{ "type": "[animal]" }`. Note that you can use the value of `x` inside the statement by using the syntax `[x]`. This example will produce:
+
+```json
+[
+  { "type": "rabbit" },
+  { "type": "mouse" },
+  { "type": "lion" }
+]
+```
+
+##### For-loop's range sequence
+
+For bigger amount of data you can use the `range` syntax that works the same than [range() from lodash](https://lodash.com/docs/4.17.15#range):
+
+```json
+[
+  "#for userId in range(10)",
+  { "id": "n:[userId]", "type": "user" },
+  "#endfor"
+]
+```
+
+This example will produce:
+
+```js
+[
+  { "id": 0, "type": "user" },
+  { "id": 1, "type": "user" },
+  // ...
+  { "id": 9, "type": "user" },
+]
+```
