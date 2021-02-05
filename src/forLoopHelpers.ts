@@ -4,7 +4,7 @@ import { getCastVarToNumberSyntax, replaceAll } from './utils'
 import {
   FOR_LOOP_SYNTAX_MATCHER,
   FOR_LOOP_SYNTAX_PREFIX,
-  FOR_LOOP_SYNTAX_SUFIX
+  FOR_LOOP_SYNTAX_SUFFIX
 } from './const'
 
 const ELMT_BETWEEN_PARENTHESES_MATCHER = /\(([^)]+)\)/g
@@ -28,7 +28,7 @@ export interface RangeFunctionParams {
 
 export const getForLoopSyntax = (forLoopObject: ForLoopSyntax): string => {
   const { x, sequence, statement } = forLoopObject
-  return `"${FOR_LOOP_SYNTAX_PREFIX} ${x} in ${sequence}",${statement},"${FOR_LOOP_SYNTAX_SUFIX}"`
+  return `"${FOR_LOOP_SYNTAX_PREFIX} ${x} in ${sequence}",${statement},"${FOR_LOOP_SYNTAX_SUFFIX}"`
 }
 
 export const getForLoopSyntaxInContent = (content: string): ForLoopSyntax[] => {

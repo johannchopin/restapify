@@ -19,4 +19,4 @@ export const FAKER_SYNTAX_MATCHER = /\[#faker:(.*?)\]/g
 
 export const FOR_LOOP_SYNTAX_MATCHER = /"#for (\w+) in (.*?)",(.*?),"#endfor"/g
 export const FOR_LOOP_SYNTAX_PREFIX = '#for'
-export const FOR_LOOP_SYNTAX_SUFIX = '#endfor'
+export const FOR_LOOP_SYNTAX_SUFFIX = '#endfor'
