@@ -28,7 +28,7 @@ export interface Route {
   isExtended: boolean
   header?: {[key: string]: string | number}
   body?: string
-  getBody: (vars: {[key: string]: string}) => string
+  getBody: (vars: {[key: string]: string}) => string | undefined
   states?: {
     [state: string]: Pick<Route, 'fileContent'
       | 'statusCode'
@@ -207,7 +207,7 @@ export const getRoute = (
 
   const body = getBodyValue()
 
-  const getBody = (varsToReplace?: {[key: string]: string}): string => {
+  const getBody = (varsToReplace?: {[key: string]: string}): string | undefined => {
     if (body) {
       let bodyClone = body
 
@@ -218,7 +218,7 @@ export const getRoute = (
       return bodyClone
     }
 
-    return fileContent
+    return undefined
   }
 
   return {
