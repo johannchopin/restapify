@@ -32,7 +32,7 @@ describe('Internal API', () => {
           "states": {
             "ERR": {
               "fileContent": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
-              "body": "{\"success\":false,\"test\":\"error\"}",
+              "body": { success: false, test: "error" },
               "isExtended": false,
               "statusCode": 404
             }
@@ -48,7 +48,7 @@ describe('Internal API', () => {
           "stateVars": [],
           "statusCode": 200,
           "method": "GET",
-          "body": "{\"testUserId\":\"n:[userid]\"}"
+          "body": { testUserId: "n:[userid]" }
         },
         "DELETE": {
           "states": {
@@ -63,7 +63,7 @@ describe('Internal API', () => {
               "statusCode": 401
             },
             "ERR": {
-              "body": "{\"success\":false}",
+              "body": { success: false },
               "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": false\n  }\n}",
               "header": {
                 "Content-Type": "text/html; charset=UTF-8"
@@ -83,7 +83,7 @@ describe('Internal API', () => {
           "stateVars": [],
           "statusCode": 200,
           "method": "DELETE",
-          "body": "{\"success\":true,\"data\":{\"id\":67,\"name\":\"bob\"}}",
+          "body": { success: true, data: { id: 67, name: "bob" } },
           "header": {
             "Content-Type": "text/html; charset=UTF-8"
           }

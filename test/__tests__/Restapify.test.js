@@ -260,7 +260,7 @@ describe('Restapify with state variables', () => {
           fileContent: JSON.stringify(deleteUserErr, null, '  '),
           statusCode: 404,
           header: deleteUserErr['#header'],
-          body: JSON.stringify(deleteUserErr['#body']),
+          body: deleteUserErr['#body'],
           isExtended: true,
           getBody: expect.any(Function)
         }

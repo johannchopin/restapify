@@ -312,7 +312,7 @@ class Restapify {
       const responseBody = routeData.getBody(vars)
 
       if (responseBody) {
-        res.send(JSON.parse(responseBody))
+        res.send(JSON.stringify(responseBody))
       } else {
         res.end()
       }

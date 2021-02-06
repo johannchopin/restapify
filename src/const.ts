@@ -8,6 +8,7 @@ export const DASHBOARD_FOLDER_PATH = './dashboard-public/'
 export const NUMBER_CAST_INDICATOR = 'n:'
 export const OPEN_DASHBOARD_TIMEOUT = 1000
 
+export const EMPTY_BODY_SYNTAX = [null]
 export const HEADER_SYNTAX = '#header'
 export const BODY_SYNTAX = '#body'
 
