@@ -372,7 +372,7 @@ class Restapify {
       this.configRoutesFromListedFiles()
       if (startServer) this.configServer()
 
-      if (hard && startServer) this.configDashboard()
+      if (startServer) this.configDashboard()
 
       if (startServer) this.configInternalApi()
 
