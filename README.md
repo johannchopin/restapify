@@ -110,6 +110,7 @@ Wants to collaborate? Please read the [contributing guidelines](./CONTRIBUTING.m
   - [`restapify list`](#restapify-list)
   - [🚧 Serve from configuration file](#-serve-from-configuration-file)
   - [Flags](#flags)
+- [JavaScript's API](#javascripts-api)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -190,7 +191,7 @@ GET /posts/:postid
 GET /posts/:postid/comments
 ```
 
-You will be then able to use theses variables in the json files (see the [blabla]() section) <!-- TODO: Give correct link -->
+You will be then able to use theses variables in the json files (see the [Consume route's variables](#consume-routes-variables) section).
 
 > ⚠️ In case your want to use severals variables inside a route like `/posts/:var1/comments/:var2`, make sure that they have an unique name
 
@@ -494,3 +495,5 @@ Example:
 | `-p <number>` | `--port <number>`    | port to serve the API                | `6767`   |
 | `-b <string>` | `--baseUrl <string>` | base url to serve the API            | `'/api'` |
 |               | `--no-open`          | don't open dashboard on server start | `false`  |
+
+### JavaScript's API
