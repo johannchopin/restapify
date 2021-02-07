@@ -23,6 +23,7 @@ import {
 import {
   getRouteFiles,
   getRoutesByFileOrder as getRoutesByFileOrderHelper,
+  getSortedRoutesSlug,
   isJsonString,
   routeResolve,
   withoutUndefinedFromObject
@@ -277,7 +278,10 @@ class Restapify {
 
   private serveRoutes = (): void => {
     (Object.keys(this.routes) as HttpVerb[]).forEach(method => {
-      Object.keys(this.routes[method]).forEach(route => {
+      const routesSlug = Object.keys(this.routes[method])
+      const sortedRoutesSlug = getSortedRoutesSlug(routesSlug)
+
+      sortedRoutesSlug.forEach(route => {
         const routeData = this.getRouteData(method, route)
 
         if (routeData) {

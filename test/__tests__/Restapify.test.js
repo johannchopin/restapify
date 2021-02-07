@@ -6,13 +6,13 @@ import Restapify from '../../src/Restapify'
 // D A T A
 import getAnimals from '../api/animals.json'
 import getAnimalsByName from '../api/animals/[name].json'
+import getAnimalHedgehog from '../api/animals/hedgehog.json'
 import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../api/plants.GET.json'
 import getUsers from '../api/users/*.json'
 import getUserErr from '../api/users/[userid].404.{ERR}.json'
 import postUsers from '../api/users/*.POST.201.json'
 import getComments from '../api/comments/*.GET.json'
-import getComment43 from '../api/comments/43.json'
 import deleteUser from '../api/users/[userid].DELETE.json'
 import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
 import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
@@ -172,6 +172,12 @@ describe('Restapify', () => {
     let statusCode = response.status
 
     expect(statusCode).toBe(expectedStatusCode)
+  })
+
+  it('should fetch a specific route', async () => {
+    let response = await fetch(`${apiRoot}/animals/hedgehog`)
+    let data = await response.json()
+    expect(data).toStrictEqual(getAnimalHedgehog)
   })
 })
 
