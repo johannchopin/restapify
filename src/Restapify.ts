@@ -309,7 +309,13 @@ class Restapify {
         vars[variable] = req.params[variable]
       })
 
-      res.send(JSON.parse(routeData.getBody(vars)))
+      const responseBody = routeData.getBody(vars)
+
+      if (responseBody) {
+        res.send(JSON.stringify(responseBody))
+      } else {
+        res.end()
+      }
     }
 
     this.listenRoute(routeData.method, normalizedRoute, responseCallback)

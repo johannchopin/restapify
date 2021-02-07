@@ -13,6 +13,7 @@
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
     "test": "jest --silent --no-cache",
     "test:manual": "yarn ts-node-dev --files test/run.ts",
+    "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
     "build": "yarn tsc",
     "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",

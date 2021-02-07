@@ -12,6 +12,7 @@ import getUsers from '../api/users/*.json'
 import getUserErr from '../api/users/[userid].404.{ERR}.json'
 import postUsers from '../api/users/*.POST.201.json'
 import getComments from '../api/comments/*.GET.json'
+import getComment43 from '../api/comments/43.json'
 import deleteUser from '../api/users/[userid].DELETE.json'
 import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
 import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
@@ -142,17 +143,23 @@ describe('Restapify', () => {
       let data = await response.json()
       expect(data).toStrictEqual(postUsers['#body'])
     })
-  })
 
-  it('should respond with custom #header', async () => {
-    let response = await fetch(`${apiRoot}/users/`, {
-      method: 'POST'
+    it('should respond without a body', async () => {
+      let response = await fetch(`${apiRoot}/comments/43`)
+      let data = await response.text()
+      expect(data.length).toBe(0)
     })
 
-    let headers = response.headers
-
-    Object.keys(postUsers['#header']).forEach(headerProperty => {
-      expect(headers.get(headerProperty)).toBe(postUsers['#header'][headerProperty])
+    it('should respond with custom #header', async () => {
+      let response = await fetch(`${apiRoot}/users/`, {
+        method: 'POST'
+      })
+  
+      let headers = response.headers
+  
+      Object.keys(postUsers['#header']).forEach(headerProperty => {
+        expect(headers.get(headerProperty)).toBe(postUsers['#header'][headerProperty])
+      })
     })
   })
 
@@ -260,7 +267,7 @@ describe('Restapify with state variables', () => {
           fileContent: JSON.stringify(deleteUserErr, null, '  '),
           statusCode: 404,
           header: deleteUserErr['#header'],
-          body: JSON.stringify(deleteUserErr['#body']),
+          body: deleteUserErr['#body'],
           isExtended: true,
           getBody: expect.any(Function)
         }

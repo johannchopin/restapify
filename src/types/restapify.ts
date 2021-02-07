@@ -1,3 +1,5 @@
+import { Json, JsonCompatible } from './json'
+
 export type HttpVerb = 'GET' | 'POST' | 'DELETE' | 'PUT' |'PATCH'
 export type RestapifyEventName = 'error'
   | 'warning'
@@ -15,3 +17,7 @@ export type RestapifyErrorCallbackParam = {
 }
 export type RestapifyEventCallbackParam = RestapifyErrorCallbackParam
 export type RestapifyEventCallback = (params?: RestapifyEventCallbackParam) => void
+export type JsonRouteFileContent = JsonCompatible<{
+  '#body'?: Json
+  '#header'?: Json
+}>

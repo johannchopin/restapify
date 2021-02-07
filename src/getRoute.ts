@@ -1,10 +1,11 @@
-import { HttpVerb } from './types'
+import { HttpVerb, JsonRouteFileContent } from './types'
 
 import { replaceAll, getCastVarToNumberSyntax } from './utils'
 import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
   HEADER_SYNTAX,
-  BODY_SYNTAX
+  BODY_SYNTAX,
+  EMPTY_BODY_SYNTAX
 } from './const'
 import {
   getVarsInPath,
@@ -27,8 +28,8 @@ export interface Route {
   stateVars: string[]
   isExtended: boolean
   header?: {[key: string]: string | number}
-  body?: string
-  getBody: (vars: {[key: string]: string}) => string
+  body?: JsonRouteFileContent
+  getBody: (vars: {[key: string]: string}) => JsonRouteFileContent | undefined
   states?: {
     [state: string]: Pick<Route, 'fileContent'
       | 'statusCode'
@@ -175,6 +176,19 @@ export const isStructureExtended = (jsonContent: {[key: string]: any}): boolean 
   return jsonContent[HEADER_SYNTAX] !== undefined || jsonContent[BODY_SYNTAX] !== undefined
 }
 
+export const isBodyEmpty = (body: JsonRouteFileContent): boolean => {
+  const stringifiedEmptyBodySyntax = JSON.stringify(EMPTY_BODY_SYNTAX)
+
+  if (JSON.stringify(body) === stringifiedEmptyBodySyntax) return true
+
+  if (body[BODY_SYNTAX]) {
+    return JSON.stringify(body[BODY_SYNTAX]) === stringifiedEmptyBodySyntax
+      || body[BODY_SYNTAX] === stringifiedEmptyBodySyntax
+  }
+
+  return false
+}
+
 export const getRoute = (
   filePath: string,
   entryFolderPath: string,
@@ -195,30 +209,30 @@ export const getRoute = (
 
   const header = jsonContent[HEADER_SYNTAX]
 
-  const getBodyValue = (): string | undefined => {
-    if (fileContent === '[null]') {
-      return undefined
-    }
+  const getBodyValue = (): JsonRouteFileContent | undefined => {
+    if (isBodyEmpty(jsonContent)) return undefined
 
     return isExtended
-      ? JSON.stringify(jsonContent[BODY_SYNTAX])
-      : JSON.stringify(JSON.parse(fileContent)) // use stringify after parse to remove empty spaces
+      ? jsonContent[BODY_SYNTAX]
+      : jsonContent
   }
 
   const body = getBodyValue()
 
-  const getBody = (varsToReplace?: {[key: string]: string}): string => {
+  const getBody = (
+    varsToReplace?: {[key: string]: string}
+  ): JsonRouteFileContent | undefined => {
     if (body) {
-      let bodyClone = body
+      let bodyAsString = JSON.stringify(body)
 
-      bodyClone = getContentWithReplacedFakerVars(bodyClone)
-      if (varsToReplace) bodyClone = getContentWithReplacedVars(bodyClone, varsToReplace)
-      bodyClone = getContentWithReplacedForLoopsSyntax(bodyClone)
+      bodyAsString = getContentWithReplacedFakerVars(bodyAsString)
+      if (varsToReplace) bodyAsString = getContentWithReplacedVars(bodyAsString, varsToReplace)
+      bodyAsString = getContentWithReplacedForLoopsSyntax(bodyAsString)
 
-      return bodyClone
+      return JSON.parse(bodyAsString)
     }
 
-    return fileContent
+    return undefined
   }
 
   return {
