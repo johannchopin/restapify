@@ -133,3 +133,34 @@ export const isJsonString = (str: string): true | string => {
 export const getCastVarToNumberSyntax = (variable: string):string => {
   return `"${NUMBER_CAST_INDICATOR}[${variable}]"`
 }
+
+export const getSortedRoutesSlug = (routesSlug: string[]): string[] => {
+  // By alphabetical order, a route that contains a variable comes before a specific route:
+  // ex: ['/animals/[name]', '/animals/hedgehog']
+  // But we want the route with the variable at the end
+  routesSlug.sort((a, b) => {
+    const splittedA = a.split('/')
+    const splittedB = b.split('/')
+
+    const lastASlugPart = splittedA[splittedA.length - 1]
+    const lastBSlugPart = splittedB[splittedB.length - 1]
+
+    const aPrefix = splittedA.slice(0, a.length - lastASlugPart.length).join('/')
+    const bPrefix = splittedA.slice(0, b.length - lastBSlugPart.length).join('/')
+
+    const areSlugsOnSameDeepness = splittedA.length === splittedB.length && aPrefix === bPrefix
+
+    if (areSlugsOnSameDeepness) {
+      const isAFinalSlugVar = lastASlugPart.endsWith(']')
+      const isBFinalSlugVar = lastBSlugPart.endsWith(']')
+
+      if (isAFinalSlugVar && !isBFinalSlugVar) {
+        return 1
+      }
+    }
+
+    return -1
+  })
+
+  return routesSlug
+}
