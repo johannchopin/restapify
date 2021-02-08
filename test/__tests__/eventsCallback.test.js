@@ -166,6 +166,32 @@ describe('Restapify\'s events', () => {
         error: 'MISS:ROOT_DIR'
       })
     })
+
+    it('should execute callback for invalid fakerjs syntax', () => {
+      const filename = 'foobar.json'
+      const filePath = path.resolve(apiRootDir, filename)
+      const bodyWithInvalidFakerjsSyntax = {
+        email: "[#faker:internet:emailFoobar]",
+      }
+      fs.writeFileSync(filePath, JSON.stringify(bodyWithInvalidFakerjsSyntax))
+
+      const rpfy = new Restapify({ ...restapifyParams })
+
+      rpfy.on('error', onErrorSpy)
+
+      rpfy.on('start', () => {
+        rpfy.close()
+      })
+
+      rpfy.run()
+
+      fs.unlinkSync(filePath)
+
+      expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'INV:FAKER_SYNTAX'
+      })
+    })
   })
 
   it('should execute callback for multiple events', () => {
