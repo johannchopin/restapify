@@ -179,6 +179,14 @@ describe('Restapify', () => {
     let data = await response.json()
     expect(data).toStrictEqual(getAnimalHedgehog)
   })
+
+  it('should not generate same faker value in for loop', async () => {
+    let response = await fetch(`${apiRoot}/cars`)
+    let data = await response.json()
+
+    const areGeneratedDataSimilaire = data[0].type === data[1].type && data[1].type === data[2].type && data[2].type === data[10].type
+    expect(areGeneratedDataSimilaire).toBeFalsy()
+  })
 })
 
 describe('Restapify with state variables', () => {
@@ -334,8 +342,8 @@ describe('Restapify with state variables', () => {
 it('should get correct served routes', () => {
   const rpfy = new Restapify({...restapifyParams})
   const servedRoutes = rpfy.getServedRoutes()
-  const expectedServedRoutesAmount = 20
-  const expectedServedRoutesResponse = [{ "method": "GET", "route": "/animals" }, { "method": "GET", "route": "/animals/[name]" }, { "method": "GET", "route": "/animals/[name]/friends" }, { "method": "GET", "route": "/animals/[name]/friends/[friend_id]" }, { "method": "GET", "route": "/animals/hedgehog" }, { "method": "GET", "route": "/comments" }, { "method": "GET", "route": "/comments/42" }, { "method": "GET", "route": "/comments/43" }, { "method": "GET", "route": "/comments/[id]" }, { "method": "GET", "route": "/plants" }, { "method": "GET", "route": "/posts" }, { "method": "GET", "route": "/posts/[postid]" }, { "method": "GET", "route": "/posts/[postid]/comments/[commentid]" }, { "method": "GET", "route": "/users" }, { "method": "POST", "route": "/users" }, { "method": "GET", "route": "/users/[userid]" }, { "method": "PUT", "route": "/users/[userid]" }, { "method": "PATCH", "route": "/users/[userid]" }, { "method": "DELETE", "route": "/users/[userid]" }, { "method": "GET", "route": "/users/[userid]/friends" }]
+  const expectedServedRoutesAmount = 21
+  const expectedServedRoutesResponse = [{ "method": "GET", "route": "/animals" }, { "method": "GET", "route": "/animals/[name]" }, { "method": "GET", "route": "/animals/[name]/friends" }, { "method": "GET", "route": "/animals/[name]/friends/[friend_id]" }, { "method": "GET", "route": "/animals/hedgehog" }, { "method": "GET", "route": "/cars" }, { "method": "GET", "route": "/comments" }, { "method": "GET", "route": "/comments/42" }, { "method": "GET", "route": "/comments/43" }, { "method": "GET", "route": "/comments/[id]" }, { "method": "GET", "route": "/plants" }, { "method": "GET", "route": "/posts" }, { "method": "GET", "route": "/posts/[postid]" }, { "method": "GET", "route": "/posts/[postid]/comments/[commentid]" }, { "method": "GET", "route": "/users" }, { "method": "POST", "route": "/users" }, { "method": "GET", "route": "/users/[userid]" }, { "method": "PUT", "route": "/users/[userid]" }, { "method": "PATCH", "route": "/users/[userid]" }, { "method": "DELETE", "route": "/users/[userid]" }, { "method": "GET", "route": "/users/[userid]/friends" }]
 
   expect(servedRoutes.length).toBe(expectedServedRoutesAmount)
   expect(servedRoutes).toStrictEqual(expectedServedRoutesResponse)
