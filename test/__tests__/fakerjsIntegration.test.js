@@ -53,10 +53,10 @@ describe('Faker\'s integration', () => {
   describe('Invalid faker syntax detection', () => {
     it('should find invalid syntax', () => {
       const content = JSON.stringify({
-        email: "[#faker:internet:emailFoobar]",
+        email: "[#faker:internetFoobar:emailFoobar]",
       })
       const expectedResult = {
-        namespace: 'internet',
+        namespace: 'internetFoobar',
         method: 'emailFoobar'
       }
 

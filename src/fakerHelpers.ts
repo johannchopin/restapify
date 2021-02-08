@@ -18,7 +18,9 @@ export const areFakerVarsSyntaxValidInContent = (content: string): true | FakerS
   fakerVars.some((fakerVar) => {
     const [fakerNamespace, fakerMethod] = fakerVar.split(':')
     // @ts-ignore
-    const isFakerSyntaxValid = faker[fakerNamespace][fakerMethod] !== undefined
+    const isFakerSyntaxValid = faker[fakerNamespace] !== undefined
+      // @ts-ignore
+      && faker[fakerNamespace][fakerMethod] !== undefined
 
     if (!isFakerSyntaxValid) {
       invalidFakerSyntaxData = {
