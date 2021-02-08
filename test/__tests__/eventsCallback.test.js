@@ -189,7 +189,8 @@ describe('Restapify\'s events', () => {
 
       expect(onErrorSpy).toHaveBeenCalledTimes(1)
       expect(onErrorSpy).toHaveBeenCalledWith({
-        error: 'INV:FAKER_SYNTAX'
+        error: 'INV:FAKER_SYNTAX',
+        message: 'The fakerjs method call `faker.internet.emailFoobar()` is invalid'
       })
     })
   })
