@@ -1,0 +1,8 @@
+[
+  "#for i in range(25)",
+  {
+    "type": "[#faker:vehicle:type]",
+    "model": "[#faker:vehicle:model]"
+  },
+  "#endfor"
+]

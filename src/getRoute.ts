@@ -225,9 +225,9 @@ export const getRoute = (
     if (body) {
       let bodyAsString = JSON.stringify(body)
 
-      bodyAsString = getContentWithReplacedFakerVars(bodyAsString)
       if (varsToReplace) bodyAsString = getContentWithReplacedVars(bodyAsString, varsToReplace)
       bodyAsString = getContentWithReplacedForLoopsSyntax(bodyAsString)
+      bodyAsString = getContentWithReplacedFakerVars(bodyAsString)
 
       return JSON.parse(bodyAsString)
     }
