@@ -10,6 +10,15 @@ export const getFakerVarsInContent = (content: string): string[] => {
   return Array.from(content.matchAll(FAKER_SYNTAX_MATCHER), m => m[1])
 }
 
+export const areFakerVarsSyntaxValidInContent = (content: string): boolean => {
+  const fakerVars = getFakerVarsInContent(content)
+  return !fakerVars.some((fakerVar) => {
+    const [fakerNamespace, fakerMethod] = fakerVar.split(':')
+    // @ts-ignore
+    return faker[fakerNamespace][fakerMethod] === undefined
+  })
+}
+
 export const getContentWithReplacedFakerVars = (content: string): string => {
   const fakerVars = getFakerVarsInContent(content)
 

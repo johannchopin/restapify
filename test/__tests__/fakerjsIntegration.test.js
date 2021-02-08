@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as faker from 'faker';
 
 import { getRoute } from '../../src/getRoute'
-import { getFakerVarsInContent, getContentWithReplacedFakerVars } from '../../src/fakerHelpers'
+import { getFakerVarsInContent, getContentWithReplacedFakerVars, areFakerVarsSyntaxValidInContent } from '../../src/fakerHelpers'
 
 // D A T A
 import getPostsById from '../api/posts/[postid]/*.json'
@@ -47,5 +47,31 @@ describe('Faker\'s integration', () => {
     const isFakerValueNumber = !isNaN(result.timestamp)
 
     expect(isFakerValueNumber).toBeTruthy()
+  })
+
+  describe('Invalid faker syntax detection', () => {
+    it('should find invalid syntax', () => {
+      const content = JSON.stringify({
+        email: "[#faker:internet:emailFoobar]",
+      })
+
+      expect(areFakerVarsSyntaxValidInContent(content)).toBeFalsy()
+    })
+    
+    it('should find valid syntax', () => {
+      const content = JSON.stringify({
+        email: "[#faker:internet:email]",
+      })
+
+      expect(areFakerVarsSyntaxValidInContent(content)).toBeTruthy()
+    })
+    
+    it('should find valid syntax when no faker variable', () => {
+      const content = JSON.stringify({
+        email: "foo@bar.com",
+      })
+
+      expect(areFakerVarsSyntaxValidInContent(content)).toBeTruthy()
+    })
   })
 })
