@@ -15,7 +15,7 @@
     "test:manual": "yarn ts-node-dev --files test/run.ts",
     "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
-    "build": "yarn tsc",
+    "build": "yarn tsc && yarn babel src --out-dir dist --extensions '.ts'",
     "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",
     "lint": "yarn eslint . --ext .js,.ts"
   },
