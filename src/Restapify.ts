@@ -30,6 +30,7 @@ import {
 } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
+import { areFakerVarsSyntaxValidInContent } from './fakerHelpers'
 
 const DEFAULT_PORT = 6767
 
@@ -189,12 +190,22 @@ class Restapify {
     Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
       const routeFileContent = this.listedRouteFiles[routeFilePath]
       const isJsonValidResponse = isJsonString(routeFileContent)
+      // eslint-disable-next-line max-len
+      const isJsonContainingValidFakerSyntaxResponse = areFakerVarsSyntaxValidInContent(routeFileContent)
 
       if (isJsonValidResponse !== true) {
         const error: RestapifyErrorName = 'INV:JSON_FILE'
         const errorObject = {
           error,
           message: `Invalid json file ${routeFilePath}: ${isJsonValidResponse}`
+        }
+        throw new Error(JSON.stringify(errorObject))
+      } else if (isJsonContainingValidFakerSyntaxResponse !== true) {
+        const { namespace, method } = isJsonContainingValidFakerSyntaxResponse
+        const error: RestapifyErrorName = 'INV:FAKER_SYNTAX'
+        const errorObject = {
+          error,
+          message: `The fakerjs method call \`faker.${namespace}.${method}()\` is invalid`
         }
         throw new Error(JSON.stringify(errorObject))
       }
