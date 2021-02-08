@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "noEmit": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
