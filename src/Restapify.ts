@@ -58,6 +58,7 @@ interface RunOptions {
   hard?:boolean
   startServer?:boolean
   openDashboard?: boolean
+  hotWatch?: boolean
 }
 type EventCallbackStore = {
   [event in RestapifyEventName]?: RestapifyEventCallback[]
@@ -369,7 +370,12 @@ class Restapify {
   }
 
   private customRun = (options: RunOptions = {}):void => {
-    const { hard = true, startServer = true, openDashboard = true } = options
+    const {
+      hard = true,
+      startServer = true,
+      openDashboard = true,
+      hotWatch = true
+    } = options
 
     try {
       if (hard) {
@@ -387,11 +393,11 @@ class Restapify {
 
       if (startServer) this.configInternalApi()
 
-      if (hard) this.configHotWatch()
+      if (hard && hotWatch) this.configHotWatch()
       if (hard && this.autoOpenDashboard && startServer && openDashboard) this.openDashboard()
       if (hard && startServer) this.executeCallbacks('server:start')
 
-      this.startServer()
+      if (startServer) this.startServer()
 
       if (hard) this.executeCallbacks('start')
     } catch (error) {
@@ -500,10 +506,11 @@ class Restapify {
     this.restartServer()
   }
 
-  public getServedRoutes = ():{
+  public getServedRoutes = (): {
     route: string,
     method: HttpVerb
   }[] => {
+    this.customRun({ startServer: false, openDashboard: false, hotWatch: false })
     return getRoutesByFileOrderHelper(this.routes)
   }
 
