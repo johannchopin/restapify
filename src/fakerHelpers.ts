@@ -4,19 +4,33 @@ import {
   FAKER_SYNTAX_PREFIX,
   FAKER_SYNTAX_SUFIX
 } from './const'
+import { FakerSyntaxData } from './types'
 import { getCastVarToNumberSyntax, replaceAll } from './utils'
 
 export const getFakerVarsInContent = (content: string): string[] => {
   return Array.from(content.matchAll(FAKER_SYNTAX_MATCHER), m => m[1])
 }
 
-export const areFakerVarsSyntaxValidInContent = (content: string): boolean => {
+export const areFakerVarsSyntaxValidInContent = (content: string): true | FakerSyntaxData => {
   const fakerVars = getFakerVarsInContent(content)
-  return !fakerVars.some((fakerVar) => {
+  let invalidFakerSyntaxData: FakerSyntaxData | null = null
+
+  fakerVars.some((fakerVar) => {
     const [fakerNamespace, fakerMethod] = fakerVar.split(':')
     // @ts-ignore
-    return faker[fakerNamespace][fakerMethod] === undefined
+    const isFakerSyntaxValid = faker[fakerNamespace][fakerMethod] !== undefined
+
+    if (!isFakerSyntaxValid) {
+      invalidFakerSyntaxData = {
+        namespace: fakerNamespace,
+        method: fakerMethod
+      }
+      return false
+    }
+    return true
   })
+
+  return invalidFakerSyntaxData !== null ? invalidFakerSyntaxData : true
 }
 
 export const getContentWithReplacedFakerVars = (content: string): string => {
