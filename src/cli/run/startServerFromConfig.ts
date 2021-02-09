@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { ValidationError } from 'jsonschema'
 
+import { RestapifyParams } from '../../index'
 import { consoleError, runServer, validateConfig } from '../utils'
 
 const outputConfigErrors = (errors: ValidationError[]): void => {
@@ -22,7 +23,7 @@ export const startServerFromConfig = (configFilePath: string): void => {
 
   const configFileContent = fs.readFileSync(configFilePath, 'utf8')
 
-  const config = JSON.parse(configFileContent)
+  const config = JSON.parse(configFileContent) as RestapifyParams
 
   const validatedConfig = validateConfig(config)
 
@@ -31,8 +32,11 @@ export const startServerFromConfig = (configFilePath: string): void => {
     return
   }
 
+  const { rootDir, openDashboard = true, ...configsRest } = config
+
   runServer({
-    ...config,
-    rootDir: path.join(path.dirname(configFilePath), config.rootDir)
+    rootDir: path.join(path.dirname(configFilePath), rootDir),
+    openDashboard,
+    ...configsRest
   })
 }
