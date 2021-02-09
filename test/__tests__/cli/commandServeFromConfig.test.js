@@ -33,6 +33,7 @@ describe('Test `restapify` command', () => {
   it('should init Restapify\'s instance with options in config files', () => {
     const expectedOptionsInConstuctor = {
       ...config,
+      openDashboard: true,
       rootDir: pathToApiFolder
     }
     const args = `yarn restapify ${pathToConfigFile}`
