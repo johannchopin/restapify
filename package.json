@@ -19,7 +19,7 @@
     "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
     "build": "yarn tsc",
-    "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",
+    "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/src/dashboard-public/",
     "lint": "yarn eslint . --ext .js,.ts"
   },
   "publishConfig": {
