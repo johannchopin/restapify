@@ -89,38 +89,40 @@ export const getRoutesListOutput = (
 }
 
 export const runServer = (config: RestapifyParams): void => {
-  const RestapifyInstance = new Restapify(config)
+  const rpfy = new Restapify(config)
 
-  RestapifyInstance.on('server:start', () => {
-    console.log(`\n🏗 Try to serve on port ${RestapifyInstance.port}`)
+  rpfy.on('server:start', () => {
+    console.log(`\n🏗 Try to serve on port ${rpfy.port}`)
   })
 
-  RestapifyInstance.onError(({ error }) => {
+  rpfy.onError(({ error }) => {
     onRestapifyInstanceError(error, {
-      rootDir: RestapifyInstance.rootDir,
-      apiBaseUrl: RestapifyInstance.apiBaseUrl,
-      port: RestapifyInstance.port
+      rootDir: rpfy.rootDir,
+      apiBaseUrl: rpfy.apiBaseUrl,
+      port: rpfy.port
     })
+
+    rpfy.close()
   })
 
-  RestapifyInstance.on('start', () => {
+  rpfy.on('start', () => {
     const servedRoutesOutput = getRoutesListOutput(
-      RestapifyInstance.getServedRoutes(),
-      RestapifyInstance.apiBaseUrl
+      rpfy.getServedRoutes(),
+      rpfy.apiBaseUrl
     )
 
     console.log(servedRoutesOutput)
     console.log(getInstanceOverviewOutput(
-      RestapifyInstance.port,
-      RestapifyInstance.apiBaseUrl
+      rpfy.port,
+      rpfy.apiBaseUrl
     ))
   })
 
-  RestapifyInstance.on('server:restart', () => {
+  rpfy.on('server:restart', () => {
     console.log(chalk.green('✅ API updated!'))
   })
 
-  RestapifyInstance.run()
+  rpfy.run()
 }
 
 export const validateConfig = (config: object): ValidatorResult => {
