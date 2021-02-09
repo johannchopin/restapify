@@ -514,7 +514,12 @@ class Restapify {
     route: string,
     method: HttpVerb
   }[] => {
-    this.customRun({ startServer: false, openDashboard: false, hotWatch: false })
+    this.customRun({
+      startServer: false,
+      openDashboard: false,
+      hotWatch: false,
+      hard: false
+    })
     return getRoutesByFileOrderHelper(this.routes)
   }
 
