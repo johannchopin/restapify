@@ -401,8 +401,12 @@ class Restapify {
 
       if (hard) this.executeCallbacks('start')
     } catch (error) {
-      const { error: errorId, message } = JSON.parse(error.message)
-      this.executeCallbacks('error', { error: errorId, message })
+      if (isJsonString(error.message)) {
+        const { error: errorId, message } = JSON.parse(error.message)
+        this.executeCallbacks('error', { error: errorId, message })
+      } else {
+        this.executeCallbacks('error', { error: 'ERR', message: error.message })
+      }
     }
   }
 

@@ -12,6 +12,7 @@ export type RestapifyErrorName = 'INV:JSON_FILE' // json file can't be parsed
   | 'MISS:PORT' // given port is not available
   | 'INV:API_BASEURL' // given api base url is needed for internal purposes (ex: `/restapify`)
   | 'INV:FAKER_SYNTAX' // there is an invalid call to the fakerjs library
+  | 'ERR' // Unhandled error catch
 export type RestapifyErrorCallbackParam = {
   error: RestapifyErrorName
   message?: string
