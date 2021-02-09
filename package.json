@@ -9,7 +9,6 @@
   "license": "MIT",
   "private": false,
   "bin": {
-    "@johannchopin/restapify": "./bin/restapify",
     "restapify": "./bin/restapify"
   },
   "scripts": {
