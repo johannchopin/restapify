@@ -8,6 +8,10 @@
   ],
   "license": "MIT",
   "private": false,
+  "bin": {
+    "@johannchopin/restapify": "./bin/restapify",
+    "restapify": "./bin/restapify"
+  },
   "scripts": {
     "restapify:init": "yarn move:dashboard",
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
