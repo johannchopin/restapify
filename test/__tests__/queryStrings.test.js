@@ -22,7 +22,7 @@ describe('Query strings integration', () => {
       size: '[q:size|20]',
       limit: '[q:limit]'
     })
-    const expectedResult = [{var: 'size', defaultValue: '20'}, {var: 'limit', 'defaultValue': undefined,}]
+    const expectedResult = [{variable: 'size', defaultValue: '20'}, {variable: 'limit', 'defaultValue': undefined,}]
     expect(getQueryStringVarsInContent(content)).toStrictEqual(expectedResult)
   })
 
@@ -38,6 +38,24 @@ describe('Query strings integration', () => {
     const expectedContentWithReplacedVars = JSON.stringify({
       size: '20',
       limit: '2'
+    })
+
+    expect(getContentWithReplacedVars(content, [], vars))
+      .toStrictEqual(expectedContentWithReplacedVars)
+  })
+
+
+  it('should use default query string variables value in text content', () => {
+    const content = JSON.stringify({
+      size: '[q:size]',
+      limit: '[q:limit|42]'
+    })
+    const vars = {
+      size: '20'
+    }
+    const expectedContentWithReplacedVars = JSON.stringify({
+      size: '20',
+      limit: '42'
     })
 
     expect(getContentWithReplacedVars(content, [], vars))
