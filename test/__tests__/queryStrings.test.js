@@ -1,6 +1,19 @@
+import * as path from 'path'
+import 'isomorphic-fetch'
+import Restapify from '../../src/Restapify'
 import {
   getContentWithReplacedVars
 } from '../../src/getRoute'
+
+const restapifyParams = {
+  rootDir: path.resolve(__dirname, '../api'),
+  port: 6767,
+  baseURL: '/api',
+  hotWatch: false
+}
+
+const baseUrl = `http://localhost:${restapifyParams.port}`
+const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
 
 describe('Query strings integration', () => {
   it('should replace all query string variables in text content', () => {
@@ -19,5 +32,18 @@ describe('Query strings integration', () => {
 
     expect(getContentWithReplacedVars(content, [], vars))
       .toStrictEqual(expectedContentWithReplacedVars)
+  })
+
+  it('should fetch route with query strings and get them in response body', async () => {
+    const rpfy = new Restapify(restapifyParams)
+    rpfy.run()
+    const postsLimit = 17
+
+    let response = await fetch(`${apiRoot}/posts?limit=${postsLimit}`)
+    let data = await response.json()
+
+    rpfy.close()
+  
+    expect(data.length).toBe(postsLimit)
   })
 })
