@@ -45,8 +45,15 @@ export interface Route {
   }
 }
 export interface QueryStringVarData {
-  var: string
-  defaultValue: string
+  variable: string
+  defaultValue?: string
+}
+
+export const getQueryStringVarSyntax = (data: QueryStringVarData): string => {
+  const { variable, defaultValue } = data
+
+  if (defaultValue) return `[q:${variable}|${defaultValue}]`
+  return `[q:${variable}]`
 }
 
 export const getFilenameFromFilePath = (filePath: string): string => {
@@ -127,7 +134,7 @@ export const getHttpMethodInFilename = (filename: string): HttpVerb => {
 export const getQueryStringVarData = (queryStringSyntax: string): QueryStringVarData => {
   const [variable, defaultValue] = queryStringSyntax.split(QS_VAR_DEFAULT_SEPARATOR)
   return {
-    var: variable,
+    variable: variable,
     defaultValue
   }
 }
@@ -193,8 +200,19 @@ export const getContentWithReplacedVars = (
   })
 
   if (queryStringVars) {
-    Object.keys(queryStringVars).forEach((variable) => {
-      content = replaceAll(content, `[q:${variable}]`, queryStringVars[variable])
+    const queryStringVarsInContent = getQueryStringVarsInContent(content)
+    queryStringVarsInContent.forEach(({ variable, defaultValue }) => {
+      const replaceValue = queryStringVars[variable] || defaultValue
+
+      // if there is no query string in request and no default value for it
+      // don't replace anything
+      if (replaceValue) {
+        content = replaceAll(
+          content,
+          getQueryStringVarSyntax({ variable, defaultValue }),
+          replaceValue
+        )
+      }
     })
   }
 
