@@ -5,7 +5,9 @@ import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
   HEADER_SYNTAX,
   BODY_SYNTAX,
-  EMPTY_BODY_SYNTAX
+  EMPTY_BODY_SYNTAX,
+  QUERY_STRING_VAR_MATCHER,
+  QS_VAR_DEFAULT_SEPARATOR
 } from './const'
 import {
   getVarsInPath,
@@ -29,7 +31,9 @@ export interface Route {
   isExtended: boolean
   header?: {[key: string]: string | number}
   body?: JsonRouteFileContent
-  getBody: (vars: {[key: string]: string}) => JsonRouteFileContent | undefined
+  getBody: (vars: {[key: string]: string},
+    queryStringVars?: {[key: string]: string}
+  ) => JsonRouteFileContent | undefined
   states?: {
     [state: string]: Pick<Route, 'fileContent'
       | 'statusCode'
@@ -39,6 +43,17 @@ export interface Route {
       | 'getBody'
     >
   }
+}
+export interface QueryStringVarData {
+  variable: string
+  defaultValue?: string
+}
+
+export const getQueryStringVarSyntax = (data: QueryStringVarData): string => {
+  const { variable, defaultValue } = data
+
+  if (defaultValue) return `[q:${variable}|${defaultValue}]`
+  return `[q:${variable}]`
 }
 
 export const getFilenameFromFilePath = (filePath: string): string => {
@@ -116,9 +131,27 @@ export const getHttpMethodInFilename = (filename: string): HttpVerb => {
   return httpVerb
 }
 
+export const getQueryStringVarData = (queryStringSyntax: string): QueryStringVarData => {
+  const [variable, defaultValue] = queryStringSyntax.split(QS_VAR_DEFAULT_SEPARATOR)
+  return {
+    variable: variable,
+    defaultValue
+  }
+}
+
+export const getQueryStringVarsInContent = (content: string): QueryStringVarData[] => {
+  // In string `[q:startIndex|0], [q:size]` it will find `['startIndex|0', 'size']`
+  const matchingVars = Array.from(content.matchAll(QUERY_STRING_VAR_MATCHER), m => m[1])
+
+  return matchingVars.map((variable) => {
+    return getQueryStringVarData(variable)
+  })
+}
+
 export const getContentWithReplacedVars = (
   content: string,
-  vars: {[key: string]: string}
+  vars: {[key: string]: string},
+  queryStringVars?: {[key: string]: string}
 ): string => {
   const getEscapedVar = (variable: string): string => {
     return `\`[${variable}]\``
@@ -165,6 +198,23 @@ export const getContentWithReplacedVars = (
     // replace simple variables
     content = replaceAll(content, `[${variable}]`, vars[variable])
   })
+
+  if (queryStringVars) {
+    const queryStringVarsInContent = getQueryStringVarsInContent(content)
+    queryStringVarsInContent.forEach(({ variable, defaultValue }) => {
+      const replaceValue = queryStringVars[variable] || defaultValue
+
+      // if there is no query string in request and no default value for it
+      // don't replace anything
+      if (replaceValue) {
+        content = replaceAll(
+          content,
+          getQueryStringVarSyntax({ variable, defaultValue }),
+          replaceValue
+        )
+      }
+    })
+  }
 
   // unsanitize variables to escape
   content = getContentWithUnsanitizedEscapedVars(content)
@@ -220,12 +270,19 @@ export const getRoute = (
   const body = getBodyValue()
 
   const getBody = (
-    varsToReplace?: {[key: string]: string}
+    varsToReplace?: {[key: string]: string},
+    queryStringVarsToReplace?: {[key: string]: string}
   ): JsonRouteFileContent | undefined => {
     if (body) {
       let bodyAsString = JSON.stringify(body)
 
-      if (varsToReplace) bodyAsString = getContentWithReplacedVars(bodyAsString, varsToReplace)
+      if (varsToReplace) {
+        bodyAsString = getContentWithReplacedVars(
+          bodyAsString,
+          varsToReplace,
+          queryStringVarsToReplace
+        )
+      }
       bodyAsString = getContentWithReplacedForLoopsSyntax(bodyAsString)
       bodyAsString = getContentWithReplacedFakerVars(bodyAsString)
 
