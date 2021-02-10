@@ -29,7 +29,9 @@ export interface Route {
   isExtended: boolean
   header?: {[key: string]: string | number}
   body?: JsonRouteFileContent
-  getBody: (vars: {[key: string]: string}) => JsonRouteFileContent | undefined
+  getBody: (vars: {[key: string]: string},
+    queryStringVars?: {[key: string]: string}
+  ) => JsonRouteFileContent | undefined
   states?: {
     [state: string]: Pick<Route, 'fileContent'
       | 'statusCode'
@@ -118,7 +120,8 @@ export const getHttpMethodInFilename = (filename: string): HttpVerb => {
 
 export const getContentWithReplacedVars = (
   content: string,
-  vars: {[key: string]: string}
+  vars: {[key: string]: string},
+  queryStringVars?: {[key: string]: string}
 ): string => {
   const getEscapedVar = (variable: string): string => {
     return `\`[${variable}]\``
@@ -165,6 +168,12 @@ export const getContentWithReplacedVars = (
     // replace simple variables
     content = replaceAll(content, `[${variable}]`, vars[variable])
   })
+
+  if (queryStringVars) {
+    Object.keys(queryStringVars).forEach((variable) => {
+      content = replaceAll(content, `[q:${variable}]`, queryStringVars[variable])
+    })
+  }
 
   // unsanitize variables to escape
   content = getContentWithUnsanitizedEscapedVars(content)
@@ -220,12 +229,19 @@ export const getRoute = (
   const body = getBodyValue()
 
   const getBody = (
-    varsToReplace?: {[key: string]: string}
+    varsToReplace?: {[key: string]: string},
+    queryStringVarsToReplace?: {[key: string]: string}
   ): JsonRouteFileContent | undefined => {
     if (body) {
       let bodyAsString = JSON.stringify(body)
 
-      if (varsToReplace) bodyAsString = getContentWithReplacedVars(bodyAsString, varsToReplace)
+      if (varsToReplace) {
+        bodyAsString = getContentWithReplacedVars(
+          bodyAsString,
+          varsToReplace,
+          queryStringVarsToReplace
+        )
+      }
       bodyAsString = getContentWithReplacedForLoopsSyntax(bodyAsString)
       bodyAsString = getContentWithReplacedFakerVars(bodyAsString)
 

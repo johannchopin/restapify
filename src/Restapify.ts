@@ -325,7 +325,7 @@ class Restapify {
         vars[variable] = req.params[variable]
       })
 
-      const responseBody = routeData.getBody(vars)
+      const responseBody = routeData.getBody(vars, req.query)
 
       if (responseBody) {
         res.send(JSON.stringify(responseBody))
