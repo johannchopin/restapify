@@ -13,7 +13,7 @@
   },
   "scripts": {
     "restapify:init": "yarn move:dashboard",
-    "readme:generate-doc-table": "yarn doctoc ./README.md",
+    "readme:generate-doc-table": "yarn doctoc ./docs/README.md",
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
     "clean": "yarn rimraf ./dist",
     "test": "jest --silent --no-cache",
