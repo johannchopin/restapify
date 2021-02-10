@@ -1,7 +1,7 @@
 {
   "name": "restapify",
-  "version": "0.0.28",
-  "main": "dist/index.js",
+  "version": "0.0.29",
+  "main": "dist/src/index.js",
   "files": [
     "dist",
     "dist/node_modules/restapify-dashboard"
