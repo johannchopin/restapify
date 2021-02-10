@@ -22,6 +22,7 @@
   - [For-loops](#for-loops)
     - [For-loop's array sequence](#for-loops-array-sequence)
     - [For-loop's range sequence](#for-loops-range-sequence)
+    - [Use route's variables in sequence](#use-routes-variables-in-sequence)
 - [CLI](#cli)
   - [`restapify serve`](#restapify-serve)
   - [`restapify list`](#restapify-list)
@@ -415,6 +416,20 @@ This example will produce:
   { "id": 9, "type": "user" },
 ]
 ```
+
+#### Use route's variables in sequence
+
+You can use [route's variables](#consume-routes-variables) and [route's query string variables](#consume-routes-query-string-variables) in your for loop's sequence:
+
+```json
+[
+  "#for userId in range([q:limit|20])",
+  { "id": "n:[userId]", "type": "user" },
+  "#endfor"
+]
+```
+
+You can then have `x` users in the response of `GET /api/users?limit=x`
 
 ## CLI
 Restapify comes with a cli to easily serve your mocked API.
