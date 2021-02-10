@@ -1,5 +1,5 @@
 [
-  "#for i in range([q:limit])",
+  "#for i in range([q:limit|15])",
   {
     "id": "n:[i]",
     "post": "test"
