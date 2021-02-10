@@ -5,7 +5,9 @@ import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
   HEADER_SYNTAX,
   BODY_SYNTAX,
-  EMPTY_BODY_SYNTAX
+  EMPTY_BODY_SYNTAX,
+  QUERY_STRING_VAR_MATCHER,
+  QS_VAR_DEFAULT_SEPARATOR
 } from './const'
 import {
   getVarsInPath,
@@ -41,6 +43,10 @@ export interface Route {
       | 'getBody'
     >
   }
+}
+export interface QueryStringVarData {
+  var: string
+  defaultValue: string
 }
 
 export const getFilenameFromFilePath = (filePath: string): string => {
@@ -116,6 +122,23 @@ export const getHttpMethodInFilename = (filename: string): HttpVerb => {
   })
 
   return httpVerb
+}
+
+export const getQueryStringVarData = (queryStringSyntax: string): QueryStringVarData => {
+  const [variable, defaultValue] = queryStringSyntax.split(QS_VAR_DEFAULT_SEPARATOR)
+  return {
+    var: variable,
+    defaultValue
+  }
+}
+
+export const getQueryStringVarsInContent = (content: string): QueryStringVarData[] => {
+  // In string `[q:startIndex|0], [q:size]` it will find `['startIndex|0', 'size']`
+  const matchingVars = Array.from(content.matchAll(QUERY_STRING_VAR_MATCHER), m => m[1])
+
+  return matchingVars.map((variable) => {
+    return getQueryStringVarData(variable)
+  })
 }
 
 export const getContentWithReplacedVars = (

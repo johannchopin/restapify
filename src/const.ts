@@ -12,6 +12,9 @@ export const EMPTY_BODY_SYNTAX = [null]
 export const HEADER_SYNTAX = '#header'
 export const BODY_SYNTAX = '#body'
 
+export const QUERY_STRING_VAR_MATCHER = /\[q:(.*?)\]/g
+export const QS_VAR_DEFAULT_SEPARATOR = '|'
+
 // faker's syntax looks like `[#faker:<...>]`
 // ex: [#faker:lorem:sentence], [#faker:image:avatar]
 export const FAKER_SYNTAX_PREFIX = '[#faker:'
