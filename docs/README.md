@@ -17,6 +17,7 @@
   - [Extended syntax](#extended-syntax)
   - [Consume route's variables](#consume-routes-variables)
     - [Route's variable casting](#routes-variable-casting)
+  - [Consume route's query string variables](#consume-routes-query-string-variables)
   - [Fakerjs integration](#fakerjs-integration)
   - [For-loops](#for-loops)
     - [For-loop's array sequence](#for-loops-array-sequence)
@@ -272,6 +273,73 @@ and then call the route `GET /posts/42`, you will get the response:
 ```
 
 > ⚠️ Don't cast your number route's variable that are present in a string. Just use them like `"content": "The post [postid] is nice …"`
+
+### Consume route's query string variables
+You can consume query string variables in your body using the syntax `[q:<variable>]`
+
+Take the following file `/api/users.json` for example:
+```json
+[
+  {
+    "id": 1,
+    "name": "bob",
+    "age": "[q:age]"
+  },
+  {
+    "id": 2,
+    "name": "alice",
+    "age": "[q:age]"
+  }
+]
+```
+
+I you request `GET /api/users?age=42`, you will get:
+```json
+[
+  {
+    "id": 1,
+    "name": "bob",
+    "age": "42"
+  },
+  {
+    "id": 2,
+    "name": "alice",
+    "age": "42"
+  }
+]
+```
+
+You can also declare a default value using this syntax `[q:<variable>|<defaultValue>]`:
+```json
+[
+  {
+    "id": 1,
+    "name": "bob",
+    "age": "[q:age|30]"
+  },
+  {
+    "id": 2,
+    "name": "alice",
+    "age": "[q:age|42]"
+  }
+]
+```
+
+So if you request `GET /api/users` you will get:
+```json
+[
+  {
+    "id": 1,
+    "name": "bob",
+    "age": "30"
+  },
+  {
+    "id": 2,
+    "name": "alice",
+    "age": "42"
+  }
+]
+```
 
 ### Fakerjs integration
 
