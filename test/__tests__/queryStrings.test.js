@@ -2,7 +2,8 @@ import * as path from 'path'
 import 'isomorphic-fetch'
 import Restapify from '../../src/Restapify'
 import {
-  getContentWithReplacedVars
+  getContentWithReplacedVars,
+  getQueryStringVarsInContent
 } from '../../src/getRoute'
 
 const restapifyParams = {
@@ -16,6 +17,15 @@ const baseUrl = `http://localhost:${restapifyParams.port}`
 const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
 
 describe('Query strings integration', () => {
+  it('should find query strings syntax in content', () => {
+    const content = JSON.stringify({
+      size: '[q:size|20]',
+      limit: '[q:limit]'
+    })
+    const expectedResult = [{var: 'size', defaultValue: '20'}, {var: 'limit', 'defaultValue': undefined,}]
+    expect(getQueryStringVarsInContent(content)).toStrictEqual(expectedResult)
+  })
+
   it('should replace all query string variables in text content', () => {
     const content = JSON.stringify({
       size: '[q:size]',
