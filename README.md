@@ -44,7 +44,7 @@ The problem of most of this libraries is the way you have to define your API end
 The simplest way to use Restapify is to use his [cli](https://github.com/johannchopin/restapify-cli):
 
 ```bash
-npm i -g restapify-cli
+npm i -g restapify
 ```
 
 and then serve the api folder:
