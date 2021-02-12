@@ -573,3 +573,25 @@ setTimeout(() => {
   rpfy.close()
 }, 3000);
 ```
+
+### Restapify.on()
+You can trigger callbacks on different event with the help of the `on(<event>, <callback>)` method:
+
+```js
+import Restapify from 'restapify'
+const params = {...}
+const rpfy = new Restapify(params)
+
+rpfy.on('start', () => { console.log('Mocked API successfully started') })
+rpfy.on(['server:start', 'server:restart'], () => { console.log('Event on server') })
+rpfy.on('error', ({ error, message }) => {
+  console.log(`Failed with error ${error}: ${message}`)
+  rpfy.close()
+  process.exit(1)
+})
+
+rpfy.run()
+```
+
+#### Events
+
