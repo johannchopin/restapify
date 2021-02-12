@@ -57,7 +57,7 @@ PUT    /posts/my-post
 ```
 
 ## Route's filename
-The mocked API creation start directly with the filename.
+The mocked API creation start directly with the filename choice.
 
 ### Simple route
 You can create a simple route with the filename of a `json` file:
@@ -75,7 +75,7 @@ GET /posts
 ```
 
 ### Star notation
-To easily manage your different routes `json` files you can use the star notation:
+To easily manage your different routes `json` files into folder, you can use the star notation:
 
 ```
 📂 api
@@ -92,7 +92,7 @@ GET /animals/rabbits
 ```
 
 ### Route's variables
-You can define some variables in your routes by using squared brackets. It works on a filename but also on directories name:
+You can define some variables in your routes by using squared brackets. It works on a filename but also on directory name:
 
 ```
 📂 api
@@ -497,3 +497,79 @@ Example:
 |               | `--no-open`          | don't open dashboard on server start | `false`  |
 
 ## JavaScript's API
+
+Restapify provides a JavaScript API which is usable from Node.js. You will rarely need to use this, and should probably be using the command line.
+
+### Types definition list
+
+#### RestapifyParams
+Object of needed parameters to instanciate a Restapify's instance.
+
+```typescript
+interface RestapifyParams {
+  rootDir: string
+  port?: number           // default: 6767
+  baseUrl?: string        // default: '/api'
+  states?: RouteState[]   // default: []
+  openDashboard?: boolean // default: false
+  hotWatch?: boolean      // default: true
+}
+```
+
+#### RouteState
+Used in Restapify parameter to specify which state use for a specific route.
+```typescript
+interface RouteState {
+  route: string
+  state?: string
+  method?: HttpVerb // default: 'GET'
+}
+```
+
+### Restapify's constructor
+First step is to create an Restapify's instance with a `params` object from type [RestapifyParams](#restapifyParams):
+
+```js
+import Restapify from 'restapify'
+
+const params = {...}
+
+const rpfy = new Restapify(params)
+```
+
+Be aware that `params.rootDir` has to be the **absolute** path to the directory. This can be easily achieved by using the [path](https://nodejs.org/api/path.html) library:
+
+```js
+import * as path from 'path'
+
+const rootDir = path.resolve(__dirname, './api')
+const params = { rootDir }
+// ...
+```
+
+### Restapify.run()
+Use the method `run` after the instanciation to start the mocked API server:
+
+```js
+import Restapify from 'restapify'
+const params = {...}
+const rpfy = new Restapify(params)
+
+rpfy.run()
+```
+
+### Restapify.close()
+Stop the mocked API server:
+
+```js
+import Restapify from 'restapify'
+const params = {...}
+const rpfy = new Restapify(params)
+
+rpfy.run()
+
+setTimeout(() => { 
+  // Close the server after 3 seconds
+  rpfy.close()
+}, 3000);
+```
