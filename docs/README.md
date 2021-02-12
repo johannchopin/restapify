@@ -593,5 +593,25 @@ rpfy.on('error', ({ error, message }) => {
 rpfy.run()
 ```
 
-#### Events
+#### Events list
 
+| event              | description                                  | callback type                                              |
+|--------------------|----------------------------------------------|------------------------------------------------------------|
+| **start**          | Restapify started successfully               | `() => void`                                               |
+| **server:start**   | Mocked API served successfully               | `() => void`                                               |
+| **server:restart** | Mocked has been refreshed successfully       | `() => void`                                               |
+| **dashboard:open** | Dashboard SPA has been opened in the browser | `() => void`                                               |
+| **error**          | Error detected                               | `({ error: RestapifyErrorName, message?:string } => void)` |
+
+#### Restapify.on('error', <callback>)
+
+The error callback provides as parameter an object with 2 usefull infos: the `error` string identifier and *optionally* a `message` that explain the reason of the error. Here is the list of the different errors (type `RestapifyErrorName`):
+
+| error                | description                                                           | message |
+|----------------------|-----------------------------------------------------------------------|:-------:|
+| **INV:JSON_FILE**    | one of the detected json files is invalid                             |    ✅    |
+| **MISS:ROOT_DIR**    | root directory parameter is missing or invalid                        |    ❌    |
+| **MISS:PORT**        | given port is not available                                           |    ❌    |
+| **INV:API_BASEURL**  | given api base url is needed for internal purposes (ex: `/restapify`) |    ❌    |
+| **INV:FAKER_SYNTAX** | invalid call to the fakerjs library                                   |    ✅    |
+| **ERR**              | Unhandled error triggered                                             |    ✅    |
