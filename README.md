@@ -66,6 +66,7 @@ npm i -D restapify
 You can then import the class and instantiate it to serve the api folder:
 
 ```javascript
+import * as path from 'path'
 import Restapify from 'restapify'
 
 const apiFolderPath = path.resolve(__dirname, './path/to/folder')
