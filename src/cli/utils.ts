@@ -45,7 +45,7 @@ export const consoleError = (message: string): void => {
 
 export const getInstanceOverviewOutput = (port: number, apiBaseURL: string): string => {
   const runningTitle = chalk.magenta('🚀 Restapify is running:')
-  const apiBaseURLTitle = chalk.bold('- 📦API base url:')
+  const apiBaseURLTitle = chalk.bold('- 📦API entry point:')
   const apiBaseURLLink = chalk.blueBright(`http://localhost:${port}${apiBaseURL}`)
   const dashboardURLTitle = chalk.bold('- 🎛 Dashboard:')
   const dashboardURLLink = chalk.blueBright(`http://localhost:${port}/restapify`)
