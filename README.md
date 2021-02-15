@@ -1,5 +1,9 @@
 # Restapify
 
+<p>
+  <img src="https://user-images.githubusercontent.com/31794680/107934535-7b4be300-6f80-11eb-9b26-87515325ca3f.png" alt="restapify cover" width="500">
+</p>
+
 <a href="https://codecov.io/gh/johannchopin/restapify">
   <img src="https://img.shields.io/codecov/c/github/johannchopin/restapify" alt="codecov">
 </a>
@@ -7,7 +11,9 @@
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
 </a>
 
-Restapify is a tool that allows you to easily and quickly deploy a local REST API using an intuitive and developer friendly JSON file structure.
+<br>
+
+📁 Restapify is a tool that allows you to easily and quickly deploy a local REST API by using an intuitive and developer friendly JSON file structure.
 
 ## Summary
 - [**Why Restapify**](#why-restapify)
