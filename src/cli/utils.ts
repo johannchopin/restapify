@@ -101,8 +101,6 @@ export const runServer = (config: RestapifyParams): void => {
       apiBaseUrl: rpfy.apiBaseUrl,
       port: rpfy.port
     })
-
-    rpfy.close()
   })
 
   rpfy.on('start', () => {
