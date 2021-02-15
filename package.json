@@ -1,6 +1,6 @@
 {
   "name": "restapify",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "main": "dist/src/index.js",
   "files": [
     "dist",
@@ -38,7 +38,7 @@
     "jsonschema": "^1.4.0",
     "lodash.range": "^3.2.0",
     "open": "^7.3.0",
-    "restapify-dashboard": "^1.0.9"
+    "restapify-dashboard": "^1.0.13"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.12.1",
