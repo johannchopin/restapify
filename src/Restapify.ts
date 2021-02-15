@@ -109,8 +109,14 @@ class Restapify {
     if (this.hotWatch) {
       this.chokidarWatcher = chokidar.watch(this.rootDir, {
         ignoreInitial: true
-      }).on('all', () => {
-        this.restartServer({ hard: true })
+      })
+
+      const events = ['change', 'unlink']
+
+      events.forEach(event => {
+        this.chokidarWatcher.on(event, () => {
+          this.restartServer({ hard: true })
+        })
       })
     }
   }
