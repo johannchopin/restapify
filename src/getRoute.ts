@@ -132,7 +132,8 @@ export const getHttpMethodInFilename = (filename: string): HttpVerb => {
 }
 
 export const getQueryStringVarData = (queryStringSyntax: string): QueryStringVarData => {
-  const [variable, defaultValue] = queryStringSyntax.split(QS_VAR_DEFAULT_SEPARATOR)
+  const qsWithoutEmptySpace = replaceAll(queryStringSyntax, ' ', '')
+  const [variable, defaultValue] = qsWithoutEmptySpace.split(QS_VAR_DEFAULT_SEPARATOR)
   return {
     variable: variable,
     defaultValue

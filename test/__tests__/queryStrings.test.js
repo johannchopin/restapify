@@ -48,14 +48,16 @@ describe('Query strings integration', () => {
   it('should use default query string variables value in text content', () => {
     const content = JSON.stringify({
       size: '[q:size]',
-      limit: '[q:limit|42]'
+      limit: '[q:limit|42]',
+      page: '[q:page | 2]'
     })
     const vars = {
       size: '20'
     }
     const expectedContentWithReplacedVars = JSON.stringify({
       size: '20',
-      limit: '42'
+      limit: '42',
+      page: '2'
     })
 
     expect(getContentWithReplacedVars(content, [], vars))
