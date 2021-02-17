@@ -233,7 +233,7 @@ Example:
 
 ### Consume route's variables
 
-You can define some route's variables in your route's filename (see [route's variables](#routes-variable) section). You can then consume them in your response's body.
+You can define some route's variables in your route's filename (see [route's variables](#routes-variables) section). You can then consume them in your response's body.
 
 For example the file `/api/posts/[postid].json` contains the route variable `postid` that you can use in the file content:
 
