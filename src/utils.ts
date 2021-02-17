@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { HTTP_VERBS } from './const'
+import { HTTP_VERBS, NUMBER_CAST_INDICATOR } from './const'
 import { HttpVerb } from './types'
 import { Routes } from './Restapify'
 
@@ -120,12 +120,47 @@ export const getRouteFiles = (
   return files
 }
 
-export const isJsonString = (str: string): boolean => {
+export const isJsonString = (str: string): true | string => {
   try {
     JSON.parse(str)
   } catch (e) {
-    return false
+    return e.message
   }
 
   return true
+}
+
+export const getCastVarToNumberSyntax = (variable: string):string => {
+  return `"${NUMBER_CAST_INDICATOR}[${variable}]"`
+}
+
+export const getSortedRoutesSlug = (routesSlug: string[]): string[] => {
+  // By alphabetical order, a route that contains a variable comes before a specific route:
+  // ex: ['/animals/[name]', '/animals/hedgehog']
+  // But we want the route with the variable at the end
+  routesSlug.sort((a, b) => {
+    const splittedA = a.split('/')
+    const splittedB = b.split('/')
+
+    const lastASlugPart = splittedA[splittedA.length - 1]
+    const lastBSlugPart = splittedB[splittedB.length - 1]
+
+    const aPrefix = splittedA.slice(0, a.length - lastASlugPart.length).join('/')
+    const bPrefix = splittedA.slice(0, b.length - lastBSlugPart.length).join('/')
+
+    const areSlugsOnSameDeepness = splittedA.length === splittedB.length && aPrefix === bPrefix
+
+    if (areSlugsOnSameDeepness) {
+      const isAFinalSlugVar = lastASlugPart.endsWith(']')
+      const isBFinalSlugVar = lastBSlugPart.endsWith(']')
+
+      if (isAFinalSlugVar && !isBFinalSlugVar) {
+        return 1
+      }
+    }
+
+    return -1
+  })
+
+  return routesSlug
 }

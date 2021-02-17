@@ -1,13 +1,22 @@
-import { HttpVerb } from './types'
+import { HttpVerb, JsonRouteFileContent } from './types'
 
-import { replaceAll } from './utils'
-import { CURRENT_LOCATION_ROUTE_SELECTOR, NUMBER_CAST_INDICATOR } from './const'
+import { replaceAll, getCastVarToNumberSyntax } from './utils'
+import {
+  CURRENT_LOCATION_ROUTE_SELECTOR,
+  HEADER_SYNTAX,
+  BODY_SYNTAX,
+  EMPTY_BODY_SYNTAX,
+  QUERY_STRING_VAR_MATCHER,
+  QS_VAR_DEFAULT_SEPARATOR
+} from './const'
 import {
   getVarsInPath,
   isHttpVerb,
   isNumeric,
   isStateVariable
 } from './utils'
+import { getContentWithReplacedForLoopsSyntax } from './forLoopHelpers'
+import { getContentWithReplacedFakerVars } from './fakerHelpers'
 
 // I N T E R F A C E S
 export interface Route {
@@ -21,8 +30,10 @@ export interface Route {
   stateVars: string[]
   isExtended: boolean
   header?: {[key: string]: string | number}
-  body?: string
-  getBody: (vars: {[key: string]: string}) => string
+  body?: JsonRouteFileContent
+  getBody: (vars: {[key: string]: string},
+    queryStringVars?: {[key: string]: string}
+  ) => JsonRouteFileContent | undefined
   states?: {
     [state: string]: Pick<Route, 'fileContent'
       | 'statusCode'
@@ -32,6 +43,17 @@ export interface Route {
       | 'getBody'
     >
   }
+}
+export interface QueryStringVarData {
+  variable: string
+  defaultValue?: string
+}
+
+export const getQueryStringVarSyntax = (data: QueryStringVarData): string => {
+  const { variable, defaultValue } = data
+
+  if (defaultValue) return `[q:${variable}|${defaultValue}]`
+  return `[q:${variable}]`
 }
 
 export const getFilenameFromFilePath = (filePath: string): string => {
@@ -109,9 +131,27 @@ export const getHttpMethodInFilename = (filename: string): HttpVerb => {
   return httpVerb
 }
 
+export const getQueryStringVarData = (queryStringSyntax: string): QueryStringVarData => {
+  const [variable, defaultValue] = queryStringSyntax.split(QS_VAR_DEFAULT_SEPARATOR)
+  return {
+    variable: variable,
+    defaultValue
+  }
+}
+
+export const getQueryStringVarsInContent = (content: string): QueryStringVarData[] => {
+  // In string `[q:startIndex|0], [q:size]` it will find `['startIndex|0', 'size']`
+  const matchingVars = Array.from(content.matchAll(QUERY_STRING_VAR_MATCHER), m => m[1])
+
+  return matchingVars.map((variable) => {
+    return getQueryStringVarData(variable)
+  })
+}
+
 export const getContentWithReplacedVars = (
   content: string,
-  vars: {[key: string]: string}
+  vars: {[key: string]: string},
+  queryStringVars?: {[key: string]: string}
 ): string => {
   const getEscapedVar = (variable: string): string => {
     return `\`[${variable}]\``
@@ -154,10 +194,27 @@ export const getContentWithReplacedVars = (
 
   Object.keys(vars).forEach((variable) => {
     // replace number casted variables
-    content = replaceAll(content, `"${NUMBER_CAST_INDICATOR}[${variable}]"`, vars[variable])
+    content = replaceAll(content, getCastVarToNumberSyntax(variable), vars[variable])
     // replace simple variables
     content = replaceAll(content, `[${variable}]`, vars[variable])
   })
+
+  if (queryStringVars) {
+    const queryStringVarsInContent = getQueryStringVarsInContent(content)
+    queryStringVarsInContent.forEach(({ variable, defaultValue }) => {
+      const replaceValue = queryStringVars[variable] || defaultValue
+
+      // if there is no query string in request and no default value for it
+      // don't replace anything
+      if (replaceValue) {
+        content = replaceAll(
+          content,
+          getQueryStringVarSyntax({ variable, defaultValue }),
+          replaceValue
+        )
+      }
+    })
+  }
 
   // unsanitize variables to escape
   content = getContentWithUnsanitizedEscapedVars(content)
@@ -166,7 +223,20 @@ export const getContentWithReplacedVars = (
 }
 
 export const isStructureExtended = (jsonContent: {[key: string]: any}): boolean => {
-  return jsonContent.__header !== undefined || jsonContent.__body !== undefined
+  return jsonContent[HEADER_SYNTAX] !== undefined || jsonContent[BODY_SYNTAX] !== undefined
+}
+
+export const isBodyEmpty = (body: JsonRouteFileContent): boolean => {
+  const stringifiedEmptyBodySyntax = JSON.stringify(EMPTY_BODY_SYNTAX)
+
+  if (JSON.stringify(body) === stringifiedEmptyBodySyntax) return true
+
+  if (body[BODY_SYNTAX]) {
+    return JSON.stringify(body[BODY_SYNTAX]) === stringifiedEmptyBodySyntax
+      || body[BODY_SYNTAX] === stringifiedEmptyBodySyntax
+  }
+
+  return false
 }
 
 export const getRoute = (
@@ -187,24 +257,39 @@ export const getRoute = (
 
   const isExtended = isStructureExtended(jsonContent)
 
-  const header = jsonContent.__header
+  const header = jsonContent[HEADER_SYNTAX]
 
-  const getBodyValue = (): string | undefined => {
-    if (fileContent === '[null]') {
-      return undefined
-    }
+  const getBodyValue = (): JsonRouteFileContent | undefined => {
+    if (isBodyEmpty(jsonContent)) return undefined
 
-    return isExtended ? JSON.stringify(jsonContent.__body) : fileContent
+    return isExtended
+      ? jsonContent[BODY_SYNTAX]
+      : jsonContent
   }
 
   const body = getBodyValue()
 
-  const getBody = (varsToReplace?: {[key: string]: string}): string => {
-    if (varsToReplace && body) {
-      return getContentWithReplacedVars(body, varsToReplace)
+  const getBody = (
+    varsToReplace?: {[key: string]: string},
+    queryStringVarsToReplace?: {[key: string]: string}
+  ): JsonRouteFileContent | undefined => {
+    if (body) {
+      let bodyAsString = JSON.stringify(body)
+
+      if (varsToReplace) {
+        bodyAsString = getContentWithReplacedVars(
+          bodyAsString,
+          varsToReplace,
+          queryStringVarsToReplace
+        )
+      }
+      bodyAsString = getContentWithReplacedForLoopsSyntax(bodyAsString)
+      bodyAsString = getContentWithReplacedFakerVars(bodyAsString)
+
+      return JSON.parse(bodyAsString)
     }
 
-    return fileContent
+    return undefined
   }
 
   return {

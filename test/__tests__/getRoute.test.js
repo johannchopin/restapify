@@ -6,6 +6,7 @@ import {
   getRouteFromFilePath,
   getResponseStatusCodeInFilename,
   getHttpMethodInFilename,
+  isBodyEmpty,
 } from '../../src/getRoute'
 
 describe('Get route helpers', () => {
@@ -162,6 +163,14 @@ describe('Get route helpers', () => {
       const expectedStatusCode = 404
 
       expect(getResponseStatusCodeInFilename(filename)).toBe(expectedStatusCode)
+    })
+  })
+
+  describe('isBodyEmpty', () => {
+    it('should detect an empty body', () => {
+      expect(isBodyEmpty({'#body': [null]})).toBeTruthy()
+      expect(isBodyEmpty({'#body': '[null]'})).toBeTruthy()
+      expect(isBodyEmpty([null])).toBeTruthy()
     })
   })
 

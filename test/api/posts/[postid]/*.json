@@ -1,4 +1,6 @@
 {
   "postId": "[postid]",
-  "success": true
+  "post": "[#faker:lorem:text]",
+  "email": "[#faker:internet:email]",
+  "created-at": "n:[#faker:time:recent]"
 }

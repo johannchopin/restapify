@@ -6,6 +6,7 @@ import Restapify from '../../src/Restapify'
 // D A T A
 import getAnimals from '../api/animals.json'
 import getAnimalsByName from '../api/animals/[name].json'
+import getAnimalHedgehog from '../api/animals/hedgehog.json'
 import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../api/plants.GET.json'
 import getUsers from '../api/users/*.json'
@@ -27,15 +28,15 @@ const baseUrl = `http://localhost:${restapifyParams.port}`
 const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
 
 describe('Restapify', () => {
-  let RestapifyInstance
+  let rpfy
 
   beforeEach(() => {
-    RestapifyInstance = new Restapify(restapifyParams)
-    RestapifyInstance.run()
+    rpfy = new Restapify(restapifyParams)
+    rpfy.run()
   })
 
   afterEach(() => {
-    RestapifyInstance.close()
+    rpfy.close()
   })
 
   describe('HTTP verbs', () => {
@@ -135,24 +136,30 @@ describe('Restapify', () => {
   })
 
   describe('Extended structure', () => {
-    it('should respond with __body', async () => {
+    it('should respond with #body', async () => {
       let response = await fetch(`${apiRoot}/users/`, {
         method: 'POST'
       })
       let data = await response.json()
-      expect(data).toStrictEqual(postUsers.__body)
-    })
-  })
-
-  it('should respond with custom __header', async () => {
-    let response = await fetch(`${apiRoot}/users/`, {
-      method: 'POST'
+      expect(data).toStrictEqual(postUsers['#body'])
     })
 
-    let headers = response.headers
+    it('should respond without a body', async () => {
+      let response = await fetch(`${apiRoot}/comments/43`)
+      let data = await response.text()
+      expect(data.length).toBe(0)
+    })
 
-    Object.keys(postUsers.__header).forEach(headerProperty => {
-      expect(headers.get(headerProperty)).toBe(postUsers.__header[headerProperty])
+    it('should respond with custom #header', async () => {
+      let response = await fetch(`${apiRoot}/users/`, {
+        method: 'POST'
+      })
+  
+      let headers = response.headers
+  
+      Object.keys(postUsers['#header']).forEach(headerProperty => {
+        expect(headers.get(headerProperty)).toBe(postUsers['#header'][headerProperty])
+      })
     })
   })
 
@@ -166,10 +173,24 @@ describe('Restapify', () => {
 
     expect(statusCode).toBe(expectedStatusCode)
   })
+
+  it('should fetch a specific route', async () => {
+    let response = await fetch(`${apiRoot}/animals/hedgehog`)
+    let data = await response.json()
+    expect(data).toStrictEqual(getAnimalHedgehog)
+  })
+
+  it('should not generate same faker value in for loop', async () => {
+    let response = await fetch(`${apiRoot}/cars`)
+    let data = await response.json()
+
+    const areGeneratedDataSimilaire = data[0].type === data[1].type && data[1].type === data[2].type && data[2].type === data[10].type
+    expect(areGeneratedDataSimilaire).toBeFalsy()
+  })
 })
 
 describe('Restapify with state variables', () => {
-  let RestapifyInstance
+  let rpfy
   const states = [
     {
       route: '/users/[userid]',
@@ -183,16 +204,16 @@ describe('Restapify with state variables', () => {
   ]
 
   beforeEach(() => {
-    RestapifyInstance = new Restapify({
+    rpfy = new Restapify({
       ...restapifyParams,
       states
     })
 
-    RestapifyInstance.run()
+    rpfy.run()
   })
 
   afterEach(() => {
-    RestapifyInstance.close()
+    rpfy.close()
   })
 
   it('should respond according to state variable', async () => {
@@ -203,7 +224,7 @@ describe('Restapify with state variables', () => {
     let statusCode = response.status
     let data = await response.json()
 
-    expect(data).toStrictEqual(deleteUserErr.__body)
+    expect(data).toStrictEqual(deleteUserErr['#body'])
     expect(statusCode).toBe(404)
   })
 
@@ -218,7 +239,7 @@ describe('Restapify with state variables', () => {
   })
 
   it('should update state variable and respond with new data', async () => {
-    RestapifyInstance.setState({
+    rpfy.setState({
       route: '/users/[userid]',
       method: 'DELETE'
     })
@@ -230,18 +251,18 @@ describe('Restapify with state variables', () => {
     let statusCode = response.status
     let data = await response.json()
 
-    expect(data).toStrictEqual(deleteUser.__body)
+    expect(data).toStrictEqual(deleteUser['#body'])
     expect(statusCode).toBe(200)
   })
 
   describe('define routes states', () => {
     it('should not set states in route that don\'t have any', () => {
-      const getUsersRoute = RestapifyInstance.routes.GET['/users']
+      const getUsersRoute = rpfy.routes.GET['/users']
       expect(getUsersRoute.states).toBe(undefined)
     })
 
     it('should set correct state to route', () => {
-      const deleteUserRoute = RestapifyInstance.routes.DELETE['/users/[userid]'].states
+      const deleteUserRoute = rpfy.routes.DELETE['/users/[userid]'].states
 
       const expectedState = {
         'INV_CRED': {
@@ -259,8 +280,8 @@ describe('Restapify with state variables', () => {
         'ERR': {
           fileContent: JSON.stringify(deleteUserErr, null, '  '),
           statusCode: 404,
-          header: deleteUserErr.__header,
-          body: JSON.stringify(deleteUserErr.__body),
+          header: deleteUserErr['#header'],
+          body: deleteUserErr['#body'],
           isExtended: true,
           getBody: expect.any(Function)
         }
@@ -281,9 +302,9 @@ describe('Restapify with state variables', () => {
         route: '/users/[userid]',
         state: 'ERR'
       }]
-      RestapifyInstance.setState(updatedState)
+      rpfy.setState(updatedState)
 
-      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
+      expect(rpfy.states).toStrictEqual(expectedStates)
     })
 
     it('should add state variable', async () => {
@@ -293,9 +314,9 @@ describe('Restapify with state variables', () => {
         method: 'POST'
       }
       const expectedStates = [...states, newState]
-      RestapifyInstance.setState(newState)
+      rpfy.setState(newState)
 
-      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
+      expect(rpfy.states).toStrictEqual(expectedStates)
     })
 
     it('should remove state variable', async () => {
@@ -304,9 +325,9 @@ describe('Restapify with state variables', () => {
         method: 'DELETE'
       }
       const expectedStates = []
-      RestapifyInstance.setState(updatedState)
+      rpfy.setState(updatedState)
 
-      expect(RestapifyInstance.states).toStrictEqual(expectedStates)
+      expect(rpfy.states).toStrictEqual(expectedStates)
     })
   })
 
@@ -316,4 +337,14 @@ describe('Restapify with state variables', () => {
     const text = await response.text()
     expect(text).toContain(expectedPageTitle)
   })
+})
+
+it('should get correct served routes', () => {
+  const rpfy = new Restapify({...restapifyParams})
+  const servedRoutes = rpfy.getServedRoutes()
+  const expectedServedRoutesAmount = 21
+  const expectedServedRoutesResponse = [{ "method": "GET", "route": "/animals" }, { "method": "GET", "route": "/animals/[name]" }, { "method": "GET", "route": "/animals/[name]/friends" }, { "method": "GET", "route": "/animals/[name]/friends/[friend_id]" }, { "method": "GET", "route": "/animals/hedgehog" }, { "method": "GET", "route": "/cars" }, { "method": "GET", "route": "/comments" }, { "method": "GET", "route": "/comments/42" }, { "method": "GET", "route": "/comments/43" }, { "method": "GET", "route": "/comments/[id]" }, { "method": "GET", "route": "/plants" }, { "method": "GET", "route": "/posts" }, { "method": "GET", "route": "/posts/[postid]" }, { "method": "GET", "route": "/posts/[postid]/comments/[commentid]" }, { "method": "GET", "route": "/users" }, { "method": "POST", "route": "/users" }, { "method": "GET", "route": "/users/[userid]" }, { "method": "PUT", "route": "/users/[userid]" }, { "method": "PATCH", "route": "/users/[userid]" }, { "method": "DELETE", "route": "/users/[userid]" }, { "method": "GET", "route": "/users/[userid]/friends" }]
+
+  expect(servedRoutes.length).toBe(expectedServedRoutesAmount)
+  expect(servedRoutes).toStrictEqual(expectedServedRoutesResponse)
 })

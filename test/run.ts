@@ -2,7 +2,7 @@
 import * as path from 'path'
 import Restapify from '../src/Restapify'
 
-const RestapifyInstance = new Restapify({
+const rpfy = new Restapify({
   rootDir: path.resolve(__dirname, './api'),
   states: [
     {
@@ -13,16 +13,16 @@ const RestapifyInstance = new Restapify({
   ]
 })
 
-RestapifyInstance.onError(({ error }) => {
+rpfy.onError(({ error }) => {
   console.log(`Ouuups> ${error}`)
 })
 
-RestapifyInstance.on('server:start', () => {
+rpfy.on('server:start', () => {
   console.log('server start')
 })
 
-RestapifyInstance.on('server:restart', () => {
+rpfy.on('server:restart', () => {
   console.log('server restart')
 })
 
-RestapifyInstance.run()
+rpfy.run()

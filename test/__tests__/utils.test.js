@@ -1,4 +1,9 @@
-import { getVarsInPath, isJsonString, routeResolve } from '../../src/utils'
+import {
+  getVarsInPath,
+  isJsonString,
+  routeResolve,
+  getSortedRoutesSlug
+} from '../../src/utils'
 
 describe('getVarsInPath', () => {
   it('find no vars in path', () => {
@@ -51,7 +56,30 @@ describe('routeResolve', () => {
 
   describe('isJsonString', () => {
     expect(isJsonString('{"test": "its json"}')).toBeTruthy()
-    expect(isJsonString('{"test": "its json"')).toBeFalsy()
-    expect(isJsonString('test')).toBeFalsy()
+    expect(isJsonString('{"test": "its json"')).toBe('Unexpected end of JSON input')
+    expect(isJsonString('test')).toBe('Unexpected token e in JSON at position 1')
+  })
+})
+
+describe('getSortedRoutesSlug', () => {
+  it('Slugs with variables should be after specific slug', () => {
+    const slugs = [
+      '/animals/[name]',
+      '/animals/hedgehog',
+      '/animals/[name]/friends',
+      '/animals/[name]/friends/[friend_id]',
+      '/animals/[name]/friends/42',
+      '/animals/[name]/friends/mario'
+    ]
+    const expectedResult = [
+      '/animals/[name]/friends/mario',
+      '/animals/[name]/friends/42',
+      '/animals/[name]/friends/[friend_id]',
+      '/animals/[name]/friends',
+      '/animals/hedgehog',
+      '/animals/[name]',
+    ]
+
+    expect(getSortedRoutesSlug(slugs)).toStrictEqual(expectedResult)
   })
 })

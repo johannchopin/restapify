@@ -1,9 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 // @ts-ignore
-import * as express from 'express'
+import express, { Application } from 'express'
 import * as http from 'http'
-import * as open from 'open'
+import open from 'open'
 import * as chokidar from 'chokidar'
 
 import {
@@ -23,12 +23,14 @@ import {
 import {
   getRouteFiles,
   getRoutesByFileOrder as getRoutesByFileOrderHelper,
+  getSortedRoutesSlug,
   isJsonString,
   routeResolve,
   withoutUndefinedFromObject
 } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
+import { areFakerVarsSyntaxValidInContent } from './fakerHelpers'
 
 const DEFAULT_PORT = 6767
 
@@ -56,6 +58,7 @@ interface RunOptions {
   hard?:boolean
   startServer?:boolean
   openDashboard?: boolean
+  hotWatch?: boolean
 }
 type EventCallbackStore = {
   [event in RestapifyEventName]?: RestapifyEventCallback[]
@@ -66,7 +69,7 @@ type ListedFiles = {
 
 class Restapify {
   private eventCallbacksStore: EventCallbackStore = {}
-  private app: express.Express
+  private app: Application
   private server: any
   private chokidarWatcher: chokidar.FSWatcher
   private listedRouteFiles: ListedFiles = {}
@@ -106,8 +109,14 @@ class Restapify {
     if (this.hotWatch) {
       this.chokidarWatcher = chokidar.watch(this.rootDir, {
         ignoreInitial: true
-      }).on('all', () => {
-        this.restartServer({ hard: true })
+      })
+
+      const events = ['change', 'unlink']
+
+      events.forEach(event => {
+        this.chokidarWatcher.on(event, () => {
+          this.restartServer({ hard: true })
+        })
       })
     }
   }
@@ -164,13 +173,14 @@ class Restapify {
   private restartServer = (options?: RunOptions): void => {
     this.executeCallbacks('server:restart')
     this.closeServer()
-    this.customRun({ ...options, openDashboard: false })
+    this.customRun({ ...options, hard: false, openDashboard: false })
   }
 
   private checkApiBaseUrl = (): void => {
     if (this.apiBaseUrl.startsWith(INTERNAL_BASEURL)) {
       const error: RestapifyErrorName = 'INV:API_BASEURL'
-      throw new Error(error)
+      const errorObject = { error }
+      throw new Error(JSON.stringify(errorObject))
     }
   }
 
@@ -178,18 +188,33 @@ class Restapify {
     const folderExists = fs.existsSync(this.rootDir)
     if (!folderExists) {
       const error: RestapifyErrorName = 'MISS:ROOT_DIR'
-      throw new Error(error)
+      const errorObject = { error }
+      throw new Error(JSON.stringify(errorObject))
     }
   }
 
   private checkJsonFiles = (): void => {
     Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
       const routeFileContent = this.listedRouteFiles[routeFilePath]
-      const isJsonValid = isJsonString(routeFileContent)
+      const isJsonValidResponse = isJsonString(routeFileContent)
+      // eslint-disable-next-line max-len
+      const isJsonContainingValidFakerSyntaxResponse = areFakerVarsSyntaxValidInContent(routeFileContent)
 
-      if (!isJsonValid) {
+      if (isJsonValidResponse !== true) {
         const error: RestapifyErrorName = 'INV:JSON_FILE'
-        throw new Error(`${error} ${routeFilePath}`)
+        const errorObject = {
+          error,
+          message: `Invalid json file ${routeFilePath}: ${isJsonValidResponse}`
+        }
+        throw new Error(JSON.stringify(errorObject))
+      } else if (isJsonContainingValidFakerSyntaxResponse !== true) {
+        const { namespace, method } = isJsonContainingValidFakerSyntaxResponse
+        const error: RestapifyErrorName = 'INV:FAKER_SYNTAX'
+        const errorObject = {
+          error,
+          message: `The fakerjs method call \`faker.${namespace}.${method}()\` is invalid`
+        }
+        throw new Error(JSON.stringify(errorObject))
       }
     })
   }
@@ -271,7 +296,10 @@ class Restapify {
 
   private serveRoutes = (): void => {
     (Object.keys(this.routes) as HttpVerb[]).forEach(method => {
-      Object.keys(this.routes[method]).forEach(route => {
+      const routesSlug = Object.keys(this.routes[method])
+      const sortedRoutesSlug = getSortedRoutesSlug(routesSlug)
+
+      sortedRoutesSlug.forEach(route => {
         const routeData = this.getRouteData(method, route)
 
         if (routeData) {
@@ -303,7 +331,13 @@ class Restapify {
         vars[variable] = req.params[variable]
       })
 
-      res.send(JSON.parse(routeData.getBody(vars)))
+      const responseBody = routeData.getBody(vars, req.query)
+
+      if (responseBody) {
+        res.send(JSON.stringify(responseBody))
+      } else {
+        res.end()
+      }
     }
 
     this.listenRoute(routeData.method, normalizedRoute, responseCallback)
@@ -342,7 +376,12 @@ class Restapify {
   }
 
   private customRun = (options: RunOptions = {}):void => {
-    const { hard = true, startServer = true, openDashboard = true } = options
+    const {
+      hard = true,
+      startServer = true,
+      openDashboard = true,
+      hotWatch = true
+    } = options
 
     try {
       if (hard) {
@@ -352,23 +391,28 @@ class Restapify {
       }
 
       this.listRouteFiles()
-      this.configRoutesFromListedFiles()
       this.checkJsonFiles()
+      this.configRoutesFromListedFiles()
       if (startServer) this.configServer()
 
-      if (hard && startServer) this.configDashboard()
+      if (startServer) this.configDashboard()
 
       if (startServer) this.configInternalApi()
 
-      if (hard) this.configHotWatch()
+      if (hard && hotWatch) this.configHotWatch()
       if (hard && this.autoOpenDashboard && startServer && openDashboard) this.openDashboard()
       if (hard && startServer) this.executeCallbacks('server:start')
 
-      this.startServer()
+      if (startServer) this.startServer()
 
       if (hard) this.executeCallbacks('start')
     } catch (error) {
-      this.executeCallbacks('error', { error: error.message })
+      if (isJsonString(error.message)) {
+        const { error: errorId, message } = JSON.parse(error.message)
+        this.executeCallbacks('error', { error: errorId, message })
+      } else {
+        this.executeCallbacks('error', { error: 'ERR', message: error.message })
+      }
     }
   }
 
@@ -472,10 +516,16 @@ class Restapify {
     this.restartServer()
   }
 
-  public getServedRoutes = ():{
+  public getServedRoutes = (): {
     route: string,
     method: HttpVerb
   }[] => {
+    this.customRun({
+      startServer: false,
+      openDashboard: false,
+      hotWatch: false,
+      hard: false
+    })
     return getRoutesByFileOrderHelper(this.routes)
   }
 
@@ -503,7 +553,7 @@ class Restapify {
     this.addSingleEventCallbackToStore('error', callback)
   }
 
-  public run = ():void => {
+  public run = (): void => {
     this.customRun()
   }
 }

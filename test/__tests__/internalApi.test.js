@@ -14,15 +14,15 @@ const baseUrl = `http://localhost:${restapifyParams.port}`
 const apiRoot = `${baseUrl}/restapify/api`
 
 describe('Internal API', () => {
-  let RestapifyInstance
+  let rpfy
 
   beforeEach(() => {
-    RestapifyInstance = new Restapify(restapifyParams)
-    RestapifyInstance.run()
+    rpfy = new Restapify(restapifyParams)
+    rpfy.run()
   })
 
   afterEach(() => {
-    RestapifyInstance.close()
+    rpfy.close()
   })
 
   it('should fetch /routes', async () => {
@@ -31,8 +31,8 @@ describe('Internal API', () => {
         "GET": {
           "states": {
             "ERR": {
-              "body": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
               "fileContent": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
+              "body": { success: false, test: "error" },
               "isExtended": false,
               "statusCode": 404
             }
@@ -48,7 +48,7 @@ describe('Internal API', () => {
           "stateVars": [],
           "statusCode": 200,
           "method": "GET",
-          "body": "{\n  \"testUserId\": \"n:[userid]\"\n}"
+          "body": { testUserId: "n:[userid]" }
         },
         "DELETE": {
           "states": {
@@ -63,8 +63,8 @@ describe('Internal API', () => {
               "statusCode": 401
             },
             "ERR": {
-              "body": "{\"success\":false}",
-              "fileContent": "{\n  \"__header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"__body\": {\n    \"success\": false\n  }\n}",
+              "body": { success: false },
+              "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": false\n  }\n}",
               "header": {
                 "Content-Type": "text/html; charset=UTF-8"
               },
@@ -79,11 +79,11 @@ describe('Internal API', () => {
           "normalizedRoute": "/users/:userid",
           "isExtended": true,
           "filename": "[userid].DELETE.json",
-          "fileContent": "{\n  \"__header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"__body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
+          "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
           "stateVars": [],
           "statusCode": 200,
           "method": "DELETE",
-          "body": "{\"success\":true,\"data\":{\"id\":67,\"name\":\"bob\"}}",
+          "body": { success: true, data: { id: 67, name: "bob" } },
           "header": {
             "Content-Type": "text/html; charset=UTF-8"
           }
@@ -97,7 +97,7 @@ describe('Internal API', () => {
   })
 
   it('should fetch /states', async () => {
-    const expectedResponse = RestapifyInstance.states
+    const expectedResponse = rpfy.states
     let response = await fetch(`${apiRoot}/states`)
     let data = await response.json()
     expect(data).toStrictEqual(expectedResponse)
@@ -120,7 +120,7 @@ describe('Internal API', () => {
       })
 
       expect(response.status).toBe(expectedResponseStatus)
-      expect(RestapifyInstance.states).toContainEqual(updatedStateObject)
+      expect(rpfy.states).toContainEqual(updatedStateObject)
     })
 
     it('should response with error on invalid body', async () => {

@@ -1,48 +1,64 @@
 {
   "name": "restapify",
-  "version": "0.0.20",
-  "main": "dist/index.js",
+  "version": "0.0.31",
+  "main": "dist/src/index.js",
   "files": [
     "dist",
     "dist/node_modules/restapify-dashboard"
   ],
   "license": "MIT",
   "private": false,
+  "bin": {
+    "restapify": "./bin/restapify"
+  },
   "scripts": {
     "restapify:init": "yarn move:dashboard",
+    "readme:generate-doc-table": "yarn doctoc ./docs/README.md",
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
+    "clean": "yarn rimraf ./dist",
     "test": "jest --silent --no-cache",
     "test:manual": "yarn ts-node-dev --files test/run.ts",
+    "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
-    "build": "yarn tsc",
-    "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",
+    "build": "yarn clean && yarn tsc",
+    "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/src/dashboard-public/",
     "lint": "yarn eslint . --ext .js,.ts"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "boxen": "^5.0.0",
+    "chalk": "^4.1.0",
     "chokidar": "^3.4.3",
+    "commander": "^6.2.1",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "faker": "^5.2.0",
     "http": "^0.0.1-security",
+    "jsonschema": "^1.4.0",
+    "lodash.range": "^3.2.0",
     "open": "^7.3.0",
-    "restapify-dashboard": "^1.0.9"
+    "restapify-dashboard": "^1.0.13"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.12.1",
-    "@types/express": "^4.17.9",
+    "@types/express": "^4.17.11",
     "@types/express-serve-static-core": "^4.17.13",
+    "@types/faker": "^5.1.5",
+    "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.14.9",
     "@types/serve-static": "^1.13.8",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
     "cpx": "^1.5.0",
+    "doctoc": "^2.0.0",
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^26.6.3",
     "nodemon": "^2.0.5",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
     "ts-node-dev": "^1.0.0",

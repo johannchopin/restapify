@@ -18,6 +18,7 @@ const onServerRestartSpy = jest.fn()
 const onServerStartSpy = jest.fn()
 const onDashboardOpenSpy = jest.fn()
 const onErrorSpy = jest.fn()
+const onMultipleEventsSpy = jest.fn()
 
 const sleep = m => new Promise(r => setTimeout(r, m))
 
@@ -32,15 +33,15 @@ describe('Restapify\'s events', () => {
 
   describe('start', () => {
     it('should execute callback', () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('start', onStartSpy)
+      rpfy.on('start', onStartSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onStartSpy).toHaveBeenCalledTimes(1)
     })
@@ -48,15 +49,15 @@ describe('Restapify\'s events', () => {
 
   describe('server:start', () => {
     it('should execute callback', () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('server:start', onServerStartSpy)
+      rpfy.on('server:start', onServerStartSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onServerStartSpy).toHaveBeenCalledTimes(1)
     })
@@ -64,15 +65,15 @@ describe('Restapify\'s events', () => {
 
   describe('dashboard:open', () => {
     it('should execute callback', async () => {
-      const RestapifyInstance = new Restapify({...restapifyParams, openDashboard: true})
+      const rpfy = new Restapify({...restapifyParams, openDashboard: true})
 
-      RestapifyInstance.on('dashboard:open', onDashboardOpenSpy)
+      rpfy.on('dashboard:open', onDashboardOpenSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       await sleep(OPEN_DASHBOARD_TIMEOUT)
 
@@ -80,15 +81,15 @@ describe('Restapify\'s events', () => {
     })
 
     it('shouldn\'t execute callback', async () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('dashboard:open', onDashboardOpenSpy)
+      rpfy.on('dashboard:open', onDashboardOpenSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       await sleep(OPEN_DASHBOARD_TIMEOUT)
 
@@ -97,35 +98,114 @@ describe('Restapify\'s events', () => {
   })
 
   describe('error', () => {
-    it('shouldn\'t execute callback', () => {
-      const RestapifyInstance = new Restapify({...restapifyParams})
+    it('shouldn\'t execute callback if no error', () => {
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('error', onErrorSpy)
+      rpfy.on('error', onErrorSpy)
 
-      RestapifyInstance.on('start', () => {
-        RestapifyInstance.close()
+      rpfy.on('start', () => {
+        rpfy.close()
       })
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       expect(onErrorSpy).not.toHaveBeenCalled()
-    })    
+    })
     
-    it('should execute callback', () => {
+    it('should execute callback for invalid JSON', () => {
       const filename = 'foobar.json'
       const filePath = path.resolve(apiRootDir, filename)
 
       fs.writeFileSync(filePath, 'invalid json')
 
-      const RestapifyInstance = new Restapify({...restapifyParams})
+      const rpfy = new Restapify({...restapifyParams})
 
-      RestapifyInstance.on('error', onErrorSpy)
+      rpfy.on('error', onErrorSpy)
 
-      RestapifyInstance.run()
+      rpfy.run()
 
       fs.unlinkSync(filePath)
 
       expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'INV:JSON_FILE',
+        message: `Invalid json file ${filePath}: Unexpected token i in JSON at position 0`
+      })
     })
+
+    it('should execute callback for invalid base URL', () => {
+      const rpfy = new Restapify({...restapifyParams, baseUrl: '/restapify'})
+
+      rpfy.on('error', onErrorSpy)
+
+      rpfy.on('start', () => {
+        rpfy.close()
+      })
+
+      rpfy.run()
+
+      expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'INV:API_BASEURL'
+      })
+    })
+
+    it('should execute callback for missing root directory', () => {
+      const rpfy = new Restapify({ rootDir: 'missingDirectory'})
+
+      rpfy.on('error', onErrorSpy)
+
+      rpfy.on('start', () => {
+        rpfy.close()
+      })
+
+      rpfy.run()
+
+      expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'MISS:ROOT_DIR'
+      })
+    })
+
+    it('should execute callback for invalid fakerjs syntax', () => {
+      const filename = 'foobar.json'
+      const filePath = path.resolve(apiRootDir, filename)
+      const bodyWithInvalidFakerjsSyntax = {
+        email: "[#faker:internet:emailFoobar]",
+      }
+      fs.writeFileSync(filePath, JSON.stringify(bodyWithInvalidFakerjsSyntax))
+
+      const rpfy = new Restapify({ ...restapifyParams })
+
+      rpfy.on('error', onErrorSpy)
+
+      rpfy.on('start', () => {
+        rpfy.close()
+      })
+
+      rpfy.run()
+
+      fs.unlinkSync(filePath)
+
+      expect(onErrorSpy).toHaveBeenCalledTimes(1)
+      expect(onErrorSpy).toHaveBeenCalledWith({
+        error: 'INV:FAKER_SYNTAX',
+        message: 'The fakerjs method call `faker.internet.emailFoobar()` is invalid'
+      })
+    })
+  })
+
+  it('should execute callback for multiple events', () => {
+    const rpfy = new Restapify({...restapifyParams})
+
+    rpfy.on(['server:start', 'start'], onMultipleEventsSpy)
+
+    rpfy.on('start', () => {
+      rpfy.close()
+    })
+
+    rpfy.run()
+
+    expect(onMultipleEventsSpy).toHaveBeenCalledTimes(2)
   })
 })

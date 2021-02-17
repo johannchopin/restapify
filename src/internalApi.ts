@@ -1,4 +1,4 @@
-import * as express from 'express'
+import { Application } from 'express'
 
 import { INTERNAL_API_BASEURL } from './const'
 import { Routes, PrivateRouteState, RouteState } from './Restapify'
@@ -18,9 +18,9 @@ const getRoute = (route: string): string => {
 }
 
 export const getInitialisedInternalApi = (
-  app: express.Express,
+  app: Application,
   params: InternalApiParams
-): any => {
+): Application => {
   const {
     states,
     routes,
