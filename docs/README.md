@@ -29,6 +29,15 @@
   - [🚧 Serve from configuration file](#-serve-from-configuration-file)
   - [Flags](#flags)
 - [JavaScript's API](#javascripts-api)
+  - [Types definition list](#types-definition-list)
+    - [RestapifyParams](#restapifyparams)
+    - [RouteState](#routestate)
+  - [Restapify's constructor](#restapifys-constructor)
+  - [Restapify.run()](#restapifyrun)
+  - [Restapify.close()](#restapifyclose)
+  - [Restapify.on()](#restapifyon)
+    - [Events list](#events-list)
+    - [Restapify.on('error', <callback>)](#restapifyonerror-callback)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
