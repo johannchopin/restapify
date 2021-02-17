@@ -84,3 +84,4 @@ Wants to collaborate? Please read the [contributing guidelines](./CONTRIBUTING.m
 
 
 ## Documentation
+Checkout the documentation on the [website](https://restapify.vercel.app/) or directly read it from the Markdown [source file](docs/README.md).
