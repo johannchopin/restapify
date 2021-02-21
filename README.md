@@ -4,6 +4,7 @@
   <img src="https://user-images.githubusercontent.com/31794680/107934535-7b4be300-6f80-11eb-9b26-87515325ca3f.png" alt="restapify cover" width="500">
 </p>
 
+<img src="https://badgen.net/badge/icon/typescript/green?icon=typescript&label" alt="TypeScript badge">
 <a href="https://codecov.io/gh/johannchopin/restapify">
   <img src="https://img.shields.io/codecov/c/github/johannchopin/restapify" alt="codecov">
 </a>
