@@ -9,7 +9,8 @@
     "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
-    "declaration": true
+    "declaration": true,
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"
