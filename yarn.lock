@@ -1439,6 +1439,13 @@
   dependencies:
     "@parcel/plugin" "2.0.0-nightly.608+46af2476"
 
+"@parcel/packager-ts@2.0.0-nightly.608":
+  version "2.0.0-nightly.608"
+  resolved "https://registry.yarnpkg.com/@parcel/packager-ts/-/packager-ts-2.0.0-nightly.608.tgz#26ceb11d702dcefc20a055bb2a379b12ec931637"
+  integrity sha512-zgkAhI36LBI3/fK5riKjUhlxcEYJydvB9K14BouL2/90TKGnnCwQhPA6UoDyswiu59EY5KIy1y0iKp5yEFiRjw==
+  dependencies:
+    "@parcel/plugin" "2.0.0-nightly.608+46af2476"
+
 "@parcel/plugin@2.0.0-nightly.608+46af2476":
   version "2.0.0-nightly.608"
   resolved "https://registry.yarnpkg.com/@parcel/plugin/-/plugin-2.0.0-nightly.608.tgz#f062a585ac6e0c0afa32e7b46d81d88e8c10032e"
@@ -1610,6 +1617,23 @@
     "@parcel/utils" "2.0.0-nightly.608+46af2476"
     react-refresh "^0.9.0"
     semver "^5.4.1"
+
+"@parcel/transformer-typescript-types@2.0.0-nightly.608":
+  version "2.0.0-nightly.608"
+  resolved "https://registry.yarnpkg.com/@parcel/transformer-typescript-types/-/transformer-typescript-types-2.0.0-nightly.608.tgz#c19d1d636378da45c383e2f4e4b1f380a24a61b8"
+  integrity sha512-NM3kS9eY/N5zLnfR9+Q9+IboTzw60HPxj6KoO4lWYA6b44b8Zb8zDBXmWQ8jtMOKQ6QqS3aGr2OJ31kDHblNfQ==
+  dependencies:
+    "@parcel/plugin" "2.0.0-nightly.608+46af2476"
+    "@parcel/source-map" "2.0.0-alpha.4.21"
+    "@parcel/ts-utils" "2.0.0-nightly.608+46af2476"
+    nullthrows "^1.1.1"
+
+"@parcel/ts-utils@2.0.0-nightly.608+46af2476":
+  version "2.0.0-nightly.608"
+  resolved "https://registry.yarnpkg.com/@parcel/ts-utils/-/ts-utils-2.0.0-nightly.608.tgz#25c8bab1c0999ff87a80bbfa5ddba297391ea5e4"
+  integrity sha512-ZC636DgS8U/B40rGGZ7lremNj9sGNhtwbN3dBBwXiCPCpvI3OMtrHZvLfrhIP1l+Wpku4JoNzT7wbbZLpIidhQ==
+  dependencies:
+    nullthrows "^1.1.1"
 
 "@parcel/types@2.0.0-nightly.608+46af2476":
   version "2.0.0-nightly.608"
@@ -8451,10 +8475,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^4.0.5:
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.5.tgz#123a3b214aaff3be32926f0d8f1f6e704eb89a72"
-  integrity sha512-6OSu9PTIzmn9TCDiovULTnET6BgXtDYL4Gg4szY+cGsc3JP1dQL8qvE8kShTRx1NIw4Q9IBHlwODjkjWEtMUyA==
+typescript@^3.0.5:
+  version "3.9.9"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.9.tgz#e69905c54bc0681d0518bd4d587cc6f2d0b1a674"
+  integrity sha512-kdMjTiekY+z/ubJCATUPlRDl39vXYiMV9iyeMuEuXZh2we6zz80uovNN2WlAxmmdE/Z/YQe+EbOEXB5RHEED3w==
 
 undefsafe@^2.0.3:
   version "2.0.3"
