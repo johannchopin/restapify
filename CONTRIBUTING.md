@@ -27,3 +27,11 @@ cd restapify
 ```sh
 yarn install && yarn restapify:init
 ```
+
+3. Run the test script
+
+You can easily see your change by running the `./test/run.ts` script that serve the mocked API from `./test/api`:
+
+```sh
+yarn test:manual
+```
