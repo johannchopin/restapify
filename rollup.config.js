@@ -6,11 +6,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 
-const extensions = [
-  '.ts',
-];
-
-const name = 'RollupTypeScriptBabel';
+const extensions = ['.ts'];
 
 export default {
   input: './src/index.ts',
