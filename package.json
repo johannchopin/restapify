@@ -32,6 +32,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@babel/runtime": "^7.13.7",
     "boxen": "^5.0.0",
     "chalk": "^4.1.0",
     "chokidar": "^3.4.3",
