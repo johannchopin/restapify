@@ -45,7 +45,7 @@
     "lodash.range": "^3.2.0",
     "open": "^7.3.0",
     "parcel": "^2.0.0-beta.1",
-    "restapify-dashboard": "^1.0.13"
+    "restapify-dashboard": "^1.0.14"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.13.0",
