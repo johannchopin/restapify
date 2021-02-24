@@ -49,6 +49,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.13.6",
     "@babel/preset-env": "^7.13.5",
     "@babel/preset-typescript": "^7.13.0",
     "@parcel/packager-ts": "2.0.0-nightly.608",
