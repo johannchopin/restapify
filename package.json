@@ -1,8 +1,9 @@
 {
   "name": "restapify",
-  "version": "0.0.31",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "0.0.69",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/src/index.d.ts",
   "files": [
     "dist",
     "dist/node_modules/restapify-dashboard"
@@ -21,9 +22,11 @@
     "test:manual": "yarn ts-node-dev --files test/run.ts",
     "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
-    "build": "yarn clean && yarn parcel build src/index.ts",
     "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",
-    "lint": "yarn eslint . --ext .js,.ts"
+    "lint": "yarn eslint . --ext .js,.ts",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "rollup -c",
+    "build": "yarn clean && yarn build:types && yarn build:js"
   },
   "publishConfig": {
     "access": "public"
