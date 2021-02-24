@@ -17,15 +17,18 @@ export default {
 
   // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
   // https://rollupjs.org/guide/en/#external
-  external: ['path', 'fs', 'http', 'express', 'open', 'lodash.range', 'boxen', 'commander', 'chalk', 'chokidar'],
+  external: ['path', 'fs', 'http', /@babel\/runtime/, 'express', 'open', 'lodash.range', 'boxen', 'commander', 'chalk', 'chokidar'],
 
   plugins: [
     json(),
     typescript(),
 
+    // Allow bundling cjs modules. Rollup doesn't understand cjs
+    commonjs(),
+
     babel({
       extensions,
-      babelHelpers: 'bundled',
+      babelHelpers: 'runtime',
       include: ['src/**/*'],
     }),
 
@@ -33,8 +36,5 @@ export default {
     nodePolyfills(),
 
     resolve({ extensions }),
-
-    // Allow bundling cjs modules. Rollup doesn't understand cjs
-    commonjs(),
   ]
 };
