@@ -1,6 +1,7 @@
 node_modules/
 dist/
 src/dashboard-public/
+.parcel-cache/
 
 # yarn
 yarn-error.log
