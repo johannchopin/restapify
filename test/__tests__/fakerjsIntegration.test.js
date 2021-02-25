@@ -50,6 +50,14 @@ describe('Faker\'s integration', () => {
     expect(isFakerValueNumber).toBeTruthy()
   })
 
+  it('should replace faker syntax with boolean cast syntax', () => {
+    const content = '{"boolean": "b:[#faker:random:boolean]"}'
+    const result = JSON.parse(getContentWithReplacedFakerVars(content))
+    const isFakerValueBoolean = typeof result.boolean === "boolean"
+
+    expect(isFakerValueBoolean).toBeTruthy()
+  })
+
   describe('Invalid faker syntax detection', () => {
     it('should find invalid syntax', () => {
       const content = JSON.stringify({
