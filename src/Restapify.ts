@@ -321,6 +321,7 @@ class Restapify {
 
     const responseCallback = (req: any, res: any): void => {
       res.status(statusCode)
+      res.header('Content-Type', 'application/json; charset=utf-8')
 
       if (header) {
         res.header(header)
