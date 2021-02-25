@@ -5,6 +5,15 @@ import {
   getForLoopSyntaxInContent 
 } from '../../src/forLoopHelpers'
 
+jest.mock('faker', () => ({
+  internet: {
+    email: jest.fn().mockImplementation(() => 'fake@email.com' ),
+  },
+  random: {
+    boolean: jest.fn().mockImplementation(() => true )
+  }
+}))
+
 describe('Helper\'s functions to process for loops', () => {
   it('should give correct syntax from object', () => {
     const forLoopObject = {
@@ -18,11 +27,20 @@ describe('Helper\'s functions to process for loops', () => {
   })
 
   describe('Get array from sequence', () => {
-    it('should give array from array notation', () => {
-      const arrayNotation = '[1, 2]'
-      const expectedResult = [1, 2]
+    describe('Array notation', () => {
+      it('should give array from array notation', () => {
+        const arrayNotation = '[1, 2]'
+        const expectedResult = [1, 2]
 
-      expect(getSequenceArray(arrayNotation)).toStrictEqual(expectedResult)
+        expect(getSequenceArray(arrayNotation)).toStrictEqual(expectedResult)
+      })
+
+      it('should give array from array notation with faker integration', () => {
+        const arrayNotation = "['[#faker:internet:email]', '[#faker:internet:email]', [#faker:random:boolean]]"
+        const expectedResult = ['fake@email.com', 'fake@email.com', true]
+
+        expect(getSequenceArray(arrayNotation)).toStrictEqual(expectedResult)
+      })
     })
 
     describe('Range notation', () => {
