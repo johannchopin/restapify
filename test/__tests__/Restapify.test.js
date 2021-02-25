@@ -76,6 +76,16 @@ describe('Restapify', () => {
     })
   })
 
+  describe('Response Header', () => {
+    it('should serve by default application/json content type', async () => {
+      let response = await fetch(`${apiRoot}/posts/`)
+  
+      let headers = response.headers
+
+      expect(headers.get('Content-type')).toBe('application/json; charset=utf-8')
+    })
+  })
+
   describe('Star notation', () => {
     it('should respond to a GET with star notation and get http verb', async () => {
       let response = await fetch(`${apiRoot}/comments`)
@@ -156,7 +166,7 @@ describe('Restapify', () => {
       })
   
       let headers = response.headers
-  
+
       Object.keys(postUsers['#header']).forEach(headerProperty => {
         expect(headers.get(headerProperty)).toBe(postUsers['#header'][headerProperty])
       })
