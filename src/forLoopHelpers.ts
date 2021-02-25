@@ -1,6 +1,6 @@
 import range from 'lodash.range'
 
-import { getVarCastSyntax, replaceAll } from './utils'
+import { replaceAll, replaceAllCastedVar } from './utils'
 import {
   FOR_LOOP_SYNTAX_MATCHER,
   FOR_LOOP_SYNTAX_PREFIX,
@@ -90,9 +90,9 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
 
   sequenceArray.forEach(i => {
     let forLoopResult = forLoopSyntax.statement
-    forLoopResult = replaceAll(
+    forLoopResult = replaceAllCastedVar(
       forLoopResult,
-      getVarCastSyntax(forLoopSyntax.x, 'number'),
+      forLoopSyntax.x,
       i.toString()
     )
     forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}]`, i.toString())
