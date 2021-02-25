@@ -5,7 +5,7 @@ import {
   FAKER_SYNTAX_SUFIX
 } from './const'
 import { FakerSyntaxData } from './types'
-import { getCastVarToNumberSyntax, replaceAll } from './utils'
+import { getVarCastSyntax, replaceAll } from './utils'
 
 export const getFakerVarsInContent = (content: string): string[] => {
   return Array.from(content.matchAll(FAKER_SYNTAX_MATCHER), m => m[1])
@@ -48,7 +48,7 @@ export const getContentWithReplacedFakerVars = (content: string): string => {
 
     content = replaceAll(
       content,
-      getCastVarToNumberSyntax(fakerVarSyntax.substring(1, fakerVarSyntax.length - 1)),
+      getVarCastSyntax(fakerVarSyntax.substring(1, fakerVarSyntax.length - 1), 'number'),
       fakedDataValue
     )
     content = content.replace(

@@ -1,6 +1,6 @@
 import { HttpVerb, JsonRouteFileContent } from './types'
 
-import { replaceAll, getCastVarToNumberSyntax } from './utils'
+import { replaceAll, getVarCastSyntax } from './utils'
 import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
   HEADER_SYNTAX,
@@ -194,7 +194,7 @@ export const getContentWithReplacedVars = (
 
   Object.keys(vars).forEach((variable) => {
     // replace number casted variables
-    content = replaceAll(content, getCastVarToNumberSyntax(variable), vars[variable])
+    content = replaceAll(content, getVarCastSyntax(variable, 'number'), vars[variable])
     // replace simple variables
     content = replaceAll(content, `[${variable}]`, vars[variable])
   })
