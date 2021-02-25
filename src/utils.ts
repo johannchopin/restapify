@@ -1,7 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { HTTP_VERBS, NUMBER_CAST_INDICATOR } from './const'
+import {
+  BOOLEAN_CAST_INDICATOR, CASTING_OPERATORS, HTTP_VERBS, NUMBER_CAST_INDICATOR
+} from './const'
 import { HttpVerb } from './types'
 import { Routes } from './Restapify'
 
@@ -130,8 +132,20 @@ export const isJsonString = (str: string): true | string => {
   return true
 }
 
-export const getCastVarToNumberSyntax = (variable: string):string => {
-  return `"${NUMBER_CAST_INDICATOR}[${variable}]"`
+export const getVarCastSyntax = (variable: string, type: 'number' | 'boolean'):string => {
+  const typeCastIndicator = {
+    number: NUMBER_CAST_INDICATOR,
+    boolean: BOOLEAN_CAST_INDICATOR
+  }
+  return `"${typeCastIndicator[type]}[${variable}]"`
+}
+
+export const replaceAllCastedVar = (content: string, variable: string, value: string): string => {
+  CASTING_OPERATORS.forEach((operator) => {
+    content = replaceAll(content, getVarCastSyntax(variable, operator), value)
+  })
+
+  return content
 }
 
 export const getSortedRoutesSlug = (routesSlug: string[]): string[] => {
