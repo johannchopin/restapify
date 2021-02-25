@@ -386,7 +386,8 @@ To get for example a faked text content with the regular library you will call `
 ```json
 {
   "id": "n:[postid]",
-  "content": "[#faker:lorem:paragraphs]"
+  "content": "[#faker:lorem:paragraphs]",
+  "private": "b:[#faker:random:boolean]"
 }
 ```
 
