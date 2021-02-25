@@ -6,6 +6,7 @@ export const INTERNAL_BASEURL = '/restapify'
 export const INTERNAL_API_BASEURL = `${INTERNAL_BASEURL}/api`
 export const DASHBOARD_FOLDER_PATH = './dashboard-public/'
 export const NUMBER_CAST_INDICATOR = 'n:'
+export const BOOLEAN_CAST_INDICATOR = 'b:'
 export const OPEN_DASHBOARD_TIMEOUT = 1000
 
 export const EMPTY_BODY_SYNTAX = [null]
