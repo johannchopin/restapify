@@ -4,7 +4,12 @@
   <img src="https://user-images.githubusercontent.com/31794680/107934535-7b4be300-6f80-11eb-9b26-87515325ca3f.png" alt="restapify cover" width="500">
 </p>
 
-![test workflow](https://github.com/johannchopin/restapify/actions/workflows/test.yml/badge.svg)
+<a href="https://www.npmjs.com/package/restapify">
+  <img src="https://img.shields.io/npm/v/restapify" alt="npm">
+</a>
+<a href="https://github.com/johannchopin/restapify/actions">
+  <img src="https://github.com/johannchopin/restapify/actions/workflows/test.yml/badge.svg" alt="test workflow">
+</a>
 <a href="https://codecov.io/gh/johannchopin/restapify">
   <img src="https://codecov.io/gh/johannchopin/restapify/branch/main/graph/badge.svg" alt="codecov">
 </a>
