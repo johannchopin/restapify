@@ -25,6 +25,7 @@
     - [For-loop's array sequence](#for-loops-array-sequence)
     - [For-loop's range sequence](#for-loops-range-sequence)
     - [Use route's variables in sequence](#use-routes-variables-in-sequence)
+    - [Use faker in an array sequence](#use-faker-in-an-array-sequence)
 - [CLI](#cli)
   - [`restapify serve`](#restapify-serve)
   - [`restapify list`](#restapify-list)
@@ -465,6 +466,23 @@ You can use [route's variables](#consume-routes-variables) and [route's query st
 ```
 
 You can then have `x` users in the response of `GET /api/users?limit=x`
+
+#### Use faker in an array sequence
+
+Restapify support the use of [faker variables](#fakerjs-integration) in an array sequence:
+
+```json
+[
+  "#for userName in ['[#faker:name:firstName]', '[#faker:name:firstName]', '[#faker:name:firstName]']",
+  { 
+    "name": "[userName]", 
+    "website": "[#faker:internet:protocol]://[userName].[#faker:internet:domainSuffix]" 
+  },
+  "#endfor"
+]
+```
+
+> Note that if the faker variable is a `string`, you have to wrap it between `'`. If it's a `number` or a `boolean` you don't need to.
 
 ## CLI
 Restapify comes with a cli to easily serve your mocked API.
