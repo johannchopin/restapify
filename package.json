@@ -6,12 +6,13 @@
   "types": "dist/src/index.d.ts",
   "files": [
     "dist",
-    "dist/node_modules/restapify-dashboard"
+    "dist/node_modules/restapify-dashboard",
+    "bin"
   ],
   "license": "MIT",
   "private": false,
   "bin": {
-    "restapify": "./bin/restapify"
+    "restapify": "bin/restapify"
   },
   "scripts": {
     "restapify:init": "yarn move:dashboard",
