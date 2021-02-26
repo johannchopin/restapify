@@ -9,10 +9,10 @@ import getAnimalsByName from '../api/animals/[name].json'
 import getAnimalHedgehog from '../api/animals/hedgehog.json'
 import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../api/plants.GET.json'
-import getUsers from '../api/users/*.json'
 import getUserErr from '../api/users/[userid].404.{ERR}.json'
 import postUsers from '../api/users/*.POST.201.json'
 import getComments from '../api/comments/*.GET.json'
+import getCommentsById from '../api/comments/[id]/*.json'
 import deleteUser from '../api/users/[userid].DELETE.json'
 import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
 import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
@@ -54,9 +54,9 @@ describe('Restapify', () => {
       })
 
       it('should respond with star notation for default get', async () => {
-        let response = await fetch(`${apiRoot}/users`)
+        let response = await fetch(`${apiRoot}/comments/25`)
         let data = await response.json()
-        expect(data).toStrictEqual(getUsers)
+        expect(data).toStrictEqual(getCommentsById)
       })
 
       it('should respond with star notation and get http verb', async () => {

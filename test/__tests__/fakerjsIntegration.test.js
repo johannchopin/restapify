@@ -6,7 +6,6 @@ import { getFakerVarsInContent, getContentWithReplacedFakerVars, areFakerVarsSyn
 
 // D A T A
 import getPostsById from '../api/posts/[postid]/*.json'
-import { internet } from 'faker';
 
 jest.mock('faker', () => ({
   lorem: {
