@@ -11,6 +11,8 @@ export interface InternalApiParams {
   setState: (newState: RouteState) => void
   states: PrivateRouteState[]
   routes: Routes
+  port: number
+  baseUrl: string
 }
 
 const getRoute = (route: string): string => {
@@ -22,6 +24,8 @@ export const getInitialisedInternalApi = (
   params: InternalApiParams
 ): Application => {
   const {
+    port,
+    baseUrl,
     states,
     routes,
     setState
@@ -43,6 +47,13 @@ export const getInitialisedInternalApi = (
   }
 
   const sortedRoutes = getSortedRoutes()
+
+  app.get(getRoute('/api'), (req, res): void => {
+    res.json({
+      port,
+      baseUrl
+    })
+  })
 
   app.get(getRoute('/routes'), (req, res): void => {
     res.json(sortedRoutes)
