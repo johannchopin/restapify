@@ -51,12 +51,9 @@ export const getInitialisedInternalApi = (
   app.get(getRoute('/api'), (req, res): void => {
     res.json({
       port,
-      baseUrl
+      baseUrl,
+      routes: sortedRoutes
     })
-  })
-
-  app.get(getRoute('/routes'), (req, res): void => {
-    res.json(sortedRoutes)
   })
 
   app.get(getRoute('/states'), (req, res): void => {
