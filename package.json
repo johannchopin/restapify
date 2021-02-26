@@ -1,17 +1,18 @@
 {
   "name": "restapify",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/src/index.d.ts",
   "files": [
     "dist",
-    "dist/node_modules/restapify-dashboard"
+    "dist/node_modules/restapify-dashboard",
+    "bin"
   ],
   "license": "MIT",
   "private": false,
   "bin": {
-    "restapify": "./bin/restapify"
+    "restapify": "bin/restapify"
   },
   "scripts": {
     "restapify:init": "yarn move:dashboard",
