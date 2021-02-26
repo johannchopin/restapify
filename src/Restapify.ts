@@ -147,8 +147,15 @@ class Restapify {
   }
 
   private configInternalApi = (): void => {
-    const { routes, states } = this
+    const {
+      routes,
+      states,
+      port,
+      apiBaseUrl: baseUrl
+    } = this
     this.app = getInitialisedInternalApi(this.app, {
+      port,
+      baseUrl,
       routes,
       states,
       setState: this.setState
