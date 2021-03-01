@@ -43,10 +43,14 @@ export const consoleError = (message: string): void => {
   console.log(`${errorPrepend} ${message}`)
 }
 
-export const getInstanceOverviewOutput = (port: number, apiBaseURL: string): string => {
+export const getInstanceOverviewOutput = (port: number, apiBaseUrl: string): string => {
+  if (!apiBaseUrl.startsWith('/')) {
+    apiBaseUrl = `/${apiBaseUrl}`
+  }
+
   const runningTitle = chalk.magenta('🚀 Restapify is running:')
   const apiBaseURLTitle = chalk.bold('- 📦API entry point:')
-  const apiBaseURLLink = chalk.blueBright(`http://localhost:${port}${apiBaseURL}`)
+  const apiBaseURLLink = chalk.blueBright(`http://localhost:${port}${apiBaseUrl}`)
   const dashboardURLTitle = chalk.bold('- 🎛 Dashboard:')
   const dashboardURLLink = chalk.blueBright(`http://localhost:${port}/restapify`)
   const apiBaseURLOutput = `${apiBaseURLTitle} ${apiBaseURLLink}`

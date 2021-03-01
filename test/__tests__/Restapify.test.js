@@ -20,12 +20,12 @@ import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TO
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
-  baseURL: '/api',
+  baseUrl: '/api',
   hotWatch: false
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
-const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
+const apiRoot = `${baseUrl}${restapifyParams.baseUrl}`
 
 describe('Restapify', () => {
   let rpfy
@@ -73,6 +73,34 @@ describe('Restapify', () => {
         })
         expect(response.status).toBe(204)
       })
+    })
+  })
+
+  describe('Server base url', () => {
+    it('should by default serve on /api', async () => {
+      let response = await fetch(`http://localhost:6767/api/plants`)
+      let data = await response.json()
+      expect(data).toStrictEqual(getPlants)
+    })
+
+    it('should serve on custom base url', async () => {
+      const rpfy = new Restapify({...restapifyParams, port: 4242, baseUrl: '/dev'})
+      rpfy.run()
+
+      let response = await fetch(`http://localhost:4242/dev/plants`)
+      let data = await response.json()
+      rpfy.close()
+      expect(data).toStrictEqual(getPlants)
+    })
+
+    it('should serve on correct base url', async () => {
+      const rpfy = new Restapify({...restapifyParams, port: 4242, baseUrl: 'dev/'})
+      rpfy.run()
+
+      let response = await fetch(`http://localhost:4242/dev/plants`)
+      let data = await response.json()
+      rpfy.close()
+      expect(data).toStrictEqual(getPlants)
     })
   })
 

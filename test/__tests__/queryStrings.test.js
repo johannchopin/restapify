@@ -9,12 +9,12 @@ import {
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
-  baseURL: '/api',
+  baseUrl: '/api',
   hotWatch: false
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
-const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
+const apiRoot = `${baseUrl}${restapifyParams.baseUrl}`
 
 describe('Query strings integration', () => {
   it('should find query strings syntax in content', () => {
