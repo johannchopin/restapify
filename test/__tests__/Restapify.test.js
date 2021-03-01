@@ -76,6 +76,34 @@ describe('Restapify', () => {
     })
   })
 
+  describe('Server base url', () => {
+    it('should by default serve on /api', async () => {
+      let response = await fetch(`http://localhost:6767/api/plants`)
+      let data = await response.json()
+      expect(data).toStrictEqual(getPlants)
+    })
+
+    it('should serve on custom base url', async () => {
+      const rpfy = new Restapify({...restapifyParams, port: 4242, baseUrl: '/dev'})
+      rpfy.run()
+
+      let response = await fetch(`http://localhost:4242/dev/plants`)
+      let data = await response.json()
+      rpfy.close()
+      expect(data).toStrictEqual(getPlants)
+    })
+
+    it('should serve on correct base url', async () => {
+      const rpfy = new Restapify({...restapifyParams, port: 4242, baseUrl: 'dev/'})
+      rpfy.run()
+
+      let response = await fetch(`http://localhost:4242/dev/plants`)
+      let data = await response.json()
+      rpfy.close()
+      expect(data).toStrictEqual(getPlants)
+    })
+  })
+
   describe('Response Header', () => {
     it('should serve by default application/json content type', async () => {
       let response = await fetch(`${apiRoot}/posts/`)
