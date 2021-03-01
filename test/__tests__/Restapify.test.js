@@ -20,12 +20,12 @@ import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TO
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
-  baseURL: '/api',
+  baseUrl: '/api',
   hotWatch: false
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
-const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
+const apiRoot = `${baseUrl}${restapifyParams.baseUrl}`
 
 describe('Restapify', () => {
   let rpfy
