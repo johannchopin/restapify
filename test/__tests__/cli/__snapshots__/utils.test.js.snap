@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI utils functions Output the right error message should output for invalid JSON file 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m Impossible to parse the JSON file undefined!"`;
+
+exports[`CLI utils functions Output the right error message should output for invalid base URL 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m Impossible to use /dev as the API base URL since it's already needed for internal purposes!"`;
+
+exports[`CLI utils functions Output the right error message should output for missing port 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m port 6767 is already in use!"`;
+
+exports[`CLI utils functions Output the right error message should output for missing rootDir 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m The given folder /user/mockedApi/ doesn't exist!"`;
+
+exports[`CLI utils functions should output overview 1`] = `
+"[35m┌────────────────────────────────────────────────────┐[39m
+[35m│[39m                                                    [35m│[39m
+[35m│[39m   [35m🚀 Restapify is running:[39m                         [35m│[39m
+[35m│[39m                                                    [35m│[39m
+[35m│[39m   [1m- 📦API entry point:[22m [94mhttp://localhost:6767/dev[39m   [35m│[39m
+[35m│[39m   [1m- 🎛 Dashboard:[22m [94mhttp://localhost:6767/restapify[39m   [35m│[39m
+[35m│[39m                                                    [35m│[39m
+[35m│[39m   [93mUse Ctrl+C to quit this process[39m                  [35m│[39m
+[35m│[39m                                                    [35m│[39m
+[35m└────────────────────────────────────────────────────┘[39m"
+`;
