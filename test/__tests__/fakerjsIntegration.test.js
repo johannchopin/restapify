@@ -6,7 +6,6 @@ import { getFakerVarsInContent, getContentWithReplacedFakerVars, areFakerVarsSyn
 
 // D A T A
 import getPostsById from '../api/posts/[postid]/*.json'
-import { internet } from 'faker';
 
 jest.mock('faker', () => ({
   lorem: {
@@ -16,7 +15,10 @@ jest.mock('faker', () => ({
     email: jest.fn().mockImplementation(() => 'fake@email.com' ),
   },
   time: {
-    recent:jest.fn().mockImplementation(() => 123 ),
+    recent: jest.fn().mockImplementation(() => 123 ),
+  },
+  random: {
+    boolean: jest.fn().mockImplementation(() => true )
   }
 }))
 
@@ -45,9 +47,15 @@ describe('Faker\'s integration', () => {
   it('should replace faker syntax with number cast syntax', () => {
     const content = '{"timestamp": "n:[#faker:time:recent]"}'
     const result = JSON.parse(getContentWithReplacedFakerVars(content))
-    const isFakerValueNumber = !isNaN(result.timestamp)
 
-    expect(isFakerValueNumber).toBeTruthy()
+    expect(result.timestamp).toBe(123)
+  })
+
+  it('should replace faker syntax with boolean cast syntax', () => {
+    const content = '{"boolean": "b:[#faker:random:boolean]"}'
+    const result = JSON.parse(getContentWithReplacedFakerVars(content))
+
+    expect(result.boolean).toBe(true)
   })
 
   describe('Invalid faker syntax detection', () => {

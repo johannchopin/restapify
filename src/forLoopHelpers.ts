@@ -1,11 +1,12 @@
 import range from 'lodash.range'
 
-import { getCastVarToNumberSyntax, replaceAll } from './utils'
+import { replaceAll, replaceAllCastedVar } from './utils'
 import {
   FOR_LOOP_SYNTAX_MATCHER,
   FOR_LOOP_SYNTAX_PREFIX,
   FOR_LOOP_SYNTAX_SUFFIX
 } from './const'
+import { getContentWithReplacedFakerVars } from './fakerHelpers'
 
 const ELMT_BETWEEN_PARENTHESES_MATCHER = /\(([^)]+)\)/g
 
@@ -70,13 +71,19 @@ export const getArrayFromRangeString = (stringifiedRange: string): number[] => {
   return []
 }
 
-export const getSequenceArray = (sequence: string): (number | string)[] => {
+export const getSequenceArrayAsArray = (sequence: string): (number | string | boolean)[] => {
+  sequence = getContentWithReplacedFakerVars(sequence)
+  sequence = replaceAll(sequence, '\'', '"')
+
+  return JSON.parse(sequence)
+}
+
+export const getSequenceArray = (sequence: string): (number | string | boolean)[] => {
   const isSequenceAnArray = sequence.startsWith('[') && sequence.endsWith(']')
   const isSequenceRange = sequence.startsWith('range(') && sequence.endsWith(')')
 
   if (isSequenceAnArray) {
-    sequence = replaceAll(sequence, '\'', '"')
-    return JSON.parse(sequence)
+    return getSequenceArrayAsArray(sequence)
   } if (isSequenceRange) {
     return getArrayFromRangeString(sequence)
   }
@@ -90,9 +97,9 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
 
   sequenceArray.forEach(i => {
     let forLoopResult = forLoopSyntax.statement
-    forLoopResult = replaceAll(
+    forLoopResult = replaceAllCastedVar(
       forLoopResult,
-      getCastVarToNumberSyntax(forLoopSyntax.x),
+      forLoopSyntax.x,
       i.toString()
     )
     forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}]`, i.toString())

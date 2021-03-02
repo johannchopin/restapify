@@ -147,8 +147,15 @@ class Restapify {
   }
 
   private configInternalApi = (): void => {
-    const { routes, states } = this
+    const {
+      routes,
+      states,
+      port,
+      apiBaseUrl: baseUrl
+    } = this
     this.app = getInitialisedInternalApi(this.app, {
+      port,
+      baseUrl,
       routes,
       states,
       setState: this.setState
@@ -321,6 +328,7 @@ class Restapify {
 
     const responseCallback = (req: any, res: any): void => {
       res.status(statusCode)
+      res.header('Content-Type', 'application/json; charset=utf-8')
 
       if (header) {
         res.header(header)

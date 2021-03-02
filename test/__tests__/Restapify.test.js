@@ -9,10 +9,10 @@ import getAnimalsByName from '../api/animals/[name].json'
 import getAnimalHedgehog from '../api/animals/hedgehog.json'
 import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../api/plants.GET.json'
-import getUsers from '../api/users/*.json'
 import getUserErr from '../api/users/[userid].404.{ERR}.json'
 import postUsers from '../api/users/*.POST.201.json'
 import getComments from '../api/comments/*.GET.json'
+import getCommentsById from '../api/comments/[id]/*.json'
 import deleteUser from '../api/users/[userid].DELETE.json'
 import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
 import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
@@ -20,12 +20,12 @@ import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TO
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
-  baseURL: '/api',
+  baseUrl: '/api',
   hotWatch: false
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
-const apiRoot = `${baseUrl}${restapifyParams.baseURL}`
+const apiRoot = `${baseUrl}${restapifyParams.baseUrl}`
 
 describe('Restapify', () => {
   let rpfy
@@ -54,9 +54,9 @@ describe('Restapify', () => {
       })
 
       it('should respond with star notation for default get', async () => {
-        let response = await fetch(`${apiRoot}/users`)
+        let response = await fetch(`${apiRoot}/comments/25`)
         let data = await response.json()
-        expect(data).toStrictEqual(getUsers)
+        expect(data).toStrictEqual(getCommentsById)
       })
 
       it('should respond with star notation and get http verb', async () => {
@@ -73,6 +73,44 @@ describe('Restapify', () => {
         })
         expect(response.status).toBe(204)
       })
+    })
+  })
+
+  describe('Server base url', () => {
+    it('should by default serve on /api', async () => {
+      let response = await fetch(`http://localhost:6767/api/plants`)
+      let data = await response.json()
+      expect(data).toStrictEqual(getPlants)
+    })
+
+    it('should serve on custom base url', async () => {
+      const rpfy = new Restapify({...restapifyParams, port: 4242, baseUrl: '/dev'})
+      rpfy.run()
+
+      let response = await fetch(`http://localhost:4242/dev/plants`)
+      let data = await response.json()
+      rpfy.close()
+      expect(data).toStrictEqual(getPlants)
+    })
+
+    it('should serve on correct base url', async () => {
+      const rpfy = new Restapify({...restapifyParams, port: 4242, baseUrl: 'dev/'})
+      rpfy.run()
+
+      let response = await fetch(`http://localhost:4242/dev/plants`)
+      let data = await response.json()
+      rpfy.close()
+      expect(data).toStrictEqual(getPlants)
+    })
+  })
+
+  describe('Response Header', () => {
+    it('should serve by default application/json content type', async () => {
+      let response = await fetch(`${apiRoot}/posts/`)
+  
+      let headers = response.headers
+
+      expect(headers.get('Content-type')).toBe('application/json; charset=utf-8')
     })
   })
 
@@ -156,7 +194,7 @@ describe('Restapify', () => {
       })
   
       let headers = response.headers
-  
+
       Object.keys(postUsers['#header']).forEach(headerProperty => {
         expect(headers.get(headerProperty)).toBe(postUsers['#header'][headerProperty])
       })
@@ -342,8 +380,8 @@ describe('Restapify with state variables', () => {
 it('should get correct served routes', () => {
   const rpfy = new Restapify({...restapifyParams})
   const servedRoutes = rpfy.getServedRoutes()
-  const expectedServedRoutesAmount = 21
-  const expectedServedRoutesResponse = [{ "method": "GET", "route": "/animals" }, { "method": "GET", "route": "/animals/[name]" }, { "method": "GET", "route": "/animals/[name]/friends" }, { "method": "GET", "route": "/animals/[name]/friends/[friend_id]" }, { "method": "GET", "route": "/animals/hedgehog" }, { "method": "GET", "route": "/cars" }, { "method": "GET", "route": "/comments" }, { "method": "GET", "route": "/comments/42" }, { "method": "GET", "route": "/comments/43" }, { "method": "GET", "route": "/comments/[id]" }, { "method": "GET", "route": "/plants" }, { "method": "GET", "route": "/posts" }, { "method": "GET", "route": "/posts/[postid]" }, { "method": "GET", "route": "/posts/[postid]/comments/[commentid]" }, { "method": "GET", "route": "/users" }, { "method": "POST", "route": "/users" }, { "method": "GET", "route": "/users/[userid]" }, { "method": "PUT", "route": "/users/[userid]" }, { "method": "PATCH", "route": "/users/[userid]" }, { "method": "DELETE", "route": "/users/[userid]" }, { "method": "GET", "route": "/users/[userid]/friends" }]
+  const expectedServedRoutesAmount = 22
+  const expectedServedRoutesResponse = [{ "method": "GET", "route": "/animals" }, { "method": "GET", "route": "/animals/[name]" }, { "method": "GET", "route": "/animals/[name]/friends" }, { "method": "GET", "route": "/animals/[name]/friends/[friend_id]" }, { "method": "GET", "route": "/animals/hedgehog" }, { "method": "GET", "route": "/cars" }, { "method": "GET", "route": "/comments" }, { "method": "GET", "route": "/comments/42" }, { "method": "GET", "route": "/comments/43" }, { "method": "GET", "route": "/comments/[id]" }, { "method": "GET", "route": "/plants" }, { "method": "GET", "route": "/posts" }, { "method": "GET", "route": "/posts/[postid]" }, { "method": "GET", "route": "/posts/[postid]/comments/[commentid]" }, { "method": "POST", "route": "/posts/[postid]/private/[isPrivate]"},{ "method": "GET", "route": "/users" }, { "method": "POST", "route": "/users" }, { "method": "GET", "route": "/users/[userid]" }, { "method": "PUT", "route": "/users/[userid]" }, { "method": "PATCH", "route": "/users/[userid]" }, { "method": "DELETE", "route": "/users/[userid]" }, { "method": "GET", "route": "/users/[userid]/friends" }]
 
   expect(servedRoutes.length).toBe(expectedServedRoutesAmount)
   expect(servedRoutes).toStrictEqual(expectedServedRoutesResponse)

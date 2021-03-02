@@ -19,7 +19,7 @@ jobs:
         run: |
           yarn install
           yarn restapify:init
-          yarn build
+          yarn test:types
           yarn lint
           yarn test --coverage
           bash <(curl -s https://codecov.io/bash) 

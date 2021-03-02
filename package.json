@@ -1,33 +1,39 @@
 {
   "name": "restapify",
-  "version": "0.0.31",
-  "main": "dist/src/index.js",
+  "version": "0.0.36",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/src/index.d.ts",
   "files": [
     "dist",
-    "dist/node_modules/restapify-dashboard"
+    "dist/node_modules/restapify-dashboard",
+    "bin"
   ],
   "license": "MIT",
   "private": false,
   "bin": {
-    "restapify": "./bin/restapify"
+    "restapify": "bin/restapify"
   },
   "scripts": {
     "restapify:init": "yarn move:dashboard",
     "readme:generate-doc-table": "yarn doctoc ./docs/README.md",
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
     "clean": "yarn rimraf ./dist",
-    "test": "jest --silent --no-cache",
-    "test:manual": "yarn ts-node-dev --files test/run.ts",
+    "test": "FORCE_COLOR=3 jest --silent --no-cache",
+    "test:manual": "yarn ts-node-dev --project ./ts-node-tsconfig.json --files test/run.ts",
     "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
-    "build": "yarn clean && yarn tsc",
-    "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/src/dashboard-public/",
-    "lint": "yarn eslint . --ext .js,.ts"
+    "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",
+    "lint": "yarn eslint . --ext .js,.ts",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "rollup -c",
+    "build": "yarn clean && yarn build:types && yarn build:js"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "@babel/runtime": "^7.13.7",
     "boxen": "^5.0.0",
     "chalk": "^4.1.0",
     "chokidar": "^3.4.3",
@@ -39,10 +45,21 @@
     "jsonschema": "^1.4.0",
     "lodash.range": "^3.2.0",
     "open": "^7.3.0",
-    "restapify-dashboard": "^1.0.13"
+    "parcel": "^2.0.0-beta.1",
+    "restapify-dashboard": "^1.0.15"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.13.6",
+    "@babel/preset-env": "^7.13.5",
+    "@babel/preset-typescript": "^7.13.0",
+    "@parcel/packager-ts": "2.0.0-nightly.608",
+    "@parcel/transformer-typescript-types": "2.0.0-nightly.608",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "@types/express": "^4.17.11",
     "@types/express-serve-static-core": "^4.17.13",
     "@types/faker": "^5.1.5",
@@ -59,10 +76,14 @@
     "jest": "^26.6.3",
     "nodemon": "^2.0.5",
     "rimraf": "^3.0.2",
+    "rollup": "^2.39.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-typescript2": "^0.30.0",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
     "ts-node-dev": "^1.0.0",
-    "typescript": "^4.0.5",
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.2",
     "webpack": "^5.4.0"
   }
 }

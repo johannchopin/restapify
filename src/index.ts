@@ -4,10 +4,12 @@ import Restapify, {
   Routes,
   PrivateRouteState
 } from './Restapify'
+import { cli } from './cli/cli'
 
 export * from './types/index'
 export * from './Restapify'
 export {
+  cli,
   RestapifyParams,
   RouteState,
   Routes,

@@ -87,6 +87,24 @@ describe('Get route helpers', () => {
         .toStrictEqual(expectedContentWithReplacedVars)
     })
 
+    it('should replace and cast boolean variables', () => {
+      const content = JSON.stringify({
+        post: '[postid]',
+        private: 'b:[publishStatus]'
+      })
+      const vars = {
+        postid: 'just-a-post',
+        publishStatus: true
+      }
+      const expectedContentWithReplacedVars = JSON.stringify({
+        post: 'just-a-post',
+        private: true
+      })
+
+      expect(getContentWithReplacedVars(content, vars))
+        .toStrictEqual(expectedContentWithReplacedVars)
+    })
+
     it('should not replace escaped variables', () => {
       const content = JSON.stringify({
         post: '[postid]',

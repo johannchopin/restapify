@@ -6,7 +6,7 @@ import Restapify from '../../src/Restapify'
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../api'),
   port: 6767,
-  baseURL: '/api',
+  baseUrl: '/api',
   hotWatch: false
 }
 
@@ -25,73 +25,77 @@ describe('Internal API', () => {
     rpfy.close()
   })
 
-  it('should fetch /routes', async () => {
+  it('should fetch /api', async () => {
     const expectedResponse = {
-      "/users/[userid]": {
-        "GET": {
-          "states": {
-            "ERR": {
-              "fileContent": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
-              "body": { success: false, test: "error" },
-              "isExtended": false,
-              "statusCode": 404
-            }
+      port: restapifyParams.port,
+      baseUrl: restapifyParams.baseUrl,
+      routes: {
+        "/users/[userid]": {
+          "GET": {
+            "states": {
+              "ERR": {
+                "fileContent": "{\n  \"success\": false,\n  \"test\": \"error\"\n}",
+                "body": { success: false, test: "error" },
+                "isExtended": false,
+                "statusCode": 404
+              }
+            },
+            "route": "/users/[userid]",
+            "routeVars": [
+              "userid"
+            ],
+            "normalizedRoute": "/users/:userid",
+            "isExtended": false,
+            "filename": "[userid].json",
+            "fileContent": "{\n  \"testUserId\": \"n:[userid]\"\n}",
+            "stateVars": [],
+            "statusCode": 200,
+            "method": "GET",
+            "body": { testUserId: "n:[userid]" }
           },
-          "route": "/users/[userid]",
-          "routeVars": [
-            "userid"
-          ],
-          "normalizedRoute": "/users/:userid",
-          "isExtended": false,
-          "filename": "[userid].json",
-          "fileContent": "{\n  \"testUserId\": \"n:[userid]\"\n}",
-          "stateVars": [],
-          "statusCode": 200,
-          "method": "GET",
-          "body": { testUserId: "n:[userid]" }
-        },
-        "DELETE": {
-          "states": {
-            "INV_CRED": {
-              "fileContent": "[null]",
-              "isExtended": false,
-              "statusCode": 401
-            },
-            "INV_TOKEN": {
-              "fileContent": "[null]",
-              "isExtended": false,
-              "statusCode": 401
-            },
-            "ERR": {
-              "body": { success: false },
-              "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": false\n  }\n}",
-              "header": {
-                "Content-Type": "text/html; charset=UTF-8"
+          "DELETE": {
+            "states": {
+              "INV_CRED": {
+                "fileContent": "[null]",
+                "isExtended": false,
+                "statusCode": 401
               },
-              "isExtended": true,
-              "statusCode": 404
+              "INV_TOKEN": {
+                "fileContent": "[null]",
+                "isExtended": false,
+                "statusCode": 401
+              },
+              "ERR": {
+                "body": { success: false },
+                "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": false\n  }\n}",
+                "header": {
+                  "Content-Type": "text/html; charset=UTF-8"
+                },
+                "isExtended": true,
+                "statusCode": 404
+              }
+            },
+            "route": "/users/[userid]",
+            "routeVars": [
+              "userid"
+            ],
+            "normalizedRoute": "/users/:userid",
+            "isExtended": true,
+            "filename": "[userid].DELETE.json",
+            "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
+            "stateVars": [],
+            "statusCode": 200,
+            "method": "DELETE",
+            "body": { success: true, data: { id: 67, name: "bob" } },
+            "header": {
+              "Content-Type": "text/html; charset=UTF-8"
             }
-          },
-          "route": "/users/[userid]",
-          "routeVars": [
-            "userid"
-          ],
-          "normalizedRoute": "/users/:userid",
-          "isExtended": true,
-          "filename": "[userid].DELETE.json",
-          "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
-          "stateVars": [],
-          "statusCode": 200,
-          "method": "DELETE",
-          "body": { success: true, data: { id: 67, name: "bob" } },
-          "header": {
-            "Content-Type": "text/html; charset=UTF-8"
           }
         }
       }
     }
 
-    let response = await fetch(`${apiRoot}/routes`)
+    let response = await fetch(`${apiRoot}/api`)
     let data = await response.json()
     expect(data).toMatchObject(expectedResponse)
   })

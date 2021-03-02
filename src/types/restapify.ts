@@ -1,5 +1,6 @@
 import { Json, JsonCompatible } from './json'
 
+export type CastingOperator = 'number' | 'boolean'
 export type HttpVerb = 'GET' | 'POST' | 'DELETE' | 'PUT' |'PATCH'
 export type RestapifyEventName = 'error'
   | 'warning'

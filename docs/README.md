@@ -17,12 +17,15 @@
   - [Extended syntax](#extended-syntax)
   - [Consume route's variables](#consume-routes-variables)
     - [Route's variable casting](#routes-variable-casting)
+      - [Number casting](#number-casting)
+      - [Boolean casting](#boolean-casting)
   - [Consume route's query string variables](#consume-routes-query-string-variables)
   - [Fakerjs integration](#fakerjs-integration)
   - [For-loops](#for-loops)
     - [For-loop's array sequence](#for-loops-array-sequence)
     - [For-loop's range sequence](#for-loops-range-sequence)
     - [Use route's variables in sequence](#use-routes-variables-in-sequence)
+    - [Use faker in an array sequence](#use-faker-in-an-array-sequence)
 - [CLI](#cli)
   - [`restapify serve`](#restapify-serve)
   - [`restapify list`](#restapify-list)
@@ -263,8 +266,10 @@ As a result, if you request `GET /posts/my-post` you will get the response:
 ```
 
 #### Route's variable casting
+By default, all route's variables are interpreted as a string.
 
-By default, all route's variables are interpreted as a string. You can cast a variable to a number by using the following syntax `"n:[myroutevar]"`. So if you use the previous example and replace the file content to:
+##### Number casting
+You can cast a variable to a number by using the following syntax `"n:[<variable>]"`. So if you use the previous example and replace the file content to:
 
 ```json
 {
@@ -283,6 +288,27 @@ and then call the route `GET /posts/42`, you will get the response:
 ```
 
 > ⚠️ Don't cast your number route's variable that are present in a string. Just use them like `"content": "The post [postid] is nice …"`
+
+##### Boolean casting
+You can cast a variable to a number by using the following syntax `"b:[<variable>]"`. So if you use the example `/api/posts/[postid]/private/[isPrivate].POST.json`:
+
+```json
+{
+  "id": "n:[postid]",
+  "private": "b:[isPrivate]",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipisici elit, …"
+}
+```
+
+and call it from `POST /posts/42/private/true`, you will get the response:
+
+```json
+{
+  "id": 42,
+  "private": true,
+  "content": "Lorem ipsum dolor sit amet, consectetur adipisici elit, …"
+}
+```
 
 ### Consume route's query string variables
 You can consume query string variables in your body using the syntax `[q:<variable>]`
@@ -361,7 +387,8 @@ To get for example a faked text content with the regular library you will call `
 ```json
 {
   "id": "n:[postid]",
-  "content": "[#faker:lorem:paragraphs]"
+  "content": "[#faker:lorem:paragraphs]",
+  "private": "b:[#faker:random:boolean]"
 }
 ```
 
@@ -439,6 +466,23 @@ You can use [route's variables](#consume-routes-variables) and [route's query st
 ```
 
 You can then have `x` users in the response of `GET /api/users?limit=x`
+
+#### Use faker in an array sequence
+
+Restapify support the use of [faker variables](#fakerjs-integration) in an array sequence:
+
+```json
+[
+  "#for userName in ['[#faker:name:firstName]', '[#faker:name:firstName]', '[#faker:name:firstName]']",
+  { 
+    "name": "[userName]", 
+    "website": "[#faker:internet:protocol]://[userName].[#faker:internet:domainSuffix]" 
+  },
+  "#endfor"
+]
+```
+
+> Note that if the faker variable is a `string`, you have to wrap it between `'`. If it's a `number` or a `boolean` you don't need to.
 
 ## CLI
 Restapify comes with a cli to easily serve your mocked API.
