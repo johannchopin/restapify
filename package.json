@@ -19,7 +19,7 @@
     "readme:generate-doc-table": "yarn doctoc ./docs/README.md",
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
     "clean": "yarn rimraf ./dist",
-    "test": "jest --silent --no-cache",
+    "test": "FORCE_COLOR=3 jest --silent --no-cache",
     "test:manual": "yarn ts-node-dev --project ./ts-node-tsconfig.json --files test/run.ts",
     "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
