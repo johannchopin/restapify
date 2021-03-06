@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import boxen from 'boxen'
 import { Validator, ValidatorResult } from 'jsonschema'
 
-import Restapify, { RestapifyParams, HttpVerb, RestapifyErrorName } from '../index'
+import Restapify, { RestapifyParams, HttpVerb, RestapifyErrorCallbackParam } from '../index'
 
 export const getMethodOutput = (method: HttpVerb): string => {
   let methodOutput
@@ -60,9 +60,10 @@ export const getInstanceOverviewOutput = (port: number, apiBaseUrl: string): str
 }
 
 export const onRestapifyInstanceError = (
-  error: RestapifyErrorName,
+  errorObject: RestapifyErrorCallbackParam,
   instanceData: Pick<Restapify, 'apiBaseUrl' | 'port' | 'rootDir'>
 ): void => {
+  const { error, message } = errorObject
   const { rootDir, port, apiBaseUrl } = instanceData
 
   if (error.startsWith('MISS:ROOT_DIR')) {
@@ -72,8 +73,7 @@ export const onRestapifyInstanceError = (
   } else if (error.startsWith('INV:API_BASEURL')) {
     consoleError(`Impossible to use ${apiBaseUrl} as the API base URL since it's already needed for internal purposes!`)
   } else if (error.startsWith('INV:JSON_FILE')) {
-    const filePath = error.split(' ')[1]
-    consoleError(`Impossible to parse the JSON file ${filePath}!`)
+    consoleError(message as string)
   }
 }
 
@@ -99,7 +99,7 @@ export const runServer = (config: RestapifyParams): void => {
     console.log(`\n🏗 Try to serve on port ${rpfy.port}`)
   })
 
-  rpfy.onError(({ error }) => {
+  rpfy.onError((error) => {
     onRestapifyInstanceError(error, {
       rootDir: rpfy.rootDir,
       apiBaseUrl: rpfy.apiBaseUrl,

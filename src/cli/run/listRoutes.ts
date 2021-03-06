@@ -9,7 +9,7 @@ export const listRoutes = (rootDir: string): void => {
     hotWatch: false
   })
 
-  rpfy.onError(({ error }) => {
+  rpfy.onError((error) => {
     onRestapifyInstanceError(error, {
       rootDir: rpfy.rootDir,
       apiBaseUrl: rpfy.apiBaseUrl,
