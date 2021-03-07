@@ -6342,10 +6342,10 @@ responselike@^1.0.2:
   dependencies:
     lowercase-keys "^1.0.0"
 
-restapify-dashboard@^1.0.16:
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.0.16.tgz#800f65fed220d2633a349585edd3b3833857010a"
-  integrity sha512-XFwNR9uPtI33kXbUoUbuAyczfpA2gs+QUHPv2X/JcMib/ZicpqiQIRlu26dIOj9JtEodh5K8pPGo79ZeHf3ZzA==
+restapify-dashboard@^1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.0.17.tgz#275a798af3341a77dc00869dd53922a234778fe4"
+  integrity sha512-fr/FxpAlArGeG3em8oczADHb3iRDF3VvhI4Q0C/WvCHkXtwCxy51GPmE+XZ/kNXr/V6f2c4uVucolr8bwjk3iA==
   dependencies:
     "@popperjs/core" "^2.6.0"
     axios "^0.21.0"
