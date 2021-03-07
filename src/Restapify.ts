@@ -5,6 +5,7 @@ import express, { Application } from 'express'
 import * as http from 'http'
 import open from 'open'
 import * as chokidar from 'chokidar'
+import nocache from 'nocache'
 
 import {
   HttpVerb,
@@ -127,12 +128,15 @@ class Restapify {
 
     // Add middleware to parse request's body
     this.app.use(express.json())
+    this.app.use(nocache())
+    this.app.set('etag', false)
 
     // Handle CORS
     this.app.use((req: any, res: any, next) => {
       res.append('Access-Control-Allow-Origin', ['*'])
       res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH')
       res.append('Access-Control-Allow-Headers', 'Content-Type')
+      res.set('Cache-Control', 'no-store')
       next()
     })
 
