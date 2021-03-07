@@ -566,11 +566,11 @@ The interface is compose of 3 main sections, the navbar that provide some links 
 
 In the sidebar, you can easily see which of your routes have multiples states (see the [documentation](#routes-state) about how to define a route with several states). They are displayed with there amount of different states:
 
-<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-state.png" alt="dashboard routes with states in sidebar" width="500">
+<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-routes-with-states-in-sidebar.png" alt="dashboard routes with states in sidebar" width="500">
 
 If you go to one of this route, you will see on the right a group of button:
 
-<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-routes-with-states-in-sidebar.png" alt="dashboard routes with states in sidebar" width="500">
+<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-state-buttons.png" alt="dashboard routes with states in sidebar" width="500">
 
 With these you can preview (button with the eye icon) or select the state to use for this route. When you select a state, the server will serve this state for this route.
 
