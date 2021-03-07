@@ -31,6 +31,10 @@
   - [`restapify list`](#restapify-list)
   - [🚧 Serve from configuration file](#-serve-from-configuration-file)
   - [Flags](#flags)
+- [Dashboard](#dashboard)
+  - [Interface structure](#interface-structure)
+  - [Update the state of a route](#update-the-state-of-a-route)
+  - [API call playground](#api-call-playground)
 - [JavaScript's API](#javascripts-api)
   - [Types definition list](#types-definition-list)
     - [RestapifyParams](#restapifyparams)
@@ -379,7 +383,7 @@ So if you request `GET /api/users` you will get:
 
 ### Fakerjs integration
 
-To easily create mocked data, restapify integrate the [fakerjs](https://github.com/Marak/faker.js) library with an easy to use syntax.
+To easily create mocked data, Restapify integrate the [fakerjs](https://github.com/Marak/faker.js) library with an easy to use syntax.
 
 To get for example a faked text content with the regular library you will call `faker.lorem.paragraphs()`. In your route's response you can use it following the syntax `[#faker:<namespace>:<method>]`:
 
@@ -495,7 +499,7 @@ restapify serve <rootDir>
 ```
 
 ### `restapify list`
-List all the routes detected by restapify from a specific directory:
+List all the routes detected by Restapify from a specific directory:
 
 ```
 restapify list <rootDir>
@@ -548,6 +552,33 @@ Example:
 | `-p <number>` | `--port <number>`    | port to serve the API                | `6767`   |
 | `-b <string>` | `--baseUrl <string>` | base url to serve the API            | `'/api'` |
 |               | `--no-open`          | don't open dashboard on server start | `false`  |
+
+## Dashboard
+
+When you serve a Restapify mocked API, a dashboard is locally open in your default browser.
+It's role is to provide you an overview of the mocked API and actions to update the state of your routes.
+
+### Interface structure
+
+The interface is compose of 3 main sections, the navbar that provide some links to the documentations and the GitHub repo, the sidebar that list all different routes detected and the body that show an overview of your route file (method, slug, status code, file content).
+
+### Update the state of a route
+
+In the sidebar, you can easily see which of your routes have multiples states (see the [documentation](#routes-state) about how to define a route with several states). They are displayed with there amount of different states:
+
+<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-state.png" alt="dashboard routes with states in sidebar" width="500">
+
+If you go to one of this route, you will see on the right a group of button:
+
+<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-routes-with-states-in-sidebar.png" alt="dashboard routes with states in sidebar" width="500">
+
+With these you can preview (button with the eye icon) or select the state to use for this route. When you select a state, the server will serve this state for this route.
+
+### API call playground
+
+For a better understanding of how you can create a mocked API with Restapify, you have for each route a little playground where you can call the API for this route:
+
+<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-request-api-section.png" alt="dashboard request API section" width="500">
 
 ## JavaScript's API
 
