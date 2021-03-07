@@ -23,28 +23,28 @@ describe('CLI utils functions', () => {
     }
 
     it('should output for missing rootDir', () => {
-        const error = 'MISS:ROOT_DIR'
+        const error = {error: 'MISS:ROOT_DIR'}
         onRestapifyInstanceError(error, rpfyInstanceData)
 
         expect(consoleLogSpy.mock.calls[0][0]).toMatchSnapshot()
     })
 
     it('should output for missing port', () => {
-        const error = 'MISS:PORT'
+        const error = {error: 'MISS:PORT'}
         onRestapifyInstanceError(error, rpfyInstanceData)
 
         expect(consoleLogSpy.mock.calls[0][0]).toMatchSnapshot()
     })
 
     it('should output for invalid base URL', () => {
-        const error = 'INV:API_BASEURL'
+        const error = {error: 'INV:API_BASEURL'}
         onRestapifyInstanceError(error, rpfyInstanceData)
 
         expect(consoleLogSpy.mock.calls[0][0]).toMatchSnapshot()
     })
 
     it('should output for invalid JSON file', () => {
-        const error = 'INV:JSON_FILE'
+        const error = {error: 'INV:JSON_FILE', message: 'error message'}
         onRestapifyInstanceError(error, rpfyInstanceData)
 
         expect(consoleLogSpy.mock.calls[0][0]).toMatchSnapshot()

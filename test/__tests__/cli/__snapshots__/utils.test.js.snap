@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CLI utils functions Output the right error message should output for invalid JSON file 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m Impossible to parse the JSON file undefined!"`;
+exports[`CLI utils functions Output the right error message should output for invalid JSON file 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m error message"`;
 
 exports[`CLI utils functions Output the right error message should output for invalid base URL 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m Impossible to use /dev as the API base URL since it's already needed for internal purposes!"`;
 
