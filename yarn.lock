@@ -5426,6 +5426,11 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
+nocache@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/nocache/-/nocache-2.1.0.tgz#120c9ffec43b5729b1d5de88cd71aa75a0ba491f"
+  integrity sha512-0L9FvHG3nfnnmaEQPjT9xhfN4ISk0A8/2j4M37Np4mcDesJjHgEUfgPhdCyZuFI954tjokaIj/A3NdpFNdEh4Q==
+
 node-addon-api@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.1.0.tgz#98b21931557466c6729e51cb77cd39c965f42239"
@@ -6342,10 +6347,10 @@ responselike@^1.0.2:
   dependencies:
     lowercase-keys "^1.0.0"
 
-restapify-dashboard@^1.0.17:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.0.17.tgz#275a798af3341a77dc00869dd53922a234778fe4"
-  integrity sha512-fr/FxpAlArGeG3em8oczADHb3iRDF3VvhI4Q0C/WvCHkXtwCxy51GPmE+XZ/kNXr/V6f2c4uVucolr8bwjk3iA==
+restapify-dashboard@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.1.0.tgz#d2c5df18c0b2b30bc362362b2cce11f14498d52e"
+  integrity sha512-ONED2+VruEcSk92kbiH9S/FopKriINwmsHfzjBZZ/7TZWoZH/DBIn9GTUr5nLsPvdG2qcrRXy7tcizUh4kdW5w==
   dependencies:
     "@popperjs/core" "^2.6.0"
     axios "^0.21.0"
