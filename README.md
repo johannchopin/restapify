@@ -59,8 +59,6 @@ and then serve the api folder:
 restapify serve path/to/folder/
 ```
 
-Read more about the cli *here*. <!-- TODO: add link -->
-
 ### Using the JavaScript class
 
 You can install restapify's class using `npm` (note that this package should be a devDependency):
