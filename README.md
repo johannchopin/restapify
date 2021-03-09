@@ -81,11 +81,10 @@ const rpfy = new Restapify({
 rpfy.run()
 ```
 
+## Documentation
+Checkout the documentation on the [website](https://restapify.vercel.app/) or directly read it from the Markdown [source file](docs/README.md).
+
 ## Contributing
 
 All remarks are welcome so feel free to [open an issue](https://github.com/johannchopin/restapify/issues).
 Wants to collaborate? Please read the [contributing guidelines](./CONTRIBUTING.md).
-
-
-## Documentation
-Checkout the documentation on the [website](https://restapify.vercel.app/) or directly read it from the Markdown [source file](docs/README.md).
