@@ -1,6 +1,6 @@
 import { HttpVerb, CastingOperator } from './types'
 
-export const CURRENT_LOCATION_ROUTE_SELECTOR = '*'
+export const CURRENT_LOCATION_ROUTE_SELECTOR = '_'
 export const HTTP_VERBS: HttpVerb[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 export const INTERNAL_BASEURL = '/restapify'
 export const INTERNAL_API_BASEURL = `${INTERNAL_BASEURL}/api`
