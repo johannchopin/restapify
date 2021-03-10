@@ -7,7 +7,7 @@
 - [File structure](#file-structure)
 - [Route's filename](#routes-filename)
   - [Simple route](#simple-route)
-  - [Star notation](#star-notation)
+  - [Underscore notation](#underscore-notation)
   - [Route's variables](#routes-variables)
   - [HTTP's methods](#https-methods)
   - [HTTP's status code](#https-status-code)
@@ -53,7 +53,7 @@ Restapify allow you to easily create REST API routes using a specific file struc
 ```
 📂 api
 ┣ 📂 users
-┃ ┗ 📜 *.json
+┃ ┗ 📜 _.json
 ┃ ┗ 📜 [userid].json
 ┃ ┗ 📜 [userid].DELETE.json
 ┣ 📂 posts
@@ -90,20 +90,20 @@ GET /animals/rabbits
 GET /posts
 ```
 
-### Star notation
-To easily manage your different routes `json` files into folder, you can use the star notation:
+### Underscore notation
+To easily manage your different routes `json` files into folder, you can use the underscore notation:
 
 ```
 📂 api
 ┣ 📂 animals
-┃ ┗ 📜 *.json
+┃ ┗ 📜 _.json
 ┃ ┗ 📜 rabbits.json
 ```
 
 It will serve the routes:
 
 ```bash
-GET /animals    # <-- served from the file /animals/*.json
+GET /animals    # <-- served from the file /animals/_.json
 GET /animals/rabbits
 ```
 
@@ -136,11 +136,11 @@ Define your routes method (`GET`, `POST`, `PUT`, `DELETE` or `PATCH`) by adding 
 ```
 📂 api
 ┣ 📂 posts
-┃ ┗ 📜 *.GET.json
+┃ ┗ 📜 _.GET.json
 ┃ ┣ 📂 [postid]
-┃ ┃ ┗ 📜 *.json
-┃ ┃ ┗ 📜 *.POST.json
-┃ ┃ ┗ 📜 *.DELETE.json
+┃ ┃ ┗ 📜 _.json
+┃ ┃ ┗ 📜 _.POST.json
+┃ ┃ ┗ 📜 _.DELETE.json
 ```
 
 This will serve:
@@ -159,11 +159,11 @@ Define what status code your route should respond by adding it in the filename a
 ```
 📂 api
 ┣ 📂 posts
-┃ ┗ 📜 *.GET.json
+┃ ┗ 📜 _.GET.json
 ┃ ┣ 📂 [postid]
-┃ ┃ ┗ 📜 *.200.json
-┃ ┃ ┗ 📜 *.POST.201.json
-┃ ┃ ┗ 📜 *.DELETE.204.json
+┃ ┃ ┗ 📜 _.200.json
+┃ ┃ ┗ 📜 _.POST.201.json
+┃ ┃ ┗ 📜 _.DELETE.204.json
 ```
 
 It will serve:
@@ -186,13 +186,13 @@ Here is an example of how to define an endpoint with several states:
 ```
 📂 api
 ┣ 📂 posts
-┃ ┗ 📜 *.json
+┃ ┗ 📜 _.json
 ┃ ┣ 📂 [postid]
-┃ ┃ ┗ 📜 *.json
-┃ ┃ ┗ 📜 *.404.{INV_ID}.json
-┃ ┃ ┗ 📜 *.POST.201.json
-┃ ┃ ┗ 📜 *.POST.401.{INV_CRED}.json
-┃ ┃ ┗ 📜 *.POST.400.{INV_PARAMS}.json
+┃ ┃ ┗ 📜 _.json
+┃ ┃ ┗ 📜 _.404.{INV_ID}.json
+┃ ┃ ┗ 📜 _.POST.201.json
+┃ ┃ ┗ 📜 _.POST.401.{INV_CRED}.json
+┃ ┃ ┗ 📜 _.POST.400.{INV_PARAMS}.json
 ```
 
 It will serve:
@@ -209,7 +209,7 @@ You will then in the [dashboard](todo) be able to select which state you want to
 The structure of the files allows to define the API endpoints, now it is necessary to define what they respond.
 
 ### Response's body
-The content of a route file will correspond to the body of the request's response. For example if the file `/api/users/*.json` contains this content:
+The content of a route file will correspond to the body of the request's response. For example if the file `/api/users/_.json` contains this content:
 ```json
 [
   {
