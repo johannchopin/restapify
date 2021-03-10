@@ -133,7 +133,7 @@ describe('Get route helpers', () => {
 
   describe('getRouteFromFilePath', () => {
     it('should return route with local route indicator', () => {
-      const filePath = '/posts/[post_id]/comments/*.POST.{ERR}.json'
+      const filePath = '/posts/[post_id]/comments/_.POST.{ERR}.json'
       const expectedRoute = '/posts/[post_id]/comments'
 
       expect(getRouteFromFilePath(filePath)).toBe(expectedRoute)
@@ -156,28 +156,28 @@ describe('Get route helpers', () => {
 
   describe('getResponseStatusCodeInFilename', () => {
     it('should return default 200 as default status code', () => {
-      const filename = '*.json'
+      const filename = '_.json'
       const expectedStatusCode = 200
 
       expect(getResponseStatusCodeInFilename(filename)).toBe(expectedStatusCode)
     })
 
     it('should return 200 as default status code with state variable and HTTP verb', () => {
-      const filename = '*.POST.{ERR}.json'
+      const filename = '_.POST.{ERR}.json'
       const expectedStatusCode = 200
 
       expect(getResponseStatusCodeInFilename(filename)).toBe(expectedStatusCode)
     })
 
     it('should return status code ', () => {
-      const filename = '*.POST.204.json'
+      const filename = '_.POST.204.json'
       const expectedStatusCode = 204
 
       expect(getResponseStatusCodeInFilename(filename)).toBe(expectedStatusCode)
     })
 
     it('should return status code with state variable and HTTP verb', () => {
-      const filename = '*.DELETE.404.{ERR}.json'
+      const filename = '_.DELETE.404.{ERR}.json'
       const expectedStatusCode = 404
 
       expect(getResponseStatusCodeInFilename(filename)).toBe(expectedStatusCode)
@@ -194,14 +194,14 @@ describe('Get route helpers', () => {
 
   describe('getHttpMethodInFilename', () => {
     it('should return default GET', () => {
-      const filename = '*.json'
+      const filename = '_.json'
       const expectedHttpVerb = 'GET'
 
       expect(getHttpMethodInFilename(filename)).toBe(expectedHttpVerb)
     })
 
     it('should return detected HTTP verb', () => {
-      const filename = '*.POST.json'
+      const filename = '_.POST.json'
       const expectedHttpVerb = 'POST'
 
       expect(getHttpMethodInFilename(filename)).toBe(expectedHttpVerb)

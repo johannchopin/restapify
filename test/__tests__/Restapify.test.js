@@ -10,9 +10,9 @@ import getAnimalHedgehog from '../api/animals/hedgehog.json'
 import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
 import getPlants from '../api/plants.GET.json'
 import getUserErr from '../api/users/[userid].404.{ERR}.json'
-import postUsers from '../api/users/*.POST.201.json'
-import getComments from '../api/comments/*.GET.json'
-import getCommentsById from '../api/comments/[id]/*.json'
+import postUsers from '../api/users/_.POST.201.json'
+import getComments from '../api/comments/_.GET.json'
+import getCommentsById from '../api/comments/[id]/_.json'
 import deleteUser from '../api/users/[userid].DELETE.json'
 import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
 import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
@@ -53,13 +53,13 @@ describe('Restapify', () => {
         expect(data).toStrictEqual(getAnimals)
       })
 
-      it('should respond with star notation for default get', async () => {
+      it('should respond with underscore notation for default get', async () => {
         let response = await fetch(`${apiRoot}/comments/25`)
         let data = await response.json()
         expect(data).toStrictEqual(getCommentsById)
       })
 
-      it('should respond with star notation and get http verb', async () => {
+      it('should respond with underscore notation and get http verb', async () => {
         let response = await fetch(`${apiRoot}/comments`)
         let data = await response.json()
         expect(data).toStrictEqual(getComments)
@@ -114,8 +114,8 @@ describe('Restapify', () => {
     })
   })
 
-  describe('Star notation', () => {
-    it('should respond to a GET with star notation and get http verb', async () => {
+  describe('Underscore notation', () => {
+    it('should respond to a GET with underscore notation and get http verb', async () => {
       let response = await fetch(`${apiRoot}/comments`)
       let data = await response.json()
       expect(data).toStrictEqual(getComments)
