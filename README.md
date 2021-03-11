@@ -1,7 +1,7 @@
 # Restapify
 
 <p>
-  <img src="https://user-images.githubusercontent.com/31794680/107934535-7b4be300-6f80-11eb-9b26-87515325ca3f.png" alt="restapify cover" width="500">
+  <img src="./docs/assets/banner.png" alt="restapify cover" width="500">
 </p>
 
 <a href="https://www.npmjs.com/package/restapify">
