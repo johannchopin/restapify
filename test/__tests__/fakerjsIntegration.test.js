@@ -5,7 +5,7 @@ import { getRoute } from '../../src/getRoute'
 import { getFakerVarsInContent, getContentWithReplacedFakerVars, areFakerVarsSyntaxValidInContent } from '../../src/fakerHelpers'
 
 // D A T A
-import getPostsById from '../api/posts/[postid]/*.json'
+import getPostsById from '../api/posts/[postid]/_.json'
 
 jest.mock('faker', () => ({
   lorem: {
@@ -32,7 +32,7 @@ describe('Faker\'s integration', () => {
 
   it('should replace faker syntax by faker\'s data', () => {
     const route = getRoute(
-      path.resolve(__dirname, '../api/posts/[postid]/*.json'),
+      path.resolve(__dirname, '../api/posts/[postid]/_.json'),
       path.resolve(__dirname, '../api'),
       JSON.stringify(getPostsById)
     )
