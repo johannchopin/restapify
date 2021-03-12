@@ -64,20 +64,42 @@ describe('routeResolve', () => {
 describe('getSortedRoutesSlug', () => {
   it('Slugs with variables should be after specific slug', () => {
     const slugs = [
+      '/animals',
+      '/cars',
+      '/plants',
       '/animals/[name]',
       '/animals/hedgehog',
       '/animals/[name]/friends',
       '/animals/[name]/friends/[friend_id]',
-      '/animals/[name]/friends/42',
-      '/animals/[name]/friends/mario'
+      '/comments/42',
+      '/comments/43',
+      '/comments',
+      '/comments/[id]',
+      '/posts',
+      '/posts/[postid]',
+      '/posts/[postid]/comments/[commentid]',
+      '/users/[userid]',
+      '/users',
+      '/users/[userid]/friends'
     ]
     const expectedResult = [
-      '/animals/[name]/friends/mario',
-      '/animals/[name]/friends/42',
-      '/animals/[name]/friends/[friend_id]',
-      '/animals/[name]/friends',
+      '/animals',
+      '/cars',
+      '/plants',
       '/animals/hedgehog',
       '/animals/[name]',
+      '/animals/[name]/friends',
+      '/animals/[name]/friends/[friend_id]',
+      '/comments/42',
+      '/comments/43',
+      '/comments',
+      '/comments/[id]',
+      '/posts',
+      '/posts/[postid]',
+      '/posts/[postid]/comments/[commentid]',
+      '/users/[userid]',
+      '/users',
+      '/users/[userid]/friends'
     ]
 
     expect(getSortedRoutesSlug(slugs)).toStrictEqual(expectedResult)
