@@ -15,6 +15,7 @@
 - [Route's file content](#routes-file-content)
   - [Response's body](#responses-body)
   - [Extended syntax](#extended-syntax)
+  - [No content response](#no-content-response)
   - [Consume route's variables](#consume-routes-variables)
     - [Route's variable casting](#routes-variable-casting)
       - [Number casting](#number-casting)
@@ -245,6 +246,15 @@ Example:
     "success": false
   }
 }
+```
+
+### No content response
+
+For some endpoints, you don't need to repond anything (for example a request that should response with a **204	No Content**). Since an empty file is not a valid JSON file, you need to use the syntax `[null]` to specify that the response should not return any data:
+
+Example with the file `[userid].PUT.204.json`:
+```json
+[null]
 ```
 
 ### Consume route's variables
