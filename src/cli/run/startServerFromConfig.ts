@@ -5,6 +5,10 @@ import { ValidationError } from 'jsonschema'
 import { RestapifyParams } from '../../index'
 import { consoleError, runServer, validateConfig } from '../utils'
 
+const outputInvalidFilePathError = (path: string): void => {
+  consoleError(`The given path ${path} is not a valid configuration file!`)
+}
+
 const outputConfigErrors = (errors: ValidationError[]): void => {
   consoleError('Invalid configuration file:')
 
@@ -21,22 +25,25 @@ export const startServerFromConfig = (configFilePath: string): void => {
     return
   }
 
-  const configFileContent = fs.readFileSync(configFilePath, 'utf8')
+  try {
+    const configFileContent = fs.readFileSync(configFilePath, 'utf8')
+    const config = JSON.parse(configFileContent) as RestapifyParams
 
-  const config = JSON.parse(configFileContent) as RestapifyParams
+    const validatedConfig = validateConfig(config)
 
-  const validatedConfig = validateConfig(config)
+    if (!validatedConfig.valid) {
+      outputConfigErrors(validatedConfig.errors)
+      return
+    }
 
-  if (!validatedConfig.valid) {
-    outputConfigErrors(validatedConfig.errors)
-    return
+    const { rootDir, openDashboard = true, ...configsRest } = config
+
+    runServer({
+      rootDir: path.join(path.dirname(configFilePath), rootDir),
+      openDashboard,
+      ...configsRest
+    })
+  } catch (error) {
+    outputInvalidFilePathError(configFilePath)
   }
-
-  const { rootDir, openDashboard = true, ...configsRest } = config
-
-  runServer({
-    rootDir: path.join(path.dirname(configFilePath), rootDir),
-    openDashboard,
-    ...configsRest
-  })
 }
