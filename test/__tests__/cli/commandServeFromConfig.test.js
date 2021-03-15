@@ -55,6 +55,18 @@ describe('Test `restapify` command', () => {
     )
   })
 
+  it('should output an error if given path is a folder', () => {
+    const invalidFolderPath = path.resolve(__dirname)
+    const args = `yarn restapify ${invalidFolderPath}`
+    cli(args.split(' '))
+
+    const logOutput = consoleLogSpy.mock.calls[0][0]
+
+    expect(logOutput).toEqual(
+      expect.stringContaining((`The given path ${invalidFolderPath} is not a valid configuration file!`))
+    )
+  })
+
   it('should output errors on invalid config file', () => {
     const invalidConfigFilePath = path.resolve(__dirname, '../../restapify.config.invalid.json')
     const args = `yarn restapify ${invalidConfigFilePath}`
