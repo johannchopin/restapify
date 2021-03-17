@@ -5,8 +5,8 @@ import { ValidationError } from 'jsonschema'
 import { RestapifyParams } from '../../index'
 import { consoleError, runServer, validateConfig } from '../utils'
 
-const outputInvalidFilePathError = (path: string): void => {
-  consoleError(`The given path ${path} is not a valid configuration file!`)
+const outputInvalidFilePathError = (filePath: string): void => {
+  consoleError(`The given path ${filePath} is not a valid configuration file!`)
 }
 
 const outputConfigErrors = (errors: ValidationError[]): void => {

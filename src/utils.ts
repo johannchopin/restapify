@@ -111,8 +111,11 @@ export const getRouteFiles = (
   const fileNames = getFiles(rootDir)
 
   fileNames.forEach(filename => {
-    const filePath = path.resolve(rootDir, filename)
-    files[filePath] = fs.readFileSync(filePath, 'utf8')
+    const isJson = filename.endsWith('.json')
+    if (isJson) {
+      const filePath = path.resolve(rootDir, filename)
+      files[filePath] = fs.readFileSync(filePath, 'utf8')
+    }
   })
 
   dirNames.forEach(dir => {
