@@ -7,10 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.0.2] - 2021-03-17
+### 🐛 Fixed
+- crash if presence of non json file in mocked API folder
+
 ## [1.0.1] - 2021-03-15
 ### 🐛 Fixed
 - CLI crash on invalid configuration file path
 
 
-[Unreleased]: ./compare/v1.0.1...HEAD
+[Unreleased]: ./compare/v1.0.2...HEAD
+[1.0.2]: ./releases/tag/v1.0.2
 [1.0.1]: ./releases/tag/v1.0.1
