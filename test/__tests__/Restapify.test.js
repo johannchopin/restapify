@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import * as path from 'path'
+import * as fs from 'fs'
 import 'isomorphic-fetch'
 import Restapify from '../../src/Restapify'
 
@@ -385,4 +386,22 @@ it('should get correct served routes', () => {
 
   expect(servedRoutes.length).toBe(expectedServedRoutesAmount)
   expect(servedRoutes).toStrictEqual(expectedServedRoutesResponse)
+})
+
+
+it('should ignore files that are not json', () => {
+  const filename = 'foobar.txt'
+  const filePath = path.resolve(restapifyParams.rootDir, filename)
+
+  fs.writeFileSync(filePath, 'not json file')
+
+  const rpfy = new Restapify({...restapifyParams})
+  const onErrorSpy = jest.fn()
+  rpfy.on('error', onErrorSpy)
+
+  rpfy.getServedRoutes()
+
+  fs.unlinkSync(filePath)
+
+  expect(onErrorSpy).not.toHaveBeenCalled()
 })
