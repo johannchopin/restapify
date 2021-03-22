@@ -20,9 +20,9 @@
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg" alt="Gitmoji">
 </a>
 
-<br>
+<br/>
 
-📁 Restapify is a tool that allows you to quickly and easily deploy a local REST API by using an intuitive and developer friendly JSON file structure.
+Restapify is a tool that allows you to quickly and easily deploy a local REST API by using an intuitive and developer friendly JSON file structure.
 
 ----
 ## Summary
