@@ -2,7 +2,7 @@
 
 Hello! 👋
 
-Thanks for contributing on [restapify](https://github.com/johannchopin/restapify/). Before implementing new features and changes, feel free to [submit an issue](https://github.com/johannchopin/restapify/issues/new). We're going to talk here.
+Thanks for contributing on [Restapify](https://github.com/johannchopin/restapify/). Before implementing new features and changes, feel free to [submit an issue](https://github.com/johannchopin/restapify/issues/new). We're going to talk here.
 
 ## 🌱 How to submit a pull request?
 
@@ -13,18 +13,18 @@ Thanks for contributing on [restapify](https://github.com/johannchopin/restapify
 5. Commit your changes using the [gitmoji](https://gitmoji.dev/) convention.
 6. Submit your pull request.
 
-## 🔨 How to start restapify locally
+## 🔨 How to start Restapify locally
 
 1. Clone the project
 
-```sh
+```bash
 git clone https://github.com/johannchopin/restapify.git
 cd restapify
 ```
 
 2. Install the dependencies and run the initialisation
 
-```sh
+```bash
 yarn install && yarn restapify:init
 ```
 
@@ -32,6 +32,6 @@ yarn install && yarn restapify:init
 
 You can easily see your change by running the `./test/run.ts` script that serve the mocked API from `./test/api`:
 
-```sh
+```bash
 yarn test:manual
 ```
