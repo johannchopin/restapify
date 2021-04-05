@@ -515,7 +515,7 @@ List all the routes detected by Restapify from a specific directory:
 restapify list <rootDir>
 ```
 
-### 🚧 Serve from configuration file
+### Serve from configuration file
 Serve the mocked API from a configuration file. The default path is `./restapify.config.json`:
 
 ```
