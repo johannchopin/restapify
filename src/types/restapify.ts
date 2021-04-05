@@ -1,5 +1,6 @@
 import { Json, JsonCompatible } from './json'
 
+export type SupportedFileExtension = 'json' | 'yml'
 export type CastingOperator = 'number' | 'boolean'
 export type HttpVerb = 'GET' | 'POST' | 'DELETE' | 'PUT' |'PATCH'
 export type RestapifyEventName = 'error'
@@ -9,6 +10,7 @@ export type RestapifyEventName = 'error'
   | 'server:restart'
   | 'dashboard:open'
 export type RestapifyErrorName = 'INV:JSON_FILE' // json file can't be parsed
+  | 'INV:YAML_FILE' // yaml file can't be parsed
   | 'MISS:ROOT_DIR' // given root directory is missing
   | 'MISS:PORT' // given port is not available
   | 'INV:API_BASEURL' // given api base url is needed for internal purposes (ex: `/restapify`)
@@ -28,4 +30,9 @@ export type JsonRouteFileContent = JsonCompatible<{
 export interface FakerSyntaxData {
   namespace: string
   method: string
+}
+
+export interface RouteFile {
+  type: SupportedFileExtension
+  content: string
 }

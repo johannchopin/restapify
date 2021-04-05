@@ -1,10 +1,11 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import * as yaml from 'js-yaml'
 
 import {
   BOOLEAN_CAST_INDICATOR, CASTING_OPERATORS, HTTP_VERBS, NUMBER_CAST_INDICATOR
 } from './const'
-import { HttpVerb } from './types'
+import { HttpVerb, RouteFile } from './types'
 import { Routes } from './Restapify'
 
 export const getDirs = (p: string): string[] => {
@@ -105,16 +106,24 @@ export const getRoutesByFileOrder = (routes: Routes): OrderedRoutes[] => {
 
 export const getRouteFiles = (
   rootDir: string,
-  files: {[filename: string]: string} = {}
-): {[filename: string]: string} => {
+  files: {[filename: string]: RouteFile} = {}
+): {[filename: string]: RouteFile} => {
   const dirNames = getDirs(rootDir)
   const fileNames = getFiles(rootDir)
 
   fileNames.forEach(filename => {
     const isJson = filename.endsWith('.json')
-    if (isJson) {
+    const isYaml = filename.endsWith('.yml')
+
+    const isFileSupported = isJson || isYaml
+    if (isFileSupported) {
       const filePath = path.resolve(rootDir, filename)
-      files[filePath] = fs.readFileSync(filePath, 'utf8')
+      const content = fs.readFileSync(filePath, 'utf8')
+
+      files[filePath] = {
+        type: isJson ? 'json' : 'yml',
+        content
+      }
     }
   })
 
@@ -128,6 +137,20 @@ export const getRouteFiles = (
 export const isJsonString = (str: string): true | string => {
   try {
     JSON.parse(str)
+  } catch (e) {
+    return e.message
+  }
+
+  return true
+}
+
+export const yamlToJson = (yamlAsString: string): string => {
+  return JSON.stringify(yaml.load(yamlAsString))
+}
+
+export const isYamlString = (str: string): true | string => {
+  try {
+    yaml.load(str)
   } catch (e) {
     return e.message
   }

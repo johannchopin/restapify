@@ -13,7 +13,8 @@ import {
   RestapifyErrorName,
   RestapifyEventCallback,
   RestapifyEventCallbackParam,
-  RestapifyEventName
+  RestapifyEventName,
+  RouteFile
 } from './types'
 import {
   INTERNAL_BASEURL,
@@ -26,8 +27,10 @@ import {
   getRoutesByFileOrder as getRoutesByFileOrderHelper,
   getSortedRoutesSlug,
   isJsonString,
+  isYamlString,
   routeResolve,
-  withoutUndefinedFromObject
+  withoutUndefinedFromObject,
+  yamlToJson
 } from './utils'
 import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
@@ -65,7 +68,7 @@ type EventCallbackStore = {
   [event in RestapifyEventName]?: RestapifyEventCallback[]
 }
 type ListedFiles = {
-  [filename: string]: string
+  [filename: string]: RouteFile
 }
 
 class Restapify {
@@ -204,21 +207,30 @@ class Restapify {
     }
   }
 
-  private checkJsonFiles = (): void => {
+  private checkRouteFiles = (): void => {
     Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
-      const routeFileContent = this.listedRouteFiles[routeFilePath]
-      const isJsonValidResponse = isJsonString(routeFileContent)
-      // eslint-disable-next-line max-len
-      const isJsonContainingValidFakerSyntaxResponse = areFakerVarsSyntaxValidInContent(routeFileContent)
+      let { content, type } = this.listedRouteFiles[routeFilePath]
 
-      if (isJsonValidResponse !== true) {
-        const error: RestapifyErrorName = 'INV:JSON_FILE'
+      const isFileValidReponse = type === 'json' ? isJsonString(content) : isYamlString(content)
+
+      if (isFileValidReponse !== true) {
+        const error: RestapifyErrorName = type === 'json' ? 'INV:JSON_FILE' : 'INV:YAML_FILE'
         const errorObject = {
           error,
-          message: `Invalid json file ${routeFilePath}: ${isJsonValidResponse}`
+          message: `Invalid ${type} file ${routeFilePath}: ${isFileValidReponse}`
         }
         throw new Error(JSON.stringify(errorObject))
-      } else if (isJsonContainingValidFakerSyntaxResponse !== true) {
+      } else if (type === 'yml') {
+        const stringifiedJson = yamlToJson(content)
+
+        this.listedRouteFiles[routeFilePath].content = stringifiedJson
+        content = stringifiedJson
+      }
+
+      // eslint-disable-next-line max-len
+      const isJsonContainingValidFakerSyntaxResponse = areFakerVarsSyntaxValidInContent(content)
+
+      if (isJsonContainingValidFakerSyntaxResponse !== true) {
         const { namespace, method } = isJsonContainingValidFakerSyntaxResponse
         const error: RestapifyErrorName = 'INV:FAKER_SYNTAX'
         const errorObject = {
@@ -235,7 +247,7 @@ class Restapify {
       const routeData = getRoute(
         routeFilePath,
         this.rootDir,
-        this.listedRouteFiles[routeFilePath]
+        this.listedRouteFiles[routeFilePath].content
       )
       const {
         route,
@@ -403,7 +415,7 @@ class Restapify {
       }
 
       this.listRouteFiles()
-      this.checkJsonFiles()
+      this.checkRouteFiles()
       this.configRoutesFromListedFiles()
       if (startServer) this.configServer()
 
