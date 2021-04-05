@@ -16,7 +16,7 @@
   },
   "scripts": {
     "restapify:init": "yarn move:dashboard",
-    "readme:generate-doc-table": "yarn doctoc ./docs/README.md",
+    "readme:generate-doc-table": "yarn doctoc ./docs/README.md --gitlab",
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
     "clean": "yarn rimraf ./dist",
     "test": "FORCE_COLOR=3 jest --silent --no-cache",
