@@ -4,7 +4,7 @@ import 'isomorphic-fetch'
 import Restapify from '../../src/Restapify'
 
 const restapifyParams = {
-  rootDir: path.resolve(__dirname, '../api'),
+  rootDir: path.resolve(__dirname, '../../test/api'),
   port: 6767,
   baseUrl: '/api',
   hotWatch: false

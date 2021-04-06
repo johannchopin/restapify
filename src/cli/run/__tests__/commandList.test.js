@@ -1,12 +1,12 @@
 import * as path from 'path'
 
-import { cli } from '../../../src/cli/cli'
+import { cli } from '../../cli'
 
 const consoleLogSpy = jest.spyOn(global.console, 'log')
 
 describe('Test `list` command', () => {
   describe('List routes', () => {
-    const pathToApiFolder = path.resolve(__dirname, '../../api')
+    const pathToApiFolder = path.resolve(__dirname, '../../../../test/api')
     const args = `yarn restapify list ${pathToApiFolder}`
     let logOutput
 

@@ -2,24 +2,24 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import 'isomorphic-fetch'
-import Restapify from '../../src/Restapify'
+import Restapify from '../Restapify'
 
 // D A T A
-import getAnimals from '../api/animals.json'
-import getAnimalsByName from '../api/animals/[name].json'
-import getAnimalHedgehog from '../api/animals/hedgehog.json'
-import getAnimalsByNameFriends from '../api/animals/[name]/friends/[friend_id].json'
-import getPlants from '../api/plants.GET.json'
-import getUserErr from '../api/users/[userid].404.{ERR}.json'
-import postUsers from '../api/users/_.POST.201.json'
-import getComments from '../api/comments/_.GET.json'
-import getCommentsById from '../api/comments/[id]/_.json'
-import deleteUser from '../api/users/[userid].DELETE.json'
-import deleteUserErr from '../api/users/[userid].DELETE.404.{ERR}.json'
-import deleteUserInvCred from '../api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
+import getAnimals from '../../test/api/animals.json'
+import getAnimalsByName from '../../test/api/animals/[name].json'
+import getAnimalHedgehog from '../../test/api/animals/hedgehog.json'
+import getAnimalsByNameFriends from '../../test/api/animals/[name]/friends/[friend_id].json'
+import getPlants from '../../test/api/plants.GET.json'
+import getUserErr from '../../test/api/users/[userid].404.{ERR}.json'
+import postUsers from '../../test/api/users/_.POST.201.json'
+import getComments from '../../test/api/comments/_.GET.json'
+import getCommentsById from '../../test/api/comments/[id]/_.json'
+import deleteUser from '../../test/api/users/[userid].DELETE.json'
+import deleteUserErr from '../../test/api/users/[userid].DELETE.404.{ERR}.json'
+import deleteUserInvCred from '../../test/api/users/[userid].DELETE.401.{INV_CRED|INV_TOKEN}.json'
 
 const restapifyParams = {
-  rootDir: path.resolve(__dirname, '../api'),
+  rootDir: path.resolve(__dirname, '../../test/api'),
   port: 6767,
   baseUrl: '/api',
   hotWatch: false

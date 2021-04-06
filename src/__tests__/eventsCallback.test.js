@@ -3,12 +3,12 @@ import * as fs from 'fs'
 
 import 'isomorphic-fetch'
 
-import Restapify from '../../src/Restapify'
-import { OPEN_DASHBOARD_TIMEOUT } from '../../src/const'
+import Restapify from '../Restapify'
+import { OPEN_DASHBOARD_TIMEOUT } from '../const'
 
 jest.mock('open')
 
-const apiRootDir = path.resolve(__dirname, '../api')
+const apiRootDir = path.resolve(__dirname, '../../test/api')
 const restapifyParams = {
   rootDir: apiRootDir
 }
