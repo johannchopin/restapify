@@ -1,15 +1,15 @@
 import * as path from 'path'
 
-import Restapify from '../../../src/Restapify'
-import { cli } from '../../../src/cli/cli'
+import Restapify from '../../../../src/Restapify'
+import { cli } from '../../../../src/cli/cli'
 
-import config from '../../restapify.config.json'
+import config from '../../../../test/restapify.config.json'
 
 const consoleLogSpy = jest.spyOn(global.console, 'log')
 const runSpy = jest.fn()
 const onSpy = jest.fn()
 const onErrorSpy = jest.fn()
-jest.mock('../../../src/Restapify')
+jest.mock('../../../../src/Restapify')
 Restapify.mockImplementation(() => {
   return {
     run: runSpy,
@@ -18,8 +18,8 @@ Restapify.mockImplementation(() => {
   }
 })
 
-const pathToApiFolder = path.resolve(__dirname, '../../api')
-const pathToConfigFile = path.resolve(__dirname, '../../restapify.config.json')
+const pathToApiFolder = path.resolve(__dirname, '../../../../test/api')
+const pathToConfigFile = path.resolve(__dirname, '../../../../test/restapify.config.json')
 
 describe('Test `restapify` command', () => {
   beforeEach(() => {
@@ -68,16 +68,11 @@ describe('Test `restapify` command', () => {
   })
 
   it('should output errors on invalid config file', () => {
-    const invalidConfigFilePath = path.resolve(__dirname, '../../restapify.config.invalid.json')
+    const invalidConfigFilePath = path.resolve(__dirname, '../../../../test/restapify.config.invalid.json')
     const args = `yarn restapify ${invalidConfigFilePath}`
     cli(args.split(' '))
 
-
-    expect(consoleLogSpy.mock.calls[0][0]).toEqual(
-      expect.stringContaining(('Invalid configuration file'))
-    )
-    expect(consoleLogSpy.mock.calls[1][0]).toEqual(
-      expect.stringContaining(('- requires property "rootDir"'))
-    )
+    expect(consoleLogSpy.mock.calls[0][0]).toMatchSnapshot()
+    expect(consoleLogSpy.mock.calls[1][0]).toMatchSnapshot()
   })
 })

@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test \`restapify\` command should output errors on invalid config file 1`] = `"[31m[1m[4m❌ERROR:[24m[22m[39m Invalid configuration file:"`;
+
+exports[`Test \`restapify\` command should output errors on invalid config file 2`] = `"- requires property \\"rootDir\\""`;

@@ -5,7 +5,7 @@ import { getRoute } from '../../src/getRoute'
 import { getFakerVarsInContent, getContentWithReplacedFakerVars, areFakerVarsSyntaxValidInContent } from '../../src/fakerHelpers'
 
 // D A T A
-import getPostsById from '../api/posts/[postid]/_.json'
+import getPostsById from '../../test/api/posts/[postid]/_.json'
 
 jest.mock('faker', () => ({
   lorem: {

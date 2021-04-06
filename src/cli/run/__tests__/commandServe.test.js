@@ -1,12 +1,12 @@
 import * as path from 'path'
 
-import Restapify from '../../../src/Restapify'
-import { cli } from '../../../src/cli/cli'
+import Restapify from '../../../../src/Restapify'
+import { cli } from '../../../../src/cli/cli'
 
 const runSpy = jest.fn()
 const onSpy = jest.fn()
 const onErrorSpy = jest.fn()
-jest.mock('../../../src/Restapify')
+jest.mock('../../../../src/Restapify')
 Restapify.mockImplementation(() => {
   return {
     run: runSpy,
@@ -15,7 +15,7 @@ Restapify.mockImplementation(() => {
   }
 })
 
-const pathToApiFolder = path.resolve(__dirname, '../../api')
+const pathToApiFolder = path.resolve(__dirname, '../../../../api')
 console.log(pathToApiFolder)
 
 describe('Test `serve` command', () => {
