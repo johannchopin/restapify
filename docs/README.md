@@ -402,7 +402,7 @@ To get for example a faked text content with the regular library you will call `
 {
   "id": "n:[postid]",
   "content": "[#faker:lorem:paragraphs]",
-  "private": "b:[#faker:random:boolean]"
+  "private": "b:[#faker:datatype:boolean]"
 }
 ```
 

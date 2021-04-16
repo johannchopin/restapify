@@ -17,7 +17,7 @@ jest.mock('faker', () => ({
   time: {
     recent: jest.fn().mockImplementation(() => 123 ),
   },
-  random: {
+  datatype: {
     boolean: jest.fn().mockImplementation(() => true )
   }
 }))
@@ -52,7 +52,7 @@ describe('Faker\'s integration', () => {
   })
 
   it('should replace faker syntax with boolean cast syntax', () => {
-    const content = '{"boolean": "b:[#faker:random:boolean]"}'
+    const content = '{"boolean": "b:[#faker:datatype:boolean]"}'
     const result = JSON.parse(getContentWithReplacedFakerVars(content))
 
     expect(result.boolean).toBe(true)

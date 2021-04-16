@@ -9,7 +9,7 @@ jest.mock('faker', () => ({
   internet: {
     email: jest.fn().mockImplementation(() => 'fake@email.com' ),
   },
-  random: {
+  datatype: {
     boolean: jest.fn().mockImplementation(() => true )
   }
 }))
@@ -36,7 +36,7 @@ describe('Helper\'s functions to process for loops', () => {
       })
 
       it('should give array from array notation with faker integration', () => {
-        const arrayNotation = "['[#faker:internet:email]', '[#faker:internet:email]', [#faker:random:boolean]]"
+        const arrayNotation = "['[#faker:internet:email]', '[#faker:internet:email]', [#faker:datatype:boolean]]"
         const expectedResult = ['fake@email.com', 'fake@email.com', true]
 
         expect(getSequenceArray(arrayNotation)).toStrictEqual(expectedResult)
