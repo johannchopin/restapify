@@ -47,7 +47,7 @@ The problem of most of this libraries is the way you have to define your API end
 - 🔥 **Built in hot watcher** - Directly see your changes after a file update
 - 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuitive syntax to quickly populate your API responses
 - 🚨 **Events handler** - Execute callbacks on specific events 
-- 🏷️ **TypeScript support**
+- 🛡 **TypeScript support**
 
 
 ## Documentation
