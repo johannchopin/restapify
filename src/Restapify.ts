@@ -146,8 +146,7 @@ class Restapify {
   }
 
   private configDashboard = (): void => {
-    const dashboardFolderPath = path.resolve(__dirname, DASHBOARD_FOLDER_PATH)
-    this.app.use(INTERNAL_BASEURL, express.static(dashboardFolderPath))
+    this.app.use(INTERNAL_BASEURL, express.static(DASHBOARD_FOLDER_PATH))
   }
 
   private configInternalApi = (): void => {
