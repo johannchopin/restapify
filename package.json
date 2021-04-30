@@ -20,14 +20,15 @@
     "move:dashboard": "yarn cpx './node_modules/restapify-dashboard/public/**' ./src/dashboard-public",
     "clean": "yarn rimraf ./dist",
     "test": "FORCE_COLOR=3 jest --silent --no-cache",
-    "test:manual": "yarn ts-node-dev --project ./ts-node-tsconfig.json --files test/run.ts",
+    "test:manual": "concurrently 'yarn dashboard:start' 'ts-node-dev --project ./ts-node-tsconfig.json --files test/run.ts'",
     "test:types": "yarn tsc --noEmit",
     "start": "yarn nodemon --watch test src/index.js",
     "postbuild": "yarn cpx './src/dashboard-public/**' ./dist/dashboard-public/",
     "lint": "yarn eslint . --ext .js,.ts",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "rollup -c",
-    "build": "yarn clean && yarn restapify:init && yarn build:types && yarn build:js"
+    "build": "yarn clean && yarn restapify:init && yarn build:types && yarn build:js",
+    "dashboard:start": "yarn --cwd ./src/dashboard dev"
   },
   "publishConfig": {
     "access": "public"
