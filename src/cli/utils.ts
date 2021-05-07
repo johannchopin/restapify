@@ -43,35 +43,35 @@ export const consoleError = (message: string): void => {
   console.log(`${errorPrepend} ${message}`)
 }
 
-export const getInstanceOverviewOutput = (port: number, apiBaseUrl: string): string => {
-  if (!apiBaseUrl.startsWith('/')) {
-    apiBaseUrl = `/${apiBaseUrl}`
+export const getInstanceOverviewOutput = (port: number, publicPath: string): string => {
+  if (!publicPath.startsWith('/')) {
+    publicPath = `/${publicPath}`
   }
 
   const runningTitle = chalk.magenta('🚀 Restapify is running:')
-  const apiBaseURLTitle = chalk.bold('- 📦API entry point:')
-  const apiBaseURLLink = chalk.blueBright(`http://localhost:${port}${apiBaseUrl}`)
+  const publicPathTitle = chalk.bold('- 📦API entry point:')
+  const publicPathLink = chalk.blueBright(`http://localhost:${port}${publicPath}`)
   const dashboardURLTitle = chalk.bold('- 🎛 Dashboard:')
   const dashboardURLLink = chalk.blueBright(`http://localhost:${port}/restapify`)
-  const apiBaseURLOutput = `${apiBaseURLTitle} ${apiBaseURLLink}`
+  const publicPathOutput = `${publicPathTitle} ${publicPathLink}`
   const dashboardURLOutput = `${dashboardURLTitle} ${dashboardURLLink}`
   const killProcessInfo = chalk.yellowBright('Use Ctrl+C to quit this process')
-  return boxen(`${runningTitle}\n\n${apiBaseURLOutput}\n${dashboardURLOutput}\n\n${killProcessInfo}`, { padding: 1, borderColor: 'magenta' })
+  return boxen(`${runningTitle}\n\n${publicPathOutput}\n${dashboardURLOutput}\n\n${killProcessInfo}`, { padding: 1, borderColor: 'magenta' })
 }
 
 export const onRestapifyInstanceError = (
   errorObject: RestapifyErrorCallbackParam,
-  instanceData: Pick<Restapify, 'apiBaseUrl' | 'port' | 'rootDir'>
+  instanceData: Pick<Restapify, 'publicPath' | 'port' | 'rootDir'>
 ): void => {
   const { error, message } = errorObject
-  const { rootDir, port, apiBaseUrl } = instanceData
+  const { rootDir, port, publicPath } = instanceData
 
   if (error.startsWith('MISS:ROOT_DIR')) {
     consoleError(`The given folder ${rootDir} doesn't exist!`)
   } else if (error.startsWith('MISS:PORT')) {
     consoleError(`port ${port} is already in use!`)
   } else if (error.startsWith('INV:API_BASEURL')) {
-    consoleError(`Impossible to use ${apiBaseUrl} as the API base URL since it's already needed for internal purposes!`)
+    consoleError(`Impossible to use ${publicPath} as the API base URL since it's already needed for internal purposes!`)
   } else if (error.startsWith('INV:JSON_FILE')) {
     consoleError(message as string)
   }
@@ -79,14 +79,14 @@ export const onRestapifyInstanceError = (
 
 export const getRoutesListOutput = (
   routesList: { route: string; method: HttpVerb; }[],
-  apiBaseUrl: string
+  publicPath: string
 ): string => {
   let output = ''
 
   routesList.forEach(servedRoute => {
     let methodOutput = getMethodOutput(servedRoute.method)
 
-    output += `\n${methodOutput} ${apiBaseUrl}${servedRoute.route}`
+    output += `\n${methodOutput} ${publicPath}${servedRoute.route}`
   })
 
   return output
@@ -102,7 +102,7 @@ export const runServer = (config: RestapifyParams): void => {
   rpfy.onError((error) => {
     onRestapifyInstanceError(error, {
       rootDir: rpfy.rootDir,
-      apiBaseUrl: rpfy.apiBaseUrl,
+      publicPath: rpfy.publicPath,
       port: rpfy.port
     })
   })
@@ -110,13 +110,13 @@ export const runServer = (config: RestapifyParams): void => {
   rpfy.on('start', () => {
     const servedRoutesOutput = getRoutesListOutput(
       rpfy.getServedRoutes(),
-      rpfy.apiBaseUrl
+      rpfy.publicPath
     )
 
     console.log(servedRoutesOutput)
     console.log(getInstanceOverviewOutput(
       rpfy.port,
-      rpfy.apiBaseUrl
+      rpfy.publicPath
     ))
   })
 
@@ -132,7 +132,7 @@ export const validateConfig = (config: object): ValidatorResult => {
   const CONFIG_FILE_SCHEMA = {
     type: 'object',
     rootDir: { type: 'string' },
-    apiBaseUrl: { type: 'string' },
+    publicPath: { type: 'string' },
     port: { type: 'number' },
     states: {
       properties: {

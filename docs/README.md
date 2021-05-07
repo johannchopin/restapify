@@ -532,7 +532,7 @@ interface ConfigFileState  {
 }
 interface ConfigFile {
   "rootDir": string,           // [REQUIRED] relative path to the API root directory
-  "apiBaseUrl": string,        // default: `api/`
+  "publicPath": string,        // default: `api/`
   "port": number,              // default: `6767`
   "states": ConfigFileState[], // default: `undefined`
   "openDashboard": boolean     // default: `true` 
@@ -543,7 +543,7 @@ Example:
 ```json
 {
   "rootDir": "./api",
-  "apiBaseUrl": "my-api/",
+  "publicPath": "my-api/",
   "port": 6768,
   "states": [
     {
