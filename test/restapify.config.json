@@ -1,6 +1,6 @@
 {
   "rootDir": "./api",
-  "apiBaseUrl": "api/",
+  "publicPath": "api/",
   "port": 6768,
   "states": [
     {

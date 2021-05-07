@@ -12,14 +12,14 @@ export const listRoutes = (rootDir: string): void => {
   rpfy.onError((error) => {
     onRestapifyInstanceError(error, {
       rootDir: rpfy.rootDir,
-      apiBaseUrl: rpfy.apiBaseUrl,
+      publicPath: rpfy.publicPath,
       port: rpfy.port
     })
   })
 
   const servedRoutesOutput = getRoutesListOutput(
     rpfy.getServedRoutes(),
-    rpfy.apiBaseUrl
+    rpfy.publicPath
   )
 
   console.log(servedRoutesOutput)
