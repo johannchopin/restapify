@@ -79,7 +79,7 @@ class Restapify {
   }
   public rootDir: string
   public port: number
-  public apiBaseUrl: string
+  public publicPath: string
   public states: PrivateRouteState[] = []
   public hotWatch: boolean
   public autoOpenDashboard: boolean
@@ -94,7 +94,7 @@ class Restapify {
   }: RestapifyParams) {
     this.rootDir = rootDir
     this.port = port
-    this.apiBaseUrl = baseUrl
+    this.publicPath = baseUrl
     this.hotWatch = hotWatch
     this.autoOpenDashboard = openDashboard
     this.states = states.filter(state => {
@@ -155,7 +155,7 @@ class Restapify {
       routes,
       states,
       port,
-      apiBaseUrl: baseUrl
+      publicPath: baseUrl
     } = this
     this.app = getInitialisedInternalApi(this.app, {
       port,
@@ -187,8 +187,8 @@ class Restapify {
     this.customRun({ ...options, hard: false, openDashboard: false })
   }
 
-  private checkApiBaseUrl = (): void => {
-    if (this.apiBaseUrl.startsWith(INTERNAL_BASEURL)) {
+  private checkpublicPath = (): void => {
+    if (this.publicPath.startsWith(INTERNAL_BASEURL)) {
       const error: RestapifyErrorName = 'INV:API_BASEURL'
       const errorObject = { error }
       throw new Error(JSON.stringify(errorObject))
@@ -328,7 +328,7 @@ class Restapify {
       header
     } = routeData
 
-    normalizedRoute = routeResolve(this.apiBaseUrl, normalizedRoute)
+    normalizedRoute = routeResolve(this.publicPath, normalizedRoute)
 
     const responseCallback = (req: any, res: any): void => {
       res.status(statusCode)
@@ -398,7 +398,7 @@ class Restapify {
     try {
       if (hard) {
         this.configEventsCallbacks()
-        this.checkApiBaseUrl()
+        this.checkpublicPath()
         this.checkRootDirectory()
       }
 

@@ -19,7 +19,7 @@ describe('CLI utils functions', () => {
     const rpfyInstanceData = {
       rootDir: '/user/mockedApi/',
       port: 6767,
-      apiBaseUrl: '/dev'
+      publicPath: '/dev'
     }
 
     it('should output for missing rootDir', () => {
