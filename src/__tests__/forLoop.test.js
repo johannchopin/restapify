@@ -100,4 +100,11 @@ describe('Helper\'s functions to process for loops', () => {
     
     expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
   })
+
+  it('should return proceed nested for loop', () => {
+    const content = '["#for i in [1, 2]",["#for ii in [3, 4]", "n:[ii]", "#endfor"],"#endfor"]'
+    const expectedResult = JSON.stringify([[3, 4], [3, 4]])
+    
+    expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
+  })
 })
