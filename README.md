@@ -57,7 +57,7 @@ Checkout the documentation on the [website](https://restapify.vercel.app/) or di
 
 ## Getting Started
 ### Using the cli
-The simplest way to use Restapify is to use his [cli](todo):
+The simplest way to use Restapify is to use his [cli](https://github.com/johannchopin/restapify/tree/main/docs#cli):
 
 ```bash
 npm i -g restapify
