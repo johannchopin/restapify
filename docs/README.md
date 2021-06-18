@@ -540,7 +540,7 @@ interface ConfigFile {
 }
 ```
 
-Example:
+It can be a JSON file like:
 ```json
 {
   "rootDir": "./api",
@@ -553,6 +553,16 @@ Example:
       "state": "ERR"
     }
   ]
+}
+```
+
+...but can also be a JavaScript file:
+
+```javascript
+module.exports = {
+  rootDir: "./api",
+  publicPath: "api/",
+  port: 6768
 }
 ```
 
