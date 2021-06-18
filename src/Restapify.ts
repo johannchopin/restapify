@@ -135,9 +135,6 @@ class Restapify {
     // Handle CORS
     this.app.use(cors())
     this.app.use((req: any, res: any, next) => {
-      res.append('Access-Control-Allow-Origin', ['*'])
-      res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH')
-      res.append('Access-Control-Allow-Headers', 'Content-Type')
       res.set('Cache-Control', 'no-store')
       next()
     })
