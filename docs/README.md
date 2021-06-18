@@ -46,6 +46,7 @@
     - [Restapify.on()](#restapifyon)
         - [Events list](#events-list)
         - [Restapify.on('error', <callback>)](#restapifyonerror-callback)
+    - [Restapify.setState(newState)](#restapifysetstatenewstate)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -709,3 +710,31 @@ The error callback provides as parameter an object with 2 usefull infos: the `er
 | **INV:API_BASEURL**  | given api base url is needed for internal purposes (ex: `/restapify`) |    ❌    |
 | **INV:FAKER_SYNTAX** | invalid call to the fakerjs library                                   |    ✅    |
 | **ERR**              | Unhandled error triggered                                             |    ✅    |
+
+
+### Restapify.setState(newState)
+
+Set the state to serve for a specific route with a parameter of type `RouteState`:
+
+```typescript
+interface RouteState {
+  route: string
+  state?: string
+  method?: HttpVerb // default: 'GET'
+}
+```
+
+Example:
+
+```javascript
+// serve the endpoint GET /posts/[postid] with the NOT_FOUND state
+rpfy.setState({
+  route: '/posts/[postid]',
+  state: 'NOT_FOUND'
+})
+
+// reset the endpoint to the default state
+rpfy.setState({
+  route: '/posts/[postid]'
+})
+```
