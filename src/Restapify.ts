@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 // @ts-ignore
 import express, { Application } from 'express'
+import cors from 'cors'
 import * as http from 'http'
 import open from 'open'
 import * as chokidar from 'chokidar'
@@ -132,6 +133,7 @@ class Restapify {
     this.app.set('etag', false)
 
     // Handle CORS
+    this.app.use(cors())
     this.app.use((req: any, res: any, next) => {
       res.append('Access-Control-Allow-Origin', ['*'])
       res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH')
