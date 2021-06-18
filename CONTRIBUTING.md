@@ -35,3 +35,7 @@ You can easily see your change by running the `./test/run.ts` script that serve 
 ```bash
 yarn test:manual
 ```
+
+## 💻 Use the cli locally
+
+If you make some update on the cli of restapify and want to test the changes, just run the command `yarn link` at the root of the project.
