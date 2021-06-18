@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import * as path from 'path'
 import { Command } from 'commander'
 
@@ -5,7 +6,8 @@ import * as packageJson from '../../package.json'
 
 import { listRoutes } from './run/listRoutes'
 import { startServer } from './run/startServer'
-import { startServerFromConfig } from './run/startServerFromConfig'
+import { outputInvalidFilePathError, startServerFromConfig } from './run/startServerFromConfig'
+import { consoleError } from './utils'
 
 export const cli = (cliArgs: string[]): void => {
   const program = new Command()
@@ -38,8 +40,30 @@ export const cli = (cliArgs: string[]): void => {
 
   program
     .arguments('[pathToConfig]')
-    .action((pathToConfig = './restapify.config.json'): void => {
-      startServerFromConfig(path.resolve(pathToConfig))
+    .action((pathToConfig: string = './restapify.config.json'): void => {
+      const configPath = path.resolve(pathToConfig)
+      const configFileExists = fs.existsSync(configPath)
+
+      if (!configFileExists) {
+        consoleError(`The given configuration file ${pathToConfig} doesn't exist!`)
+        return
+      }
+
+      const isConfigJs = pathToConfig.endsWith('.js')
+      if (isConfigJs) {
+        // eslint-disable-next-line global-require
+        const config = require(configPath)
+        console.log(config)
+
+        startServerFromConfig(configPath, config)
+        return
+      }
+
+      try {
+        startServerFromConfig(configPath, JSON.parse(fs.readFileSync(path.resolve(pathToConfig), 'utf-8')))
+      } catch (error) {
+        outputInvalidFilePathError(configPath)
+      }
     })
 
   program.parse(cliArgs)
