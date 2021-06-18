@@ -3,7 +3,8 @@ import * as path from 'path'
 import Restapify from '../../../../src/Restapify'
 import { cli } from '../../../../src/cli/cli'
 
-import config from '../../../../test/restapify.config.json'
+import jsonConfig from '../../../../test/restapify.config.json'
+import jsConfig from '../../../../test/restapify.config'
 
 const consoleLogSpy = jest.spyOn(global.console, 'log')
 const runSpy = jest.fn()
@@ -19,7 +20,8 @@ Restapify.mockImplementation(() => {
 })
 
 const pathToApiFolder = path.resolve(__dirname, '../../../../test/api')
-const pathToConfigFile = path.resolve(__dirname, '../../../../test/restapify.config.json')
+const pathToJsonConfigFile = path.resolve(__dirname, '../../../../test/restapify.config.json')
+const pathToJsConfigFile = path.resolve(__dirname, '../../../../test/restapify.config.js')
 
 describe('Test `restapify` command', () => {
   beforeEach(() => {
@@ -30,13 +32,26 @@ describe('Test `restapify` command', () => {
     consoleLogSpy.mockClear()
   })
 
-  it('should init Restapify\'s instance with options in config files', () => {
+  it('should init Restapify\'s instance with options in json config files', () => {
     const expectedOptionsInConstuctor = {
-      ...config,
+      ...jsonConfig,
       openDashboard: true,
       rootDir: pathToApiFolder
     }
-    const args = `yarn restapify ${pathToConfigFile}`
+    const args = `yarn restapify ${pathToJsonConfigFile}`
+    cli(args.split(' '))
+
+    expect(Restapify.mock.calls.length).toBe(1)
+    expect(Restapify.mock.calls[0][0]).toStrictEqual(expectedOptionsInConstuctor)
+  })
+
+  it('should init Restapify\'s instance with options in js config files', () => {
+    const expectedOptionsInConstuctor = {
+      ...jsConfig,
+      openDashboard: true,
+      rootDir: pathToApiFolder
+    }
+    const args = `yarn restapify ${pathToJsConfigFile}`
     cli(args.split(' '))
 
     expect(Restapify.mock.calls.length).toBe(1)
