@@ -27,6 +27,7 @@
         - [For-loop's range sequence](#for-loops-range-sequence)
         - [Use route's variables in sequence](#use-routes-variables-in-sequence)
         - [Use faker in an array sequence](#use-faker-in-an-array-sequence)
+        - [Nested for-loops](#nested-for-loops)
 - [CLI](#cli)
     - [`restapify serve`](#restapify-serve)
     - [`restapify list`](#restapify-list)
@@ -498,6 +499,10 @@ Restapify support the use of [faker variables](#fakerjs-integration) in an array
 ```
 
 > Note that if the faker variable is a `string`, you have to wrap it between `'`. If it's a `number` or a `boolean` you don't need to.
+
+#### Nested for-loops
+
+> ⚠️ Sadly at the moment it's not possible to use nested for loop. This feature should be implemented in a near future.
 
 ## CLI
 Restapify comes with a cli to easily serve your mocked API.
