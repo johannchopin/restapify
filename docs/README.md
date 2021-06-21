@@ -252,7 +252,7 @@ Example:
 
 ### No content response
 
-For some endpoints, you don't need to repond anything (for example a request that should response with a **204	No Content**). Since an empty file is not a valid JSON file, you need to use the syntax `[null]` to specify that the response should not return any data:
+For some endpoints, you don't need to respond anything (for example a request that should response with a **204	No Content**). Since an empty file is not a valid JSON file, you need to use the syntax `[null]` to specify that the response should not return any data:
 
 Example with the file `[userid].PUT.204.json`:
 ```json
