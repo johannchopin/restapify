@@ -222,7 +222,7 @@ class Restapify {
         const error: RestapifyErrorName = 'INV:FAKER_SYNTAX'
         const errorObject = {
           error,
-          message: `The fakerjs method call \`faker.${namespace}.${method}()\` is invalid`
+          message: `The fakerjs method call \`faker.${namespace}.${method}()\` is not valid! Please refer to the documentation https://restapify.vercel.app/docs#fakerjs-integration`
         }
         throw new Error(JSON.stringify(errorObject))
       }

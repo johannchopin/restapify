@@ -190,7 +190,7 @@ describe('Restapify\'s events', () => {
       expect(onErrorSpy).toHaveBeenCalledTimes(1)
       expect(onErrorSpy).toHaveBeenCalledWith({
         error: 'INV:FAKER_SYNTAX',
-        message: 'The fakerjs method call `faker.internet.emailFoobar()` is invalid'
+        message: 'The fakerjs method call `faker.internet.emailFoobar()` is not valid! Please refer to the documentation https://restapify.vercel.app/docs#fakerjs-integration'
       })
     })
   })

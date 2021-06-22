@@ -53,8 +53,6 @@ export const cli = (cliArgs: string[]): void => {
       if (isConfigJs) {
         // eslint-disable-next-line global-require
         const config = require(configPath)
-        console.log(config)
-
         startServerFromConfig(configPath, config)
         return
       }
