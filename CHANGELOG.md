@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.5] - 2021-06-22
+### 🐛 Fixed
+- show error message in CLI when invalid fakerjs syntax is detected
+
 ## [2.1.0] - 2021-06-18
 ### ✨ Added
 - handle javascript config file
@@ -20,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLI crash on invalid configuration file path
 
 
-[Unreleased]: ./compare/v1.0.2...HEAD
+[Unreleased]: ./compare/v2.1.5...HEAD
+[2.1.5]: ./releases/tag/v2.1.5
+[2.1.0]: ./releases/tag/v2.1.0
 [1.0.2]: ./releases/tag/v1.0.2
 [1.0.1]: ./releases/tag/v1.0.1

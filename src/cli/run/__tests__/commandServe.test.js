@@ -15,8 +15,7 @@ Restapify.mockImplementation(() => {
   }
 })
 
-const pathToApiFolder = path.resolve(__dirname, '../../../../api')
-console.log(pathToApiFolder)
+const API_FOLDER_PATH = path.resolve(__dirname, '../../../../api')
 
 describe('Test `serve` command', () => {
   beforeEach(() => {
@@ -25,12 +24,12 @@ describe('Test `serve` command', () => {
 
   it('should init Restapify\'s instance with default options', () => {
     const expectedOptionsInConstuctor = {
-      rootDir: pathToApiFolder,
+      rootDir: API_FOLDER_PATH,
       openDashboard: true, 
       baseUrl: undefined, 
       port: undefined
     }
-    const args = `yarn restapify serve ${pathToApiFolder}`
+    const args = `yarn restapify serve ${API_FOLDER_PATH}`
     cli(args.split(' '))
 
     expect(Restapify.mock.calls.length).toBe(1)
@@ -41,12 +40,12 @@ describe('Test `serve` command', () => {
     const CUSTOM_BASEURL = '/api/test'
     const CUSTOM_PORT = '0000'
     const expectedOptionsInConstuctor = {
-      rootDir: pathToApiFolder,
+      rootDir: API_FOLDER_PATH,
       openDashboard: false, 
       baseUrl: CUSTOM_BASEURL, 
       port: CUSTOM_PORT
     }
-    const args = `yarn restapify serve ${pathToApiFolder} --no-open --baseUrl ${CUSTOM_BASEURL} --port ${CUSTOM_PORT}`
+    const args = `yarn restapify serve ${API_FOLDER_PATH} --no-open --baseUrl ${CUSTOM_BASEURL} --port ${CUSTOM_PORT}`
     cli(args.split(' '))
 
     expect(Restapify.mock.calls.length).toBe(1)
@@ -57,12 +56,12 @@ describe('Test `serve` command', () => {
     const CUSTOM_BASEURL = '/api/test'
     const CUSTOM_PORT = '42'
     const expectedOptionsInConstuctor = {
-      rootDir: pathToApiFolder,
+      rootDir: API_FOLDER_PATH,
       openDashboard: true, 
       baseUrl: CUSTOM_BASEURL, 
       port: CUSTOM_PORT
     }
-    const args = `yarn restapify serve ${pathToApiFolder} -o -b ${CUSTOM_BASEURL} -p ${CUSTOM_PORT}`
+    const args = `yarn restapify serve ${API_FOLDER_PATH} -o -b ${CUSTOM_BASEURL} -p ${CUSTOM_PORT}`
     cli(args.split(' '))
 
     expect(Restapify.mock.calls.length).toBe(1)
