@@ -74,6 +74,8 @@ export const onRestapifyInstanceError = (
     consoleError(`Impossible to use ${publicPath} as the API base URL since it's already needed for internal purposes!`)
   } else if (error.startsWith('INV:JSON_FILE')) {
     consoleError(message as string)
+  } else if (error.startsWith('INV:FAKER_SYNTAX')) {
+    consoleError(message as string)
   }
 }
 
