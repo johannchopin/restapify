@@ -404,11 +404,12 @@ class Restapify {
       this.listRouteFiles()
       this.checkJsonFiles()
       this.configRoutesFromListedFiles()
-      if (startServer) this.configServer()
 
-      if (startServer) this.configDashboard()
-
-      if (startServer) this.configInternalApi()
+      if (startServer) {
+        this.configServer()
+        this.configDashboard()
+        this.configInternalApi()
+      }
 
       if (hard && hotWatch) this.configHotWatch()
       if (hard && this.autoOpenDashboard && startServer && openDashboard) this.openDashboard()
