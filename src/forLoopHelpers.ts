@@ -32,8 +32,14 @@ export const getForLoopSyntax = (forLoopObject: ForLoopSyntax): string => {
   return `"${FOR_LOOP_SYNTAX_PREFIX} ${x} in ${sequence}",${statement},"${FOR_LOOP_SYNTAX_SUFFIX}"`
 }
 
-export const getForLoopSyntaxInContent = (content: string): ForLoopSyntax[] => {
-  return Array.from(content.matchAll(FOR_LOOP_SYNTAX_MATCHER), m => {
+export const getForLoopSyntaxInContent = (content: string): ForLoopSyntax[] | undefined => {
+  const matches = [...content.matchAll(FOR_LOOP_SYNTAX_MATCHER)]
+
+  if (matches.length <= 0) {
+    return undefined
+  }
+
+  return matches.map(m => {
     return {
       x: m[1],
       sequence: m[2],
@@ -112,10 +118,14 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
 export const getContentWithReplacedForLoopsSyntax = (content: string): string => {
   const forLoops = getForLoopSyntaxInContent(content)
 
+  if (!forLoops) {
+    return content
+  }
+
   forLoops.forEach((forLoop) => {
     const forLoopSyntax = getForLoopSyntax(forLoop)
     content = content.replace(forLoopSyntax, getForLoopSyntaxResult(forLoop))
   })
 
-  return content
+  return getContentWithReplacedForLoopsSyntax(content)
 }
