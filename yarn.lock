@@ -6223,6 +6223,11 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
+replace-buffer@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/replace-buffer/-/replace-buffer-1.2.1.tgz#6c188c61445ba91569284b17b8fa119f04a07eb0"
+  integrity sha512-ly3OKwKu+3T55DjP5PjIMzxgz9lFx6dQnBmAIxryZyRKl8f22juy12ShOyuq8WrQE5UlFOseZgQZDua0iF9DHw==
+
 replace-ext@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/replace-ext/-/replace-ext-1.0.0.tgz#de63128373fcbf7c3ccfa4de5a480c45a67958eb"

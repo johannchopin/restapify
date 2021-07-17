@@ -63,6 +63,7 @@ export const getFilenameFromFilePath = (filePath: string): string => {
 }
 
 export const getRouteFromFilePath = (filePath: string): string => {
+  filePath = filePath.replace(/\\/g, '/')
   const filename = getFilenameFromFilePath(filePath)
   const routeWithoutFilename = filePath.replace(filename, '')
   const firstParamInFilename = filename.split('.')[0]

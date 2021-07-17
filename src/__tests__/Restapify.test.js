@@ -17,6 +17,7 @@ import getCommentsById from '../../test/api/comments/[id]/_.json'
 import deleteUser from '../../test/api/users/[userid].DELETE.json'
 import deleteUserErr from '../../test/api/users/[userid].DELETE.404.{ERR}.json'
 import deleteUserInvCred from '../../test/api/users/[userid].DELETE.401.{INV_CRED}.json'
+import { normalizeNewline } from '../../test/utils'
 
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../test/api'),
@@ -320,7 +321,7 @@ describe('Restapify with state variables', () => {
         }
       }
 
-      expect(deleteUserRoute).toStrictEqual(expectedState)
+      expect(normalizeNewline(deleteUserRoute)).toStrictEqual(expectedState)
     })
   })
 
