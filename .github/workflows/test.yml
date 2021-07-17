@@ -29,4 +29,17 @@ jobs:
           yarn restapify:init
           yarn test:types
           yarn lint
-          yarn test --coverage
+
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            yarn test --coverage
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            yarn test--windows --coverage
+          else
+            echo "$RUNNER_OS not supported"
+            exit 1
+          fi
+          
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            bash <(curl -s https://codecov.io/bash)
+          fi
+        shell: bash
