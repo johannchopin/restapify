@@ -57,6 +57,7 @@ export const getQueryStringVarSyntax = (data: QueryStringVarData): string => {
 }
 
 export const getFilenameFromFilePath = (filePath: string): string => {
+  filePath = filePath.replace(/\\/g, '/')
   const [filename] = filePath.split('/').slice(-1)
 
   return filename
