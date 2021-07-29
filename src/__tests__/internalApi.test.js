@@ -48,7 +48,6 @@ describe('Internal API', () => {
             "isExtended": false,
             "filename": "[userid].json",
             "fileContent": "{\n  \"testUserId\": \"n:[userid]\"\n}",
-            "stateVars": [],
             "statusCode": 200,
             "method": "GET",
             "body": { testUserId: "n:[userid]" }
@@ -56,11 +55,6 @@ describe('Internal API', () => {
           "DELETE": {
             "states": {
               "INV_CRED": {
-                "fileContent": "[null]",
-                "isExtended": false,
-                "statusCode": 401
-              },
-              "INV_TOKEN": {
                 "fileContent": "[null]",
                 "isExtended": false,
                 "statusCode": 401
@@ -83,7 +77,6 @@ describe('Internal API', () => {
             "isExtended": true,
             "filename": "[userid].DELETE.json",
             "fileContent": "{\n  \"#header\": {\n    \"Content-Type\": \"text/html; charset=UTF-8\"\n  },\n  \"#body\": {\n    \"success\": true,\n    \"data\": {\n      \"id\": 67,\n      \"name\": \"bob\"\n    }\n  }\n}",
-            "stateVars": [],
             "statusCode": 200,
             "method": "DELETE",
             "body": { success: true, data: { id: 67, name: "bob" } },
