@@ -9,7 +9,7 @@ export type Route = Pick<RouteData,
   | 'filename'
   | 'header'
   | 'routeVars'
-  | 'stateVars'
+  | 'stateVariable'
   | 'statusCode'
 >
 
