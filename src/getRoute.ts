@@ -27,7 +27,7 @@ export interface Route {
   fileContent: string
   method: HttpVerb
   statusCode: number
-  stateVars: string[]
+  stateVariable?: string
   isExtended: boolean
   header?: {[key: string]: string | number}
   body?: JsonRouteFileContent
@@ -102,19 +102,19 @@ export const getResponseStatusCodeInFilename = (filename: string): number => {
   return 200
 }
 
-export const getStateVarsInFilename = (filename: string): string[] => {
-  let stateVars: string[] = []
+export const getStateVariableInFilename = (filename: string): string | undefined => {
+  let stateVariable: string | undefined
   const explodedFilename = filename.split('.')
 
   explodedFilename.forEach(filenameElement => {
     const isStateVar = filenameElement.startsWith('{') && filenameElement.endsWith('}')
 
     if (isStateVar) {
-      stateVars = [...filenameElement.slice(1, -1).split('|')]
+      stateVariable = filenameElement.slice(1, -1)
     }
   })
 
-  return stateVars
+  return stateVariable
 }
 
 export const getHttpMethodInFilename = (filename: string): HttpVerb => {
@@ -251,7 +251,7 @@ export const getRoute = (
   const routeVars = getVarsInPath(route)
   const normalizedRoute = getNormalizedRoute(route, routeVars)
   const jsonContent = JSON.parse(fileContent)
-  const stateVars = getStateVarsInFilename(filename)
+  const stateVariable = getStateVariableInFilename(filename)
   const statusCode = getResponseStatusCodeInFilename(filename)
   const method = getHttpMethodInFilename(filename)
 
@@ -299,7 +299,7 @@ export const getRoute = (
     isExtended,
     filename,
     fileContent,
-    stateVars,
+    stateVariable,
     statusCode,
     method,
     body,

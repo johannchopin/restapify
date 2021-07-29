@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✨ Added
 - handle nested for-loop
 
+### 🔥 Removed
+- possibility to define multiple states for the same route
+
 ## [2.1.5] - 2021-06-22
 ### 🐛 Fixed
 - show error message in CLI when invalid fakerjs syntax is detected
