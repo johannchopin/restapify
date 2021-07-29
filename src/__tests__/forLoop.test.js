@@ -100,4 +100,12 @@ describe('Helper\'s functions to process for loops', () => {
     
     expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
   })
+
+  it('should return proceed nested for loop', () => {
+    const content = '["#for i in [1, 2]",["#for ii in [1, 2]",{"parent":"n:[i]","id":"n:[ii]"},"#endfor"],"#endfor"]'
+    const expectedResult = 
+      '[[{"parent":1,"id":1},{"parent":1,"id":2}],[{"parent":2,"id":1},{"parent":2,"id":2}]]'
+    
+    expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
+  })
 })

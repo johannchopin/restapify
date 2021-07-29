@@ -239,7 +239,7 @@ class Restapify {
       const {
         route,
         method,
-        stateVars,
+        stateVariable,
         body,
         getBody,
         header,
@@ -248,13 +248,12 @@ class Restapify {
         fileContent
       } = routeData
       const routeExist = this.routes[method][route] !== undefined
-      const routeContainsStates = stateVars.length > 0
 
       if (!routeExist) {
         this.routes[method][route] = {} as RouteData
       }
 
-      if (routeContainsStates) {
+      if (stateVariable) {
         if (this.routes[method][route] === undefined) {
           this.routes[method][route] = {} as RouteData
         }
@@ -263,16 +262,14 @@ class Restapify {
           this.routes[method][route].states = {}
         }
 
-        stateVars.forEach(stateVar => {
         // @ts-ignore
-          this.routes[method][route].states[stateVar] = withoutUndefinedFromObject({
-            body,
-            fileContent,
-            header,
-            isExtended,
-            statusCode,
-            getBody
-          })
+        this.routes[method][route].states[stateVariable] = withoutUndefinedFromObject({
+          body,
+          fileContent,
+          header,
+          isExtended,
+          statusCode,
+          getBody
         })
       } else {
         this.routes[method][route] = { ...this.routes[method][route], ...routeData }
@@ -404,11 +401,12 @@ class Restapify {
       this.listRouteFiles()
       this.checkJsonFiles()
       this.configRoutesFromListedFiles()
-      if (startServer) this.configServer()
 
-      if (startServer) this.configDashboard()
-
-      if (startServer) this.configInternalApi()
+      if (startServer) {
+        this.configServer()
+        this.configDashboard()
+        this.configInternalApi()
+      }
 
       if (hard && hotWatch) this.configHotWatch()
       if (hard && this.autoOpenDashboard && startServer && openDashboard) this.openDashboard()

@@ -1,7 +1,7 @@
 import {
   getContentWithReplacedVars,
   getNormalizedRoute,
-  getStateVarsInFilename,
+  getStateVariableInFilename,
   getFilenameFromFilePath,
   getRouteFromFilePath,
   getResponseStatusCodeInFilename,
@@ -27,26 +27,18 @@ describe('Get route helpers', () => {
     })
   })
 
-  describe('getStateVarsInFilename', () => {
+  describe('getStateVariableInFilename', () => {
     it('should not find any state variable', () => {
       const filename = '[id].POST.json'
-      const expectedStateVars = []
 
-      expect(getStateVarsInFilename(filename)).toStrictEqual(expectedStateVars)
+      expect(getStateVariableInFilename(filename)).toBe(undefined)
     })
 
     it('should find one state variable', () => {
       const filename = '[id].POST.{INV_CRED}.json'
-      const expectedStateVars = ['INV_CRED']
+      const expectedStateVariable = 'INV_CRED'
 
-      expect(getStateVarsInFilename(filename)).toStrictEqual(expectedStateVars)
-    })
-
-    it('should find multiple state variables', () => {
-      const filename = '[id].POST.{INV_CRED|ERR|INV_INPUT}.json'
-      const expectedStateVars = ['INV_CRED', 'ERR', 'INV_INPUT']
-
-      expect(getStateVarsInFilename(filename)).toStrictEqual(expectedStateVars)
+      expect(getStateVariableInFilename(filename)).toStrictEqual(expectedStateVariable)
     })
   })
 
