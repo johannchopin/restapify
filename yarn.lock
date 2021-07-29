@@ -5980,7 +5980,7 @@ responselike@^1.0.2:
   dependencies:
     lowercase-keys "^1.0.0"
 
-restapify-dashboard@^1.3.0:
+restapify-dashboard@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.3.2.tgz#56b0a434eff08156d0f3a6067af446ba132b8d30"
   integrity sha512-7RAlgPvlcCk3L9Ptetftb2bhrcaCRoxrazs645H6W736uzFRgQWjQpyfG3FX3zapU90XVEddewSEWblVBskC2Q==
