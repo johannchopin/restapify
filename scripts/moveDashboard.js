@@ -5,7 +5,7 @@ const destPath = path.resolve(__dirname, '../src/dashboard-public')
 
 if (fs.existsSync(destPath)) fs.rmdirSync(destPath,  { recursive: true })
 
-fs.move(
+fs.copy(
   path.resolve(__dirname, '../node_modules/restapify-dashboard/public'),
   destPath,
   err => {
