@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### ✨ Added
 - handle nested for-loop
+- use dashboard v1.3.3
 
 ### 🐛 Fixed
 - support windows OS
