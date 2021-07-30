@@ -2,6 +2,7 @@
 import * as path from 'path'
 import 'isomorphic-fetch'
 import Restapify from '../../src/Restapify'
+import { normalizeNewline } from '../../test/utils'
 
 const restapifyParams = {
   rootDir: path.resolve(__dirname, '../../test/api'),
@@ -90,7 +91,7 @@ describe('Internal API', () => {
 
     let response = await fetch(`${apiRoot}/api`)
     let data = await response.json()
-    expect(data).toMatchObject(expectedResponse)
+    expect(normalizeNewline(data)).toMatchObject(expectedResponse)
   })
 
   it('should fetch /states', async () => {

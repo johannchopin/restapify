@@ -5,8 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.2.0] - 2021-07-30
 ### ✨ Added
 - handle nested for-loop
+- use dashboard v1.3.3
+
+### 🐛 Fixed
+- support windows OS
 
 ### 🔥 Removed
 - possibility to define multiple states for the same route
@@ -29,7 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLI crash on invalid configuration file path
 
 
-[Unreleased]: ./compare/v2.1.5...HEAD
+[Unreleased]: ./compare/v2.2.0...HEAD
+[2.2.0]: ./releases/tag/v2.2.0
 [2.1.5]: ./releases/tag/v2.1.5
 [2.1.0]: ./releases/tag/v2.1.0
 [1.0.2]: ./releases/tag/v1.0.2
