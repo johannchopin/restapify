@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 - support windows OS
 
-
 ### 🔥 Removed
 - possibility to define multiple states for the same route
 
