@@ -27,6 +27,10 @@ export interface RangeFunctionParams {
   step?: number
 }
 
+interface IObject {
+  [key: string]: string | number | boolean;
+}
+
 export const getForLoopSyntax = (forLoopObject: ForLoopSyntax): string => {
   const { x, sequence, statement } = forLoopObject
   return `"${FOR_LOOP_SYNTAX_PREFIX} ${x} in ${sequence}",${statement},"${FOR_LOOP_SYNTAX_SUFFIX}"`
@@ -77,14 +81,15 @@ export const getArrayFromRangeString = (stringifiedRange: string): number[] => {
   return []
 }
 
-export const getSequenceArrayAsArray = (sequence: string): (number | string | boolean)[] => {
+// eslint-disable-next-line max-len
+export const getSequenceArrayAsArray = (sequence: string): (number | string | boolean | IObject)[] => {
   sequence = getContentWithReplacedFakerVars(sequence)
   sequence = replaceAll(sequence, '\'', '"')
 
   return JSON.parse(sequence)
 }
 
-export const getSequenceArray = (sequence: string): (number | string | boolean)[] => {
+export const getSequenceArray = (sequence: string): (number | string | boolean | IObject)[] => {
   const isSequenceAnArray = sequence.startsWith('[') && sequence.endsWith(']')
   const isSequenceRange = sequence.startsWith('range(') && sequence.endsWith(')')
 
@@ -108,8 +113,16 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
       forLoopSyntax.x,
       i.toString()
     )
-    forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}]`, i.toString())
-    resultArray.push(forLoopResult)
+
+    if (typeof i === 'object') {
+      Object.keys(i).forEach(key => {
+        forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as IObject)[key].toString())
+      })
+      resultArray.push(forLoopResult)
+    } else {
+      forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}]`, i.toString())
+      resultArray.push(forLoopResult)
+    }
   })
 
   return resultArray.join(',')

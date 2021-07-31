@@ -6,5 +6,11 @@
   {
     "type": "cat",
     "name": "caty"
-  }
+  },
+  "#for i in [{'t': 'snake', 'n': 'snek'}, {'t': 'mouse', 'n': 'mousy'}]",
+  {
+    "type": "[i.t]",
+    "model": "[i.n]"
+  },
+  "#endfor"
 ]
