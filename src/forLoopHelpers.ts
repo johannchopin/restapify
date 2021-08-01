@@ -118,11 +118,10 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
       Object.keys(i).forEach(key => {
         forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as IObject)[key].toString())
       })
-      resultArray.push(forLoopResult)
     } else {
       forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}]`, i.toString())
-      resultArray.push(forLoopResult)
     }
+    resultArray.push(forLoopResult)
   })
 
   return resultArray.join(',')
