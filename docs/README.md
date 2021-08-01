@@ -4,50 +4,49 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Documentation](#documentation)
-  - [File structure](#file-structure)
-  - [Route's filename](#routes-filename)
+- [File structure](#file-structure)
+- [Route's filename](#routes-filename)
     - [Simple route](#simple-route)
     - [Underscore notation](#underscore-notation)
     - [Route's variables](#routes-variables)
     - [HTTP's methods](#https-methods)
     - [HTTP's status code](#https-status-code)
     - [Route's state](#routes-state)
-  - [Route's file content](#routes-file-content)
+- [Route's file content](#routes-file-content)
     - [Response's body](#responses-body)
     - [Extended syntax](#extended-syntax)
     - [No content response](#no-content-response)
     - [Consume route's variables](#consume-routes-variables)
-      - [Route's variable casting](#routes-variable-casting)
-        - [Number casting](#number-casting)
-        - [Boolean casting](#boolean-casting)
+        - [Route's variable casting](#routes-variable-casting)
+            - [Number casting](#number-casting)
+            - [Boolean casting](#boolean-casting)
     - [Consume route's query string variables](#consume-routes-query-string-variables)
     - [Fakerjs integration](#fakerjs-integration)
     - [For-loops](#for-loops)
-      - [For-loop's array sequence](#for-loops-array-sequence)
-      - [For-loop's range sequence](#for-loops-range-sequence)
-      - [Use route's variables in sequence](#use-routes-variables-in-sequence)
-      - [Use faker in an array sequence](#use-faker-in-an-array-sequence)
-      - [Nested for-loops](#nested-for-loops)
-  - [CLI](#cli)
+        - [For-loop's array sequence](#for-loops-array-sequence)
+        - [For-loop's range sequence](#for-loops-range-sequence)
+        - [Use route's variables in sequence](#use-routes-variables-in-sequence)
+        - [Use faker in an array sequence](#use-faker-in-an-array-sequence)
+        - [Nested for-loops](#nested-for-loops)
+- [CLI](#cli)
     - [`restapify serve`](#restapify-serve)
     - [`restapify list`](#restapify-list)
     - [Serve from configuration file](#serve-from-configuration-file)
     - [Flags](#flags)
-  - [Dashboard](#dashboard)
+- [Dashboard](#dashboard)
     - [Interface structure](#interface-structure)
     - [Update the state of a route](#update-the-state-of-a-route)
     - [API call playground](#api-call-playground)
-  - [JavaScript's API](#javascripts-api)
+- [JavaScript's API](#javascripts-api)
     - [Types definition list](#types-definition-list)
-      - [RestapifyParams](#restapifyparams)
-      - [RouteState](#routestate)
+        - [RestapifyParams](#restapifyparams)
+        - [RouteState](#routestate)
     - [Restapify's constructor](#restapifys-constructor)
     - [Restapify.run()](#restapifyrun)
     - [Restapify.close()](#restapifyclose)
     - [Restapify.on()](#restapifyon)
-      - [Events list](#events-list)
-      - [Restapify.on('error', <callback>)](#restapifyonerror-callback)
+        - [Events list](#events-list)
+        - [Restapify.on('error', <callback>)](#restapifyonerror-callback)
     - [Restapify.setState(newState)](#restapifysetstatenewstate)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -595,7 +594,7 @@ module.exports = {
 
 ### Flags
 | short         | long                 | description                          | default  |
-| ------------- | -------------------- | ------------------------------------ | -------- |
+|---------------|----------------------|--------------------------------------|----------|
 | `-v`          | `--version`          | output the current version           |          |
 | `-p <number>` | `--port <number>`    | port to serve the API                | `6767`   |
 | `-b <string>` | `--baseUrl <string>` | base url to serve the API            | `'/api'` |
@@ -728,7 +727,7 @@ rpfy.run()
 #### Events list
 
 | event              | description                                  | callback type                                              |
-| ------------------ | -------------------------------------------- | ---------------------------------------------------------- |
+|--------------------|----------------------------------------------|------------------------------------------------------------|
 | **start**          | Restapify started successfully               | `() => void`                                               |
 | **server:start**   | Mocked API served successfully               | `() => void`                                               |
 | **server:restart** | Mocked has been refreshed successfully       | `() => void`                                               |
@@ -740,7 +739,7 @@ rpfy.run()
 The error callback provides as parameter an object with 2 usefull infos: the `error` string identifier and *optionally* a `message` that explain the reason of the error. Here is the list of the different errors (type `RestapifyErrorName`):
 
 | error                | description                                                           | message |
-| -------------------- | --------------------------------------------------------------------- | :-----: |
+|----------------------|-----------------------------------------------------------------------|:-------:|
 | **INV:JSON_FILE**    | one of the detected json files is invalid                             |    ✅    |
 | **MISS:ROOT_DIR**    | root directory parameter is missing or invalid                        |    ❌    |
 | **MISS:PORT**        | given port is not available                                           |    ❌    |
