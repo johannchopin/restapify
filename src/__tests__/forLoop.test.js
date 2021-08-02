@@ -108,11 +108,11 @@ describe('Helper\'s functions to process for loops', () => {
     expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
   })
 
-  it('should give array of objects from array notation', () => {
-    const arrayNotation = "[{'a': '1', 'b': 2}, {\"c\":\"3\", 'd':4}]"
-    const expectedResult = [{ 'a': '1', 'b': 2 }, { 'c': '3', 'd': 4 }]
+  it('should return the proceeded for loop with objects in statement', () => {
+    const content = `["#for i in [{'t':'snake'},{'t':'mouse'}]",{"type": "[i.t]"},"#endfor"]`
+    const expectedResult = '[{"type": "snake"},{"type": "mouse"}]'
 
-    expect(getSequenceArray(arrayNotation)).toStrictEqual(expectedResult)
+    expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
   })
 
   it('should return proceed nested for loop', () => {
