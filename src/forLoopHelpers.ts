@@ -108,17 +108,24 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
 
   sequenceArray.forEach(i => {
     let forLoopResult = forLoopSyntax.statement
-    forLoopResult = replaceAllCastedVar(
-      forLoopResult,
-      forLoopSyntax.x,
-      i.toString()
-    )
 
     if (typeof i === 'object') {
       Object.keys(i).forEach(key => {
+        forLoopResult = replaceAllCastedVar(
+          forLoopResult,
+          `${forLoopSyntax.x}.${key}`,
+          i[key].toString()
+        )
+
         forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as SequenceObject)[key].toString())
       })
     } else {
+      forLoopResult = replaceAllCastedVar(
+        forLoopResult,
+        forLoopSyntax.x,
+        i.toString()
+      )
+
       forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}]`, i.toString())
     }
     resultArray.push(forLoopResult)

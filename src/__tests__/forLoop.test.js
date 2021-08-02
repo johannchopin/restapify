@@ -114,6 +114,13 @@ describe('Helper\'s functions to process for loops', () => {
 
     expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
   })
+  
+  it('should return the proceeded for loop with objects in statement and cast x to number notation', () => {
+    const content = `["#for i in [{'t':'1'},{'t':'2'}]",{"type": "n:[i.t]"},"#endfor"]`
+    const expectedResult = '[{"type": 1},{"type": 2}]'
+
+    expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
+  })
 
   it('should return proceed nested for loop', () => {
     const content = '["#for i in [1, 2]",["#for ii in [1, 2]",{"parent":"n:[i]","id":"n:[ii]"},"#endfor"],"#endfor"]'
