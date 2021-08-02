@@ -27,7 +27,7 @@ export interface RangeFunctionParams {
   step?: number
 }
 
-interface IObject {
+interface SequenceObject {
   [key: string]: string | number | boolean;
 }
 
@@ -82,14 +82,14 @@ export const getArrayFromRangeString = (stringifiedRange: string): number[] => {
 }
 
 // eslint-disable-next-line max-len
-export const getSequenceArrayAsArray = (sequence: string): (number | string | boolean | IObject)[] => {
+export const getSequenceArrayAsArray = (sequence: string): (number | string | boolean | SequenceObject)[] => {
   sequence = getContentWithReplacedFakerVars(sequence)
   sequence = replaceAll(sequence, '\'', '"')
 
   return JSON.parse(sequence)
 }
 
-export const getSequenceArray = (sequence: string): (number | string | boolean | IObject)[] => {
+export const getSequenceArray = (sequence: string): (number | string | boolean | SequenceObject)[] => {
   const isSequenceAnArray = sequence.startsWith('[') && sequence.endsWith(']')
   const isSequenceRange = sequence.startsWith('range(') && sequence.endsWith(')')
 
@@ -116,7 +116,7 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
 
     if (typeof i === 'object') {
       Object.keys(i).forEach(key => {
-        forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as IObject)[key].toString())
+        forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as SequenceObject)[key].toString())
       })
     } else {
       forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}]`, i.toString())
