@@ -31,6 +31,14 @@ interface SequenceObject {
   [key: string]: string | number | boolean;
 }
 
+const isStatementObjectValid = (obj: Record<string, any>): boolean => {
+  return Object.keys(obj).every(key => {
+    return typeof obj[key] === 'string' ||
+      typeof obj[key] === 'number' ||
+      typeof obj[key] === 'boolean'
+  })
+}
+
 export const getForLoopSyntax = (forLoopObject: ForLoopSyntax): string => {
   const { x, sequence, statement } = forLoopObject
   return `"${FOR_LOOP_SYNTAX_PREFIX} ${x} in ${sequence}",${statement},"${FOR_LOOP_SYNTAX_SUFFIX}"`
@@ -110,15 +118,20 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
     let forLoopResult = forLoopSyntax.statement
 
     if (typeof i === 'object') {
-      Object.keys(i).forEach(key => {
-        forLoopResult = replaceAllCastedVar(
-          forLoopResult,
-          `${forLoopSyntax.x}.${key}`,
-          i[key].toString()
-        )
-
-        forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as SequenceObject)[key].toString())
-      })
+      const isStatementValid = isStatementObjectValid(i)
+      if (!isStatementValid) {
+        // TODO: implement throwing error
+      } else {
+        Object.keys(i).forEach(key => {
+          forLoopResult = replaceAllCastedVar(
+            forLoopResult,
+            `${forLoopSyntax.x}.${key}`,
+            i[key].toString()
+          )
+  
+          forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as SequenceObject)[key].toString())
+        })
+      }
     } else {
       forLoopResult = replaceAllCastedVar(
         forLoopResult,
