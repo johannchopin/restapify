@@ -32,7 +32,7 @@ interface SequenceObject {
   [key: string]: string | number | boolean;
 }
 
-const isStatementObjectValid = (obj: Record<string, any>): boolean => {
+export const isStatementObjectValid = (obj: Record<string, any>): boolean => {
   return Object.keys(obj).every(key => {
     return typeof obj[key] === 'string'
       || typeof obj[key] === 'number'

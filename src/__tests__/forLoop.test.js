@@ -2,7 +2,8 @@ import {
   getForLoopSyntax, 
   getSequenceArray, 
   getContentWithReplacedForLoopsSyntax, 
-  getForLoopSyntaxInContent 
+  getForLoopSyntaxInContent, 
+  isStatementObjectValid
 } from '../../src/forLoopHelpers'
 
 jest.mock('faker', () => ({
@@ -128,5 +129,17 @@ describe('Helper\'s functions to process for loops', () => {
       '[[{"parent":1,"id":1},{"parent":1,"id":2}],[{"parent":2,"id":1},{"parent":2,"id":2}]]'
     
     expect(getContentWithReplacedForLoopsSyntax(content)).toBe(expectedResult)
+  })
+
+  describe('Statement object validity', () => {
+    it('should detect a valid object', () => {
+      expect(isStatementObjectValid({foo: 'bar'})).toBe(true)
+    })
+    it('should detect an invalid object that use array as value', () => {
+      expect(isStatementObjectValid({foo: []})).toBe(false)
+    })
+    it('should detect an invalid object that use object as value', () => {
+      expect(isStatementObjectValid({foo: {}})).toBe(false)
+    })
   })
 })
