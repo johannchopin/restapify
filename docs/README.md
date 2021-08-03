@@ -446,6 +446,29 @@ Here the `<sequence>` is `['rabbit', 'mouse', 'lion']`, the iterator variable `<
 ]
 ```
 
+You can inject multiple pieces of data per iteration by supplying a `<sequence>` array containing objects with key-value pairs.
+
+```json
+[
+  "#for i in [{'t': 'snake', 'n': 'snaky'}, {'t': 'mouse', 'n': 'mousy'}]",
+  {
+    "type": "[i.t]",
+    "name": "[i.n]"
+  },
+  "#endfor"
+]
+```
+
+This example will produce:
+```json
+[
+  { "type": "snake", "name": "snaky" },
+  { "type": "mouse", "name": "mousy" },
+]
+```
+
+> ⚠️ For now only objects with a key and value from type `string | number | boolean` are allowed.
+
 #### For-loop's range sequence
 
 For bigger amount of data you can use the `range` syntax that works the same than [range() from lodash](https://lodash.com/docs/4.17.15#range):
@@ -724,6 +747,7 @@ The error callback provides as parameter an object with 2 usefull infos: the `er
 | **MISS:PORT**        | given port is not available                                           |    ❌    |
 | **INV:API_BASEURL**  | given api base url is needed for internal purposes (ex: `/restapify`) |    ❌    |
 | **INV:FAKER_SYNTAX** | invalid call to the fakerjs library                                   |    ✅    |
+| **INV:SYNTAX**       | invalid/unsupported syntax detected                                   |    ✅    |
 | **ERR**              | Unhandled error triggered                                             |    ✅    |
 
 

@@ -1,0 +1,8 @@
+[
+  "#for i in [{'t': 'snake', 'n': 'snaky'}, {'t': 'mouse', 'n': 'mousy'}]",
+  {
+    "type": "[i.t]",
+    "name": "[i.n]"
+  },
+  "#endfor"
+]

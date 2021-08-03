@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2021-08-03
+### ✨ Added
+- support object notation in for-loop array sequence (thanks to [@flippingflapping](https://github.com/flippingflapping))
+
 ## [2.2.0] - 2021-07-30
 ### ✨ Added
 - handle nested for-loop
@@ -35,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLI crash on invalid configuration file path
 
 
-[Unreleased]: ./compare/v2.2.0...HEAD
+[Unreleased]: ./compare/v2.3.0...HEAD
+[2.3.0]: ./releases/tag/v2.3.0
 [2.2.0]: ./releases/tag/v2.2.0
 [2.1.5]: ./releases/tag/v2.1.5
 [2.1.0]: ./releases/tag/v2.1.0

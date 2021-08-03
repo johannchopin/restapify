@@ -28,7 +28,7 @@ describe('Test `list` command', () => {
     })
 
     it('should output correct number of routes', () => {
-      expect(logOutput.split('\n').length).toBe(23)
+      expect(logOutput.split('\n').length).toBe(24)
     })
   })
 })
