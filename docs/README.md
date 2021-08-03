@@ -27,6 +27,7 @@
         - [For-loop's range sequence](#for-loops-range-sequence)
         - [Use route's variables in sequence](#use-routes-variables-in-sequence)
         - [Use faker in an array sequence](#use-faker-in-an-array-sequence)
+        - [Nested for-loops](#nested-for-loops)
 - [CLI](#cli)
     - [`restapify serve`](#restapify-serve)
     - [`restapify list`](#restapify-list)
@@ -251,7 +252,7 @@ Example:
 
 ### No content response
 
-For some endpoints, you don't need to repond anything (for example a request that should response with a **204	No Content**). Since an empty file is not a valid JSON file, you need to use the syntax `[null]` to specify that the response should not return any data:
+For some endpoints, you don't need to respond anything (for example a request that should response with a **204	No Content**). Since an empty file is not a valid JSON file, you need to use the syntax `[null]` to specify that the response should not return any data:
 
 Example with the file `[userid].PUT.204.json`:
 ```json
@@ -445,6 +446,29 @@ Here the `<sequence>` is `['rabbit', 'mouse', 'lion']`, the iterator variable `<
 ]
 ```
 
+You can inject multiple pieces of data per iteration by supplying a `<sequence>` array containing objects with key-value pairs.
+
+```json
+[
+  "#for i in [{'t': 'snake', 'n': 'snaky'}, {'t': 'mouse', 'n': 'mousy'}]",
+  {
+    "type": "[i.t]",
+    "name": "[i.n]"
+  },
+  "#endfor"
+]
+```
+
+This example will produce:
+```json
+[
+  { "type": "snake", "name": "snaky" },
+  { "type": "mouse", "name": "mousy" },
+]
+```
+
+> ⚠️ For now only objects with a key and value from type `string | number | boolean` are allowed.
+
 #### For-loop's range sequence
 
 For bigger amount of data you can use the `range` syntax that works the same than [range() from lodash](https://lodash.com/docs/4.17.15#range):
@@ -498,6 +522,10 @@ Restapify support the use of [faker variables](#fakerjs-integration) in an array
 ```
 
 > Note that if the faker variable is a `string`, you have to wrap it between `'`. If it's a `number` or a `boolean` you don't need to.
+
+#### Nested for-loops
+
+> ⚠️ Sadly at the moment it's not possible to use nested for loop. This feature should be implemented in a near future.
 
 ## CLI
 Restapify comes with a cli to easily serve your mocked API.
@@ -719,6 +747,7 @@ The error callback provides as parameter an object with 2 usefull infos: the `er
 | **MISS:PORT**        | given port is not available                                           |    ❌    |
 | **INV:API_BASEURL**  | given api base url is needed for internal purposes (ex: `/restapify`) |    ❌    |
 | **INV:FAKER_SYNTAX** | invalid call to the fakerjs library                                   |    ✅    |
+| **INV:SYNTAX**       | invalid/unsupported syntax detected                                   |    ✅    |
 | **ERR**              | Unhandled error triggered                                             |    ✅    |
 
 
