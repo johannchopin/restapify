@@ -34,9 +34,9 @@ interface SequenceObject {
 
 const isStatementObjectValid = (obj: Record<string, any>): boolean => {
   return Object.keys(obj).every(key => {
-    return typeof obj[key] === 'string' ||
-      typeof obj[key] === 'number' ||
-      typeof obj[key] === 'boolean'
+    return typeof obj[key] === 'string'
+      || typeof obj[key] === 'number'
+      || typeof obj[key] === 'boolean'
   })
 }
 
@@ -98,7 +98,11 @@ export const getSequenceArrayAsArray = (sequence: string): (number | string | bo
   return JSON.parse(sequence)
 }
 
-export const getSequenceArray = (sequence: string): (number | string | boolean | SequenceObject)[] => {
+export const getSequenceArray = (sequence: string): (
+    number
+    | string
+    | boolean
+    | SequenceObject)[] => {
   const isSequenceAnArray = sequence.startsWith('[') && sequence.endsWith(']')
   const isSequenceRange = sequence.startsWith('range(') && sequence.endsWith(')')
 
@@ -134,7 +138,6 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
             `${forLoopSyntax.x}.${key}`,
             i[key].toString()
           )
-  
           forLoopResult = replaceAll(forLoopResult, `[${forLoopSyntax.x}.${key}]`, (i as SequenceObject)[key].toString())
         })
       }
