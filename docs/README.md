@@ -745,6 +745,7 @@ The error callback provides as parameter an object with 2 usefull infos: the `er
 | **MISS:PORT**        | given port is not available                                           |    ❌    |
 | **INV:API_BASEURL**  | given api base url is needed for internal purposes (ex: `/restapify`) |    ❌    |
 | **INV:FAKER_SYNTAX** | invalid call to the fakerjs library                                   |    ✅    |
+| **INV:SYNTAX**       | invalid/unsupported syntax detected                                   |    ✅    |
 | **ERR**              | Unhandled error triggered                                             |    ✅    |
 
 
