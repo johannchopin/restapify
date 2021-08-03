@@ -7,6 +7,7 @@ import {
   FOR_LOOP_SYNTAX_SUFFIX
 } from './const'
 import { getContentWithReplacedFakerVars } from './fakerHelpers'
+import { RestapifyErrorName } from './types'
 
 const ELMT_BETWEEN_PARENTHESES_MATCHER = /\(([^)]+)\)/g
 
@@ -120,7 +121,12 @@ export const getForLoopSyntaxResult = (forLoopSyntax: ForLoopSyntax): string => 
     if (typeof i === 'object') {
       const isStatementValid = isStatementObjectValid(i)
       if (!isStatementValid) {
-        // TODO: implement throwing error
+        const error: RestapifyErrorName = 'INV:SYNTAX'
+        const errorObject = {
+          error,
+          message: `The object syntax ${JSON.stringify(i)} is not valid! Please refer to the documentation https://restapify.vercel.app/docs#for-loops-array-sequence`
+        }
+        throw new Error(JSON.stringify(errorObject))
       } else {
         Object.keys(i).forEach(key => {
           forLoopResult = replaceAllCastedVar(
