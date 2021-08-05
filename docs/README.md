@@ -467,7 +467,7 @@ This example will produce:
 ]
 ```
 
-> ⚠️ For now only objects with a key and value from type `string | number | boolean` are allowed.
+> ⚠️ For now only objects with a key and value from type `string | number | boolean` are allowed.
 
 #### For-loop's range sequence
 
