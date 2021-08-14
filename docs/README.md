@@ -205,7 +205,7 @@ GET    /posts/:postid  # 200
 POST   /posts/:postid  # 201
 ```
 
-You will then in the [dashboard](todo) be able to select which state you want to use for a specific route. So for example if you select the state `INV_PARAMS` for the route `POST /posts/[postid]`, the server will respond with the status code `400`.
+You will then in the [dashboard](#dashboard) be able to select which state you want to use for a specific route. So for example if you select the state `INV_PARAMS` for the route `POST /posts/[postid]`, the server will respond with the status code `400`.
 
 ## Route's file content
 The structure of the files allows to define the API endpoints, now it is necessary to define what they respond.
