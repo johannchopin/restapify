@@ -1,6 +1,9 @@
 {
   "name": "restapify",
-  "version": "2.3.1",
+  "version": "2.3.2",
+  "license": "MIT",
+  "private": false,
+  "keywords": ["rest-api", "api", "mock", "json", "fake"],
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/src/index.d.ts",
@@ -9,8 +12,6 @@
     "dist/node_modules/restapify-dashboard",
     "bin"
   ],
-  "license": "MIT",
-  "private": false,
   "bin": {
     "restapify": "bin/restapify"
   },
