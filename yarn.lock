@@ -6147,10 +6147,10 @@ responselike@^1.0.2:
   dependencies:
     lowercase-keys "^1.0.0"
 
-restapify-dashboard@^1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.3.5.tgz#a49f42658aeb8d4cd64fdbef6d981aaafcedf70a"
-  integrity sha512-0vSoir+CuK+nLslP3JpBVTjG1i4mYcI/vIi5vA4OaCoIcS/aEfYBhQp+FiykdYywzamVwRJx5f03L+MK57nwuA==
+restapify-dashboard@^1.3.9:
+  version "1.3.9"
+  resolved "https://registry.yarnpkg.com/restapify-dashboard/-/restapify-dashboard-1.3.9.tgz#1abc4c2ea41715445c743acc28094cb6eb04cec3"
+  integrity sha512-ondf5lQ62Ldgp5rDMWXtHB67byMu6mARPUNivK5YaEy7r8Mq8wTBpfVT8AnaKH3RPHRknSt1e3Jz+wKp9Y15KQ==
   dependencies:
     "@popperjs/core" "^2.6.0"
     axios "^0.21.0"
