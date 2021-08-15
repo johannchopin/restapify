@@ -56,7 +56,7 @@ Then in the `package.json` file, define the `start` command:
 
 You can now publish your app to the plateform.
 
-For a faster start use the [restapify-heroku-template](https://github.com/johannchopin/restapify-heroku-template) repo. You can check it live by visiting https://restapify-heroku-template.herokuapp.com/restapify.
+For a faster start use the [restapify-heroku-template](https://github.com/johannchopin/restapify-heroku-template) repo. You can check it live by visiting [https://restapify-heroku-template.herokuapp.com/restapify](https://restapify-heroku-template.herokuapp.com/restapify).
 
 ## Vercel
 
@@ -116,7 +116,7 @@ Finally create the following `vercel.json` configuration file that will redirect
 }
 ```
 
-For a faster start use the [restapify-vercel-template](https://github.com/johannchopin/restapify-vercel-template) repo. You can check it live by visiting https://restapify-vercel-template.vercel.app/api/users.
+For a faster start use the [restapify-vercel-template](https://github.com/johannchopin/restapify-vercel-template) repo. You can check it live by visiting [https://restapify-vercel-template.vercel.app/api/users](https://restapify-vercel-template.vercel.app/api/users).
 
 ## Codesandbox
 
@@ -127,6 +127,8 @@ You can directly try and play with restapify on [codesandbox](https://codesandbo
 </a>
 
 ## Stackblitz
+
+> ⚠️ It is currently not possible to change the state of a route from the dashboard on Stackblitz.
 
 Like with [codesandbox](#codesandbox) you can discover and serve restapify from the [stackblitz](https://stackblitz.com/) plateform.
 
