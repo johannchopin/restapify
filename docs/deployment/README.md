@@ -60,7 +60,7 @@ For a faster start use the [restapify-heroku-template](https://github.com/johann
 
 ## Vercel
 
-> ⚠️ Due to the serverless architecture of vercel, the dashboard won't be accessible. We are currently investigating on a workaround! If you need the dashboard interface please use another another platform for now.
+> ⚠️ Due to the serverless architecture of vercel, the dashboard won't be accessible. We are currently investigating on a workaround! If you need the dashboard interface please use another platform for now.
 
 To deploy on Vercel you will need to have a `start` script in your `package.json`:
 
