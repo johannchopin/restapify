@@ -120,9 +120,9 @@ For a faster start use the [restapify-vercel-template](https://github.com/johann
 
 ## Codesandbox
 
-You can directly try and play with restapify on [codesandbox](https://codesandbox.io) by using the [restapify template](https://codesandbox.io/s/restapify-h5c3p).
+You can directly try and play with restapify on [codesandbox](https://codesandbox.io) by using the [restapify template](https://codesandbox.io/s/restapify-h5c3p):
 
-You can check it out live at https://h5c3p.sse.codesandbox.io/restapify.
+[![Edit restapify](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/restapify-h5c3p?fontsize=14&hidenavigation=1&theme=dark)
 
 ## Stackblitz
 
