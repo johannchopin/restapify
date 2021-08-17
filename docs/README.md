@@ -67,10 +67,10 @@ Restapify allow you to easily create REST API routes using a specific file struc
 It will serve the following routes:
 ```
 GET    /users
-GET    /users/:userid
-DELETE /users/:userid
+GET    /users/[userid]
+DELETE /users/[userid]
 GET    /posts
-GET    /posts/:postid
+GET    /posts/[postid]
 PUT    /posts/my-post
 ```
 
@@ -123,13 +123,13 @@ You can define some variables in your routes by using squared brackets. It works
 This will serve:
 
 ```
-GET /posts/:postid
-GET /posts/:postid/comments
+GET /posts/[postid]
+GET /posts/[postid/comments]
 ```
 
 You will be then able to use theses variables in the json files (see the [Consume route's variables](#consume-routes-variables) section).
 
-> ⚠️ In case your want to use severals variables inside a route like `/posts/:var1/comments/:var2`, make sure that they have an unique name
+> ⚠️ In case your want to use severals variables inside a route like `/posts/[var1]/comments/[var2]`, make sure that they have an unique name
 
 ### HTTP's methods
 
@@ -149,9 +149,9 @@ This will serve:
 
 ```
 GET    /posts
-GET    /posts/:postid
-POST   /posts/:postid
-DELETE /posts/:postid
+GET    /posts/[postid]
+POST   /posts/[postid]
+DELETE /posts/[postid]
 ```
 
 ### HTTP's status code
@@ -172,9 +172,9 @@ It will serve:
 
 ```bash
 GET    /posts          # 200
-GET    /posts/:postid  # 200
-POST   /posts/:postid  # 201
-DELETE /posts/:postid  # 204
+GET    /posts/[postid]  # 200
+POST   /posts/[postid]  # 201
+DELETE /posts/[postid]  # 204
 ```
 
 ### Route's state
@@ -201,8 +201,8 @@ It will serve:
 
 ```bash
 GET    /posts
-GET    /posts/:postid  # 200
-POST   /posts/:postid  # 201
+GET    /posts/[postid]  # 200
+POST   /posts/[postid]  # 201
 ```
 
 You will then in the [dashboard](#dashboard) be able to select which state you want to use for a specific route. So for example if you select the state `INV_PARAMS` for the route `POST /posts/[postid]`, the server will respond with the status code `400`.
