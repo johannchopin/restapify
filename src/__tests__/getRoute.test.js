@@ -86,7 +86,7 @@ describe('Get route helpers', () => {
       })
       const vars = {
         postid: 'just-a-post',
-        publishStatus: true
+        publishStatus: 'true'
       }
       const expectedContentWithReplacedVars = JSON.stringify({
         post: 'just-a-post',
