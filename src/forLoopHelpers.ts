@@ -1,6 +1,6 @@
 import range from 'lodash.range'
 
-import { replaceAll, replaceAllCastedVar } from './utils'
+import { replaceAll } from './utils'
 import {
   FOR_LOOP_SYNTAX_MATCHER,
   FOR_LOOP_SYNTAX_PREFIX,
@@ -8,6 +8,7 @@ import {
 } from './const'
 import { getContentWithReplacedFakerVars } from './fakerHelpers'
 import { RestapifyErrorName } from './types'
+import { replaceAllCastedVar } from './variableCastingHelpers'
 
 const ELMT_BETWEEN_PARENTHESES_MATCHER = /\(([^)]+)\)/g
 

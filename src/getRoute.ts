@@ -1,6 +1,6 @@
 import { HttpVerb, JsonRouteFileContent } from './types'
 
-import { replaceAll, replaceAllCastedVar } from './utils'
+import { replaceAll } from './utils'
 import {
   CURRENT_LOCATION_ROUTE_SELECTOR,
   HEADER_SYNTAX,
@@ -17,6 +17,7 @@ import {
 } from './utils'
 import { getContentWithReplacedForLoopsSyntax } from './forLoopHelpers'
 import { getContentWithReplacedFakerVars } from './fakerHelpers'
+import { replaceAllCastedVar } from './variableCastingHelpers'
 
 // I N T E R F A C E S
 export interface Route {

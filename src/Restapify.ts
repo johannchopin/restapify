@@ -339,12 +339,16 @@ class Restapify {
         vars[variable] = req.params[variable]
       })
 
-      const responseBody = routeData.getBody(vars, req.query)
+      try {
+        const responseBody = routeData.getBody(vars, req.query)
 
-      if (responseBody) {
-        res.send(JSON.stringify(responseBody))
-      } else {
-        res.end()
+        if (responseBody) {
+          res.send(JSON.stringify(responseBody))
+        } else {
+          res.end()
+        }
+      } catch ({ message }) {
+        res.status(500).set('Content-Type', 'text/html').send(JSON.parse(message).message.toString())
       }
     }
 

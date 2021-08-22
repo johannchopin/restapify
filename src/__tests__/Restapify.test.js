@@ -203,6 +203,15 @@ describe('Restapify', () => {
     })
   })
 
+  describe('Variables casting', () => {
+    it('should fail with error message if invalid number variable', async () => {
+      const variable = 'not-a-number'
+      let response = await fetch(`${apiRoot}/posts/42/comments/${variable}`)
+
+      expect(response.status).toBe(500)
+    })
+  })
+
   it('should respond with defined HTTP Status Code', async () => {
     const expectedStatusCode = 201
     let response = await fetch(`${apiRoot}/users/`, {

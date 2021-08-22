@@ -5,7 +5,7 @@ import {
   FAKER_SYNTAX_SUFIX
 } from './const'
 import { FakerSyntaxData } from './types'
-import { replaceAllCastedVar } from './utils'
+import { replaceAllCastedVar } from './variableCastingHelpers'
 
 export const getFakerVarsInContent = (content: string): string[] => {
   return Array.from(content.matchAll(FAKER_SYNTAX_MATCHER), m => m[1])
