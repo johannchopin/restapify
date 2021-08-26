@@ -247,9 +247,10 @@ class Restapify {
         statusCode,
         fileContent
       } = routeData
-      const routeExist = this.routes[method][route] !== undefined
 
-      if (!routeExist) {
+      const routeExists = this.routes[method][route] !== undefined
+
+      if (!routeExists) {
         this.routes[method][route] = {} as RouteData
       }
 
