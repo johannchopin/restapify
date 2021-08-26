@@ -75,9 +75,7 @@ class Restapify {
   private server: any
   private chokidarWatcher: chokidar.FSWatcher
   private listedRouteFiles: ListedFiles = {}
-  public routes: Routes = {
-    GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
-  }
+  public routes: Routes
   public rootDir: string
   public port: number
   public publicPath: string
@@ -230,6 +228,11 @@ class Restapify {
   }
 
   private configRoutesFromListedFiles = (): void => {
+    // reset routes
+    this.routes = {
+      GET: {}, POST: {}, DELETE: {}, PUT: {}, PATCH: {}
+    }
+
     Object.keys(this.listedRouteFiles).forEach(routeFilePath => {
       const routeData = getRoute(
         routeFilePath,
