@@ -129,7 +129,7 @@ class Restapify {
   }
 
   private configFaker = (): void => {
-    setFakerLocale(this.locale)
+    this.setLocale(this.locale)
   }
 
   private configServer = (): void => {
@@ -557,6 +557,10 @@ class Restapify {
       hard: false
     })
     return getRoutesByFileOrderHelper(this.routes)
+  }
+
+  public setLocale = (locale: FakerLocale): void => {
+    setFakerLocale(locale)
   }
 
   public openDashboard = (): void => {
