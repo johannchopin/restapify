@@ -5,7 +5,7 @@ import { Routes, PrivateRouteState, RouteState } from './Restapify'
 import { HTTP_VERBS } from './const'
 import { GetRoutes } from './types/internalApi'
 import { getRoutesByFileOrder } from './utils'
-import { FakerLocale, isLocaleValid } from './faker'
+import { FakerLocale, isLocaleValid, LOCALES } from './faker'
 
 // I N T E R F A C E S
 export interface InternalApiParams {
@@ -75,7 +75,11 @@ export const getInitialisedInternalApi = (
     res.status(204).end()
   })
 
-  app.put(getRoute('/configs/locale'), (req, res): void => {
+  app.get(getRoute('/configs/locales'), (req, res): void => {
+    res.json(LOCALES)
+  })
+
+  app.put(getRoute('/configs/locales'), (req, res): void => {
     const { locale } = req.body
 
     if (!isLocaleValid(locale)) {
