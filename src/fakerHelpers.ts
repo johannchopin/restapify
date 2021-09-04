@@ -3,11 +3,9 @@ import {
   FAKER_SYNTAX_PREFIX,
   FAKER_SYNTAX_SUFIX
 } from './const'
-import { getFakerInstance } from './faker'
+import faker from './faker'
 import { FakerSyntaxData } from './types'
 import { replaceAllCastedVar } from './variableCastingHelpers'
-
-const faker = getFakerInstance()
 
 export const getFakerVarsInContent = (content: string): string[] => {
   return Array.from(content.matchAll(FAKER_SYNTAX_MATCHER), m => m[1])
