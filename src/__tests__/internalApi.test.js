@@ -1,18 +1,21 @@
 /* eslint-disable no-shadow */
 import * as path from 'path'
+import * as fs from 'fs'
 import 'isomorphic-fetch'
 import Restapify from '../../src/Restapify'
 import { normalizeNewline } from '../../test/utils'
 
+const ROOT_DIR = path.resolve(__dirname, '../../test/api')
+
 const restapifyParams = {
-  rootDir: path.resolve(__dirname, '../../test/api'),
+  rootDir: ROOT_DIR,
   port: 6767,
   baseUrl: '/api',
   hotWatch: false
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
-const apiRoot = `${baseUrl}/restapify/api`
+const apiEntryPoint = `${baseUrl}/restapify/api`
 
 describe('Internal API', () => {
   let rpfy
@@ -89,14 +92,30 @@ describe('Internal API', () => {
       }
     }
 
-    let response = await fetch(`${apiRoot}/api`)
+    let response = await fetch(`${apiEntryPoint}/api`)
     let data = await response.json()
     expect(normalizeNewline(data)).toMatchObject(expectedResponse)
   })
 
+  it('should update /api on file creation', async () => {
+    const newRouteFilePath = path.resolve(ROOT_DIR, 'bla.json')
+    const newRouteContent = {foor: 'bar'}
+    const stringNewRouteContent = JSON.stringify(newRouteContent)
+
+    fs.writeFileSync(newRouteFilePath, stringNewRouteContent)
+    fs.appendFileSync(newRouteFilePath, '\n')
+
+    let response = await fetch(`${apiEntryPoint}/api`)
+    let data = await response.json()
+
+    fs.unlinkSync(newRouteFilePath)
+
+    expect(data['/bla']).toBe(undefined)
+  })
+
   it('should fetch /states', async () => {
     const expectedResponse = rpfy.states
-    let response = await fetch(`${apiRoot}/states`)
+    let response = await fetch(`${apiEntryPoint}/states`)
     let data = await response.json()
     expect(data).toStrictEqual(expectedResponse)
   })
@@ -109,7 +128,7 @@ describe('Internal API', () => {
         state: 'ERR',
         method: 'POST'
       }
-      let response = await fetch(`${apiRoot}/states`, {
+      let response = await fetch(`${apiEntryPoint}/states`, {
         method: 'PUT',
         body: JSON.stringify(updatedStateObject),
         headers:{
@@ -123,7 +142,7 @@ describe('Internal API', () => {
 
     it('should response with error on invalid body', async () => {
       const expectedResponseStatus = 401
-      let response = await fetch(`${apiRoot}/states`, {
+      let response = await fetch(`${apiEntryPoint}/states`, {
         method: 'PUT'
       })
 
