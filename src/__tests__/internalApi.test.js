@@ -154,6 +154,17 @@ describe('Internal API', () => {
   })
 
   describe('locales', () => {
+    it('should fetch current locale', async () => {
+      const expectedResponseStatus = 200
+      const expectedResponse = {locale: 'en'}
+
+      let response = await fetch(`${apiEntryPoint}/configs/locale`)
+      let data = await response.json()
+
+      expect(response.status).toStrictEqual(expectedResponseStatus)
+      expect(data).toStrictEqual(expectedResponse)
+    })
+
     it('should fetch all the locales', async () => {
       const expectedResponseStatus = 200
       const expectedResponse = LOCALES
