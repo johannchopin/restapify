@@ -5,9 +5,11 @@ import { Routes, PrivateRouteState, RouteState } from './Restapify'
 import { HTTP_VERBS } from './const'
 import { GetRoutes } from './types/internalApi'
 import { getRoutesByFileOrder } from './utils'
+import { FakerLocale, isLocaleValid } from './faker'
 
 // I N T E R F A C E S
 export interface InternalApiParams {
+  setLocale: (newLocale: FakerLocale) => void
   setState: (newState: RouteState) => void
   states: PrivateRouteState[]
   routes: Routes
@@ -28,7 +30,8 @@ export const getInitialisedInternalApi = (
     baseUrl,
     states,
     routes,
-    setState
+    setState,
+    setLocale
   } = params
 
   const getSortedRoutes = () : GetRoutes => {
@@ -68,12 +71,18 @@ export const getInitialisedInternalApi = (
       res.status(401).end()
     }
 
-    setState({
-      route,
-      state,
-      method
-    })
+    setState({ route, state, method })
+    res.status(204).end()
+  })
 
+  app.put(getRoute('/configs/locale'), (req, res): void => {
+    const { locale } = req.body
+
+    if (!isLocaleValid(locale)) {
+      res.status(401).send(`The given locale ${locale} is not valid! Please refer to the documentation https://github.com/Marak/faker.js#localization`)
+    }
+
+    setLocale(locale)
     res.status(204).end()
   })
 

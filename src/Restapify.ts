@@ -170,7 +170,8 @@ class Restapify {
       baseUrl,
       routes,
       states,
-      setState: this.setState
+      setState: this.setState,
+      setLocale: setFakerLocale
     })
   }
 
