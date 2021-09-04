@@ -15,6 +15,7 @@ export interface InternalApiParams {
   routes: Routes
   port: number
   baseUrl: string
+  locale: FakerLocale
 }
 
 const getRoute = (route: string): string => {
@@ -31,7 +32,8 @@ export const getInitialisedInternalApi = (
     states,
     routes,
     setState,
-    setLocale
+    setLocale,
+    locale
   } = params
 
   const getSortedRoutes = () : GetRoutes => {
@@ -75,18 +77,22 @@ export const getInitialisedInternalApi = (
     res.status(204).end()
   })
 
+  app.get(getRoute('/configs/locale'), (req, res): void => {
+    res.json({ locale })
+  })
+
   app.get(getRoute('/configs/locales'), (req, res): void => {
     res.json(LOCALES)
   })
 
   app.put(getRoute('/configs/locales'), (req, res): void => {
-    const { locale } = req.body
+    const { locale: bodyLocale } = req.body
 
-    if (!isLocaleValid(locale)) {
-      res.status(400).send(`The given locale ${locale} is not valid! Please refer to the documentation https://github.com/Marak/faker.js#localization`)
+    if (!isLocaleValid(bodyLocale)) {
+      res.status(400).send(`The given locale ${bodyLocale} is not valid! Please refer to the documentation https://github.com/Marak/faker.js#localization`)
     }
 
-    setLocale(locale)
+    setLocale(bodyLocale)
     res.status(204).end()
   })
 

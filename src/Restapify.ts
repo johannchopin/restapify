@@ -171,7 +171,8 @@ class Restapify {
       routes,
       states,
       setState: this.setState,
-      setLocale: this.setLocale
+      setLocale: this.setLocale,
+      locale: this.locale
     })
   }
 
