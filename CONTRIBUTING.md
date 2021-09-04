@@ -39,3 +39,7 @@ yarn test:manual
 ## 💻 Use the cli locally
 
 If you make some update on the cli of restapify and want to test the changes, just run the command `yarn link` at the root of the project.
+
+## 🎨 Design
+
+All the icons are created by using Figma https://www.figma.com/file/ggaBPd6ix2QvIyCx8QQpWg/icons.
