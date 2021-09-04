@@ -16,7 +16,8 @@ export const cli = (cliArgs: string[]): void => {
     .version(packageJson.version, '-v, --version', 'output the current version')
     .option('-p, --port <number>', 'port to serve Restapify instance')
     .option('-b, --baseUrl <string>', 'base url to serve the API')
-    .option('-o, --open', 'open dashboard on server start', true)
+    .option('-l, --locale <string>', 'language locale used by faker')
+    .option('-o, --open', 'open dashboard on server start')
     .option('--no-open', 'don\'t open dashboard on server start')
 
   program
@@ -27,7 +28,8 @@ export const cli = (cliArgs: string[]): void => {
         rootDir: path.resolve(rootDir),
         baseUrl: options.parent.baseUrl,
         port: options.parent.port,
-        openDashboard: options.parent.open
+        openDashboard: options.parent.open,
+        locale: options.parent.locale
       })
     })
 

@@ -1,9 +1,9 @@
-import faker from 'faker'
 import {
   FAKER_SYNTAX_MATCHER,
   FAKER_SYNTAX_PREFIX,
   FAKER_SYNTAX_SUFIX
 } from './const'
+import faker from './faker'
 import { FakerSyntaxData } from './types'
 import { replaceAllCastedVar } from './variableCastingHelpers'
 

@@ -7,6 +7,7 @@ import * as http from 'http'
 import open from 'open'
 import * as chokidar from 'chokidar'
 import nocache from 'nocache'
+import faker, { setFakerLocale } from './faker'
 
 import {
   HttpVerb,
@@ -33,6 +34,7 @@ import {
 import { getRoute, Route as RouteData } from './getRoute'
 import { getInitialisedInternalApi } from './internalApi'
 import { areFakerVarsSyntaxValidInContent } from './fakerHelpers'
+import { FakerLocale } from './faker'
 
 const DEFAULT_PORT = 6767
 
@@ -51,7 +53,8 @@ export interface RestapifyParams {
   baseUrl?: string
   states?: RouteState[]
   openDashboard?: boolean
-  hotWatch?: boolean
+  hotWatch?: boolean,
+  locale?: FakerLocale
 }
 export type Routes = {
   [method in HttpVerb]: {[url: string]: RouteData}
@@ -75,6 +78,7 @@ class Restapify {
   private server: any
   private chokidarWatcher: chokidar.FSWatcher
   private listedRouteFiles: ListedFiles = {}
+  private faker: typeof faker
   public routes: Routes
   public rootDir: string
   public port: number
@@ -82,6 +86,7 @@ class Restapify {
   public states: PrivateRouteState[] = []
   public hotWatch: boolean
   public autoOpenDashboard: boolean
+  public locale: FakerLocale
 
   constructor({
     rootDir,
@@ -89,13 +94,15 @@ class Restapify {
     baseUrl = '/api',
     states = [],
     openDashboard = false,
-    hotWatch = true
+    hotWatch = true,
+    locale = 'en'
   }: RestapifyParams) {
     this.rootDir = rootDir
     this.port = port
     this.publicPath = baseUrl
     this.hotWatch = hotWatch
     this.autoOpenDashboard = openDashboard
+    this.locale = locale
     this.states = states.filter(state => {
       return state.state !== undefined
     }) as PrivateRouteState[]
@@ -119,6 +126,10 @@ class Restapify {
         })
       })
     }
+  }
+
+  private configFaker = (): void => {
+    this.setLocale(this.locale)
   }
 
   private configServer = (): void => {
@@ -159,7 +170,9 @@ class Restapify {
       baseUrl,
       routes,
       states,
-      setState: this.setState
+      setState: this.setState,
+      setLocale: this.setLocale,
+      locale: this.locale
     })
   }
 
@@ -184,7 +197,7 @@ class Restapify {
     this.customRun({ ...options, hard: false, openDashboard: false })
   }
 
-  private checkpublicPath = (): void => {
+  private checkPublicPath = (): void => {
     if (this.publicPath.startsWith(INTERNAL_BASEURL)) {
       const error: RestapifyErrorName = 'INV:API_BASEURL'
       const errorObject = { error }
@@ -402,7 +415,8 @@ class Restapify {
     try {
       if (hard) {
         this.configEventsCallbacks()
-        this.checkpublicPath()
+        this.configFaker()
+        this.checkPublicPath()
         this.checkRootDirectory()
       }
 
@@ -544,6 +558,11 @@ class Restapify {
       hard: false
     })
     return getRoutesByFileOrderHelper(this.routes)
+  }
+
+  public setLocale = (locale: FakerLocale): void => {
+    setFakerLocale(locale)
+    this.locale = locale
   }
 
   public openDashboard = (): void => {

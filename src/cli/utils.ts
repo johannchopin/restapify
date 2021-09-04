@@ -136,6 +136,7 @@ export const validateConfig = (config: object): ValidatorResult => {
     rootDir: { type: 'string' },
     publicPath: { type: 'string' },
     port: { type: 'number' },
+    locale: { type: 'string' },
     states: {
       properties: {
         route: 'string',

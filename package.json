@@ -3,7 +3,13 @@
   "version": "2.3.4",
   "license": "MIT",
   "private": false,
-  "keywords": ["rest-api", "api", "mock", "json", "fake"],
+  "keywords": [
+    "rest-api",
+    "api",
+    "mock",
+    "json",
+    "fake"
+  ],
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/src/index.d.ts",
@@ -49,7 +55,7 @@
     "lodash.range": "^3.2.0",
     "nocache": "^2.1.0",
     "open": "^7.3.0",
-    "restapify-dashboard": "^1.3.11"
+    "restapify-dashboard": "^1.4.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.13.0",
