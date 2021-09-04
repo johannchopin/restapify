@@ -83,7 +83,7 @@ export const getInitialisedInternalApi = (
     const { locale } = req.body
 
     if (!isLocaleValid(locale)) {
-      res.status(401).send(`The given locale ${locale} is not valid! Please refer to the documentation https://github.com/Marak/faker.js#localization`)
+      res.status(400).send(`The given locale ${locale} is not valid! Please refer to the documentation https://github.com/Marak/faker.js#localization`)
     }
 
     setLocale(locale)
