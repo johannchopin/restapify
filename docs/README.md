@@ -35,6 +35,7 @@
 - [Dashboard](#dashboard)
     - [Interface structure](#interface-structure)
     - [Update the state of a route](#update-the-state-of-a-route)
+    - [Update Faker's language locale](#update-fakers-language-locale)
     - [API call playground](#api-call-playground)
 - [JavaScript's API](#javascripts-api)
     - [Types definition list](#types-definition-list)
@@ -555,11 +556,12 @@ interface ConfigFileState  {
   "state": string
 }
 interface ConfigFile {
-  "rootDir": string,           // [REQUIRED] relative path to the API root directory
-  "publicPath": string,        // default: `api/`
-  "port": number,              // default: `6767`
-  "states": ConfigFileState[], // default: `undefined`
-  "openDashboard": boolean     // default: `true` 
+  "rootDir": string,            // [REQUIRED] relative path to the API root directory
+  "publicPath"?: string,        // default: 'api/'
+  "port"?: number,              // default: 6767
+  "locale"?: FakerLocale,       // default: 'en'. See https://github.com/marak/Faker.js/#localization
+  "states"?: ConfigFileState[], // default: []
+  "openDashboard"?: boolean     // default: true 
 }
 ```
 
@@ -595,6 +597,7 @@ module.exports = {
 | `-v`          | `--version`          | output the current version           |          |
 | `-p <number>` | `--port <number>`    | port to serve the API                | `6767`   |
 | `-b <string>` | `--baseUrl <string>` | base url to serve the API            | `'/api'` |
+| `-l <string>` | `--locale <string>`  | language locale used by faker        | `'en'`   |
 |               | `--no-open`          | don't open dashboard on server start | `false`  |
 
 ## Dashboard
@@ -618,6 +621,11 @@ If you go to one of this route, you will see on the right a group of button:
 
 With these you can preview (button with the eye icon) or select the state to use for this route. When you select a state, the server will serve this state for this route.
 
+### Update Faker's language locale
+It can be really helpful to test your app with several language. That's why you can update the fakers's language locale by using the select input at the top right of the dashboard:
+
+<img src="https://raw.githubusercontent.com/johannchopin/restapify/main/docs/assets/screenshot-locale-select.png" alt="locale select" width="500">
+
 ### API call playground
 
 For a better understanding of how you can create a mocked API with Restapify, you have for each route a little playground where you can call the API for this route:
@@ -638,6 +646,7 @@ interface RestapifyParams {
   rootDir: string
   port?: number           // default: 6767
   baseUrl?: string        // default: '/api'
+  locale?: FakerLocale,   // default: 'en'. See https://github.com/marak/Faker.js/#localization
   states?: RouteState[]   // default: []
   openDashboard?: boolean // default: false
   hotWatch?: boolean      // default: true
