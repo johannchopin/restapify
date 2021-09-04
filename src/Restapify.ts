@@ -184,7 +184,7 @@ class Restapify {
     this.customRun({ ...options, hard: false, openDashboard: false })
   }
 
-  private checkpublicPath = (): void => {
+  private checkPublicPath = (): void => {
     if (this.publicPath.startsWith(INTERNAL_BASEURL)) {
       const error: RestapifyErrorName = 'INV:API_BASEURL'
       const errorObject = { error }
@@ -402,7 +402,7 @@ class Restapify {
     try {
       if (hard) {
         this.configEventsCallbacks()
-        this.checkpublicPath()
+        this.checkPublicPath()
         this.checkRootDirectory()
       }
 
