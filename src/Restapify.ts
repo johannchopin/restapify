@@ -171,7 +171,7 @@ class Restapify {
       routes,
       states,
       setState: this.setState,
-      setLocale: setFakerLocale
+      setLocale: this.setLocale
     })
   }
 
@@ -561,6 +561,7 @@ class Restapify {
 
   public setLocale = (locale: FakerLocale): void => {
     setFakerLocale(locale)
+    this.locale = locale
   }
 
   public openDashboard = (): void => {

@@ -4,14 +4,17 @@ import * as fs from 'fs'
 import 'isomorphic-fetch'
 import Restapify from '../../src/Restapify'
 import { normalizeNewline } from '../../test/utils'
+import { LOCALES } from '../faker'
 
 const ROOT_DIR = path.resolve(__dirname, '../../test/api')
+const DEFAULT_LOCAL = 'en'
 
 const restapifyParams = {
   rootDir: ROOT_DIR,
   port: 6767,
   baseUrl: '/api',
-  hotWatch: false
+  hotWatch: false,
+  locale: DEFAULT_LOCAL
 }
 
 const baseUrl = `http://localhost:${restapifyParams.port}`
@@ -147,6 +150,54 @@ describe('Internal API', () => {
       })
 
       expect(response.status).toBe(expectedResponseStatus)
+    })
+  })
+
+  describe('locales', () => {
+    it('should fetch all the locales', async () => {
+      const expectedResponseStatus = 200
+      const expectedResponse = LOCALES
+
+      let response = await fetch(`${apiEntryPoint}/configs/locales`)
+      let data = await response.json()
+
+      expect(response.status).toStrictEqual(expectedResponseStatus)
+      expect(data).toStrictEqual(expectedResponse)
+    })
+
+    it('should update the locale', async () => {
+      const expectedResponseStatus = 204
+
+      const newLocal = 'fr'
+      let response = await fetch(`${apiEntryPoint}/configs/locales`, {
+        method: 'PUT',
+        body: JSON.stringify({ locale: newLocal }),
+        headers:{
+          "Content-Type": "application/json"
+        }
+      })
+
+      expect(response.status).toStrictEqual(expectedResponseStatus)
+      expect(rpfy.locale).toBe(newLocal)
+    })
+
+    it('should fail on invalid local update', async () => {
+      const expectedResponseStatus = 400
+
+      const invalidLocal = 'foobar'
+      let response = await fetch(`${apiEntryPoint}/configs/locales`, {
+        method: 'PUT',
+        body: JSON.stringify({ locale: invalidLocal }),
+        headers:{
+          "Content-Type": "application/json"
+        }
+      })
+
+      const errorMessage = await response.text()
+
+      expect(response.status).toStrictEqual(expectedResponseStatus)
+      expect(errorMessage).toBe(`The given locale ${invalidLocal} is not valid! Please refer to the documentation https://github.com/Marak/faker.js#localization`)
+      expect(rpfy.locale).toBe(DEFAULT_LOCAL)
     })
   })
 })
