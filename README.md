@@ -29,7 +29,6 @@ Restapify is a tool that allows you to quickly and easily deploy a local REST AP
 - [**Why Restapify**](#why-restapify)
 - [**Features**](#features)
 - [**Documentation**](#documentation)
-- [**Getting Started**](#getting-started)
 - [**Contributing**](#contributing)
 
 ## Why Restapify
@@ -53,44 +52,6 @@ The problem of most of this libraries is the way you have to define your API end
 ## Documentation
 
 Checkout the documentation on the [website](https://restapify.vercel.app/) or directly read it from the Markdown [source file](docs/README.md).
-
-
-## Getting Started
-### Using the cli
-The simplest way to use Restapify is to use his [cli](https://github.com/johannchopin/restapify/tree/main/docs#cli):
-
-```bash
-npm i -g restapify
-```
-
-and then serve the api folder:
-
-```bash
-restapify serve path/to/folder/
-```
-
-### Using the JavaScript class
-
-You can install restapify's class using `npm` (note that this package should be a devDependency):
-
-```bash
-npm i -D restapify
-```
-
-You can then import the class and instantiate it to serve the api folder:
-
-```javascript
-import * as path from 'path'
-import Restapify from 'restapify'
-
-const apiFolderPath = path.resolve(__dirname, './path/to/folder')
-
-const rpfy = new Restapify({
-  rootDir: apiFolderPath
-})
-rpfy.run()
-```
-
 
 ## Contributing
 
