@@ -124,7 +124,7 @@ This will serve:
 
 ```
 GET /posts/[postid]
-GET /posts/[postid/comments]
+GET /posts/[postid]/comments
 ```
 
 You will be then able to use theses variables in the json files (see the [Consume route's variables](#consume-routes-variables) section).
