@@ -1,8 +1,10 @@
 # Restapify
 
-<p>
+<a href="https://restapify.vercel.app/">
   <img src="./docs/assets/banner.png" alt="restapify cover" width="500">
-</p>
+</a>
+
+<br />
 
 <a href="https://www.npmjs.com/package/restapify">
   <img src="https://img.shields.io/npm/v/restapify" alt="npm">
