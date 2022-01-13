@@ -171,7 +171,7 @@ Define what status code your route should respond by adding it in the filename a
 It will serve:
 
 ```bash
-GET    /posts          # 200
+GET    /posts           # 200
 GET    /posts/[postid]  # 200
 POST   /posts/[postid]  # 201
 DELETE /posts/[postid]  # 204
