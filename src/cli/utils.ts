@@ -3,6 +3,7 @@ import boxen from 'boxen'
 import { Validator, ValidatorResult } from 'jsonschema'
 
 import Restapify, { RestapifyParams, HttpVerb, RestapifyErrorCallbackParam } from '../index'
+import { renderActions } from './actions'
 
 export const getMethodOutput = (method: HttpVerb): string => {
   let methodOutput
@@ -120,6 +121,8 @@ export const runServer = (config: RestapifyParams): void => {
       rpfy.port,
       rpfy.publicPath
     ))
+
+    renderActions(rpfy)
   })
 
   rpfy.on('server:restart', () => {

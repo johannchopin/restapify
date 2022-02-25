@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.13.7",
+    "@types/inquirer": "^8.1.1",
     "boxen": "^5.0.0",
     "chalk": "^4.1.0",
     "chokidar": "^3.4.3",
@@ -51,6 +52,7 @@
     "express": "^4.17.1",
     "faker": "^5.2.0",
     "http": "^0.0.1-security",
+    "inquirer": "^8.1.2",
     "jsonschema": "^1.4.0",
     "lodash.range": "^3.2.0",
     "nocache": "^2.1.0",
