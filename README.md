@@ -43,7 +43,7 @@ The problem of most of this libraries is the way you have to define your API end
 
 - 💡 **Incredible DX** - Intuitive files structure and JSON syntax
 - ✅ **JSON valid** - You will only use `.json` files that follows the [ECMA-404](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/) standard
-- 🎛 **Dashboard** - Out of the box SPA to explore and manage your mocked API
+- 🎛 **Dashboard** - Out of the box SPA to manage and explore your mocked API
 - 💻 **CLI** - Use the CLI for an instant deployment
 - 🔥 **Built in hot watcher** - Directly see your changes after a file update
 - 📝 **[Fakerjs](https://github.com/marak/Faker.js/) implementation** - Intuitive syntax to quickly populate your API responses
