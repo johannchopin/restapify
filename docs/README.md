@@ -305,7 +305,7 @@ and then call the route `GET /posts/42`, you will get the response:
 > ⚠️ Don't cast your number route's variable that are present in a string. Just use them like `"content": "The post [postid] is nice …"`
 
 ##### Boolean casting
-You can cast a variable to a number by using the following syntax `"b:[<variable>]"`. So if you use the example `/api/posts/[postid]/private/[isPrivate].POST.json`:
+You can cast a variable to a boolean by using the following syntax `"b:[<variable>]"`. So if you use the example `/api/posts/[postid]/private/[isPrivate].POST.json`:
 
 ```json
 {
